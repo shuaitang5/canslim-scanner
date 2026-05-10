@@ -177,6 +177,37 @@ class MarketRegime(BaseModel):
     reason: str = ""
 
 
+class SectorRow(BaseModel):
+    """One sector's snapshot (typically 11 SPDR sectors)."""
+    symbol: str
+    name: str
+    close: float
+    return_30d_pct: float
+    rs_percentile: Optional[float] = None  # 0..1 across the 11 sectors
+    above_50d_ma: bool
+    above_200d_ma: bool
+
+
+class MarketContext(BaseModel):
+    """Aggregate market-mood snapshot for the run.
+
+    Populated post-scan from price_frames + supplementary fetches (VIX, sector ETFs).
+    Renders in the HTML report's sticky header to give the user a "should I be
+    greedy or scared" read alongside the M-gate's pure regime test.
+    """
+    as_of: date
+    vix_close: Optional[float] = None
+    vix_sma50: Optional[float] = None
+    vix_label: Optional[str] = None  # "complacent" | "normal" | "elevated" | "fear"
+    distribution_days_25: Optional[int] = None  # SPY heavy-volume down days in last 25 sessions
+    pct_above_50d_ma: Optional[float] = None  # 0..1 across pre-filtered universe
+    pct_above_200d_ma: Optional[float] = None
+    new_highs: Optional[int] = None  # within 1% of 52w high
+    new_lows: Optional[int] = None   # within 1% of 52w low
+    sectors: list[SectorRow] = Field(default_factory=list)
+    note: str = ""
+
+
 class RunManifest(BaseModel):
     run_id: str  # YYYY-MM-DD_HHMMSS
     started_at: datetime
@@ -193,5 +224,6 @@ class RunManifest(BaseModel):
     fmp_budget_used: int = 0
     fmp_budget_remaining: Optional[int] = None
     market_regime: Optional[MarketRegime] = None
+    market_context: Optional[MarketContext] = None
     fetch_summary: list[FetchSummary] = Field(default_factory=list)
     errors: list[FetchError] = Field(default_factory=list)

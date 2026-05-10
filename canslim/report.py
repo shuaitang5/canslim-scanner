@@ -62,7 +62,22 @@ def write_run(
         embed_base64=embed_charts_base64,
     )
 
-    # PDF rendering (best-effort; failures don't break the scan)
+    # HTML rendering (primary output going forward; markdown remains for grep)
+    try:
+        from canslim.html_report import render_html
+        html = render_html(
+            results, manifest,
+            top_n_near_matches=top_n_near_matches,
+            chart_paths=chart_paths,
+            embed_base64=embed_charts_base64,
+            price_frames=price_frames,
+        )
+        (run_dir / "index.html").write_text(html)
+    except Exception as e:  # pragma: no cover — defensive
+        import logging
+        logging.getLogger("canslim.report").warning("HTML generation failed: %s", e)
+
+    # PDF rendering (opt-in; not auto-emitted now that HTML is primary)
     if generate_pdf:
         try:
             from canslim.pdf import render_pdf

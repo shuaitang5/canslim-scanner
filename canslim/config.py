@@ -104,8 +104,9 @@ class ScannerConfig(BaseModel):
     market_index: str = "SPY"  # M-gate benchmark. Use ^HSI for Hong Kong, ^GSPTSE for Canada, etc.
     # Auto-generate a PDF of the report alongside the markdown. Requires Chrome /
     # Chromium / Brave / Edge installed (auto-detected). Falls back gracefully
-    # if no browser is found — a warning is logged and only the .md is written.
-    generate_pdf: bool = True
+    # if no browser is found. Default OFF now that HTML is the primary surface —
+    # use `canslim report-pdf` for opt-in PDF generation when you need print/archive.
+    generate_pdf: bool = False
 
 
 class Settings(BaseModel):

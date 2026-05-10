@@ -224,6 +224,9 @@ class Scanner:
             )
         ]
 
+        # Market context: VIX, sector standings, distribution days, breadth
+        market_context = await self._compute_market_context(market_df, price_frames, force_refresh)
+
         manifest = RunManifest(
             run_id=run_id,
             started_at=started,
@@ -240,10 +243,30 @@ class Scanner:
             fmp_budget_used=max(0, self._fmp_used_today() - fmp_used_start),
             fmp_budget_remaining=fmp_budget_remaining,
             market_regime=regime,
+            market_context=market_context,
             fetch_summary=fetch_summary,
             errors=run_errors,
         )
         return results, manifest
+
+    async def _compute_market_context(self, spy_df, price_frames, force_refresh: bool):
+        """Fetch ^VIX + 11 SPDRs, then compose MarketContext. Best-effort.
+
+        Side effect: stashes the SPY + VIX dataframes onto self for the report
+        renderer to use for market overview charts.
+        """
+        try:
+            from canslim.market_context import compose_context, SPDR_SECTORS
+            sector_symbols = [s for s, _ in SPDR_SECTORS]
+            extras = await self.yf.get_prices(["^VIX"] + sector_symbols, force_refresh=force_refresh)
+            vix_df = extras.get("^VIX")
+            sector_frames = {s: extras[s] for s, _ in SPDR_SECTORS if s in extras}
+            # Stash for the report renderer
+            self._market_overview_frames = {self.market_index: spy_df, "^VIX": vix_df}
+            return compose_context(spy_df, vix_df, sector_frames, price_frames)
+        except Exception as e:  # pragma: no cover — defensive
+            log.debug("market_context computation failed: %s", e)
+            return None
 
     # ---- market regime (M)
 

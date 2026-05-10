@@ -64,13 +64,23 @@ def scan(
         scanner = Scanner(settings)
         try:
             results, manifest = await scanner.scan(tickers, dry_run=dry_run, force_refresh=force_refresh)
-            return results, manifest, getattr(scanner, "_price_frames", {})
+            return (
+                results, manifest,
+                getattr(scanner, "_price_frames", {}),
+                getattr(scanner, "_market_overview_frames", {}),
+            )
         finally:
             await scanner.close()
 
-    results, manifest, price_frames = asyncio.run(_run())
+    results, manifest, price_frames, overview_frames = asyncio.run(_run())
 
     manifest.universe_name = u_name
+    # Merge market overview frames (SPY, ^VIX) into price_frames so the HTML
+    # report can render market-wide charts alongside per-candidate charts.
+    if overview_frames:
+        for k, v in overview_frames.items():
+            if v is not None and k not in price_frames:
+                price_frames[k] = v
     report_path = write_run(
         out, results, manifest, tickers,
         top_n_near_matches=settings.scanner.top_n_near_matches,
@@ -85,6 +95,9 @@ def scan(
         f"pending={manifest.pending_budget} errors={manifest.errored} "
         f"fetch_errors={n_errors} skipped_missing={n_skipped_data}"
     )
+    html_path = report_path.parent / "index.html"
+    if html_path.exists():
+        console.print(f"html:   {html_path}")
     console.print(f"report: {report_path}")
     pdf_path = report_path.with_suffix(".pdf")
     if pdf_path.exists():
@@ -241,6 +254,110 @@ def report_pdf(
         )
         raise typer.Exit(code=1)
     console.print(f"[green]PDF written:[/green] {pdf_path}")
+
+
+@app.command("serve")
+def serve(
+    out_dir: Path = typer.Option(Path("out"), "--out", "-o", help="Output dir to serve"),
+    port: int = typer.Option(8765, "--port", "-p", help="Port for the local HTTP server"),
+    open_browser: bool = typer.Option(True, "--open/--no-open", help="Open the index page in your browser on start"),
+) -> None:
+    """Serve scan reports locally over HTTP.
+
+    Generates an index page listing all historical runs (newest first), then
+    starts a Python http.server rooted at the output directory. Each run's
+    index.html is browsable at http://localhost:<port>/runs/<run_id>/index.html.
+    """
+    import http.server
+    import socketserver
+    import threading
+    import webbrowser
+
+    runs_dir = out_dir / "runs"
+    if not runs_dir.exists():
+        console.print(f"[red]No runs dir found:[/red] {runs_dir}")
+        raise typer.Exit(code=2)
+
+    # Generate a simple index page listing all runs newest-first
+    runs = sorted(
+        [p for p in runs_dir.iterdir() if (p / "index.html").exists() or (p / "report.md").exists()],
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    index_html = _build_runs_index(runs, out_dir)
+    (out_dir / "index.html").write_text(index_html)
+    console.print(f"[green]Wrote runs index:[/green] {out_dir / 'index.html'}")
+
+    handler = http.server.SimpleHTTPRequestHandler
+
+    class _ReuseTCP(socketserver.TCPServer):
+        allow_reuse_address = True
+
+    serve_dir = str(out_dir.resolve())
+
+    def _serve_forever():
+        import os
+        os.chdir(serve_dir)
+        with _ReuseTCP(("127.0.0.1", port), handler) as httpd:
+            httpd.serve_forever()
+
+    url = f"http://127.0.0.1:{port}/index.html"
+    console.print(f"[green]Serving[/green] {serve_dir} at {url}")
+    console.print("[dim]Press Ctrl+C to stop.[/dim]")
+    if open_browser:
+        threading.Timer(0.4, lambda: webbrowser.open(url)).start()
+    try:
+        _serve_forever()
+    except KeyboardInterrupt:
+        console.print("\n[yellow]stopped.[/yellow]")
+
+
+def _build_runs_index(runs: list[Path], out_dir: Path) -> str:
+    """Build a minimal HTML index page listing all scan runs."""
+    rows = []
+    for run in runs:
+        target = "index.html" if (run / "index.html").exists() else "report.md"
+        href = f"runs/{run.name}/{target}"
+        # Try to read manifest for headline numbers
+        m_path = run / "run_manifest.json"
+        meta = {}
+        if m_path.exists():
+            try:
+                import json as _json
+                meta = _json.loads(m_path.read_text())
+            except Exception:
+                pass
+        matches = meta.get("matches", "?")
+        scanned = meta.get("scanned", "?")
+        universe = meta.get("universe_name", "?")
+        rows.append(
+            f'<tr><td><a href="{href}">{run.name}</a></td>'
+            f'<td>{universe}</td>'
+            f'<td class="num">{matches}</td>'
+            f'<td class="num">{scanned}</td></tr>'
+        )
+    return f"""<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>CANSLIM Scan Runs</title>
+<style>
+  body {{ font: 14px/1.5 -apple-system, system-ui, sans-serif; margin: 24px; max-width: 900px; color: #1a1f2b; }}
+  h1 {{ font-size: 18px; margin-bottom: 4px; }}
+  table {{ border-collapse: collapse; width: 100%; margin-top: 12px; }}
+  th, td {{ text-align: left; padding: 6px 10px; border-bottom: 1px solid #d8dde3; }}
+  th {{ background: #f7f8f9; font-size: 12px; }}
+  td.num {{ text-align: right; font-family: ui-monospace, "SF Mono", Menlo, monospace; }}
+  a {{ color: #1a4480; text-decoration: none; font-family: ui-monospace, "SF Mono", Menlo, monospace; }}
+  a:hover {{ text-decoration: underline; }}
+  .meta {{ color: #5b6473; font-size: 12px; }}
+</style></head><body>
+<h1>CANSLIM Scan Runs</h1>
+<p class="meta">{len(runs)} runs · serving from <code>{out_dir.resolve()}</code></p>
+<table>
+  <thead><tr><th>Run</th><th>Universe</th><th class="num">Matches</th><th class="num">Scanned</th></tr></thead>
+  <tbody>
+    {''.join(rows) if rows else '<tr><td colspan="4">No runs found.</td></tr>'}
+  </tbody>
+</table>
+</body></html>"""
 
 
 @app.command("list-universe")

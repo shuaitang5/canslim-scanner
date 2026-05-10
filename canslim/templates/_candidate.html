@@ -1,0 +1,156 @@
+{# Per-ticker collapsed block. Receives `r` from the parent loop.
+
+Rendered inside <section class="bucket">. Default closed. Clicking summary
+expands to show: chart, CANSLIM brief, patterns, price/volume narrative,
+entry plan.
+#}
+{% set status_label = "MATCH" if r.passed else "near-miss" %}
+{% set entry = helpers.entry_status(r) %}
+{% set n = r.criteria.get("N") %}
+{% set s = r.criteria.get("S") %}
+{% set n_ev = n.evidence if (n and n.evidence) else {} %}
+{% set s_ev = s.evidence if (s and s.evidence) else {} %}
+
+<details class="candidate" id="c-{{ r.ticker }}" data-ticker="{{ r.ticker }}" data-passed="{{ 'true' if r.passed else 'false' }}">
+  <summary>
+    <span class="ticker">{{ r.ticker }}</span>
+    <span class="score mono">{{ "%.2f"|format(r.composite_score) }}</span>
+    <span class="gates">{{ helpers.gate_flags(r) }}</span>
+    <span class="status status-{{ status_label }}">{{ status_label }}</span>
+    <span class="summary-meta">
+      {% if entry %}
+        {{ entry.status_label }}
+        {% if entry.dist is number %} · dist {{ "%+.1f"|format(entry.dist * 100) }}% from pivot ${{ "%.2f"|format(entry.pivot) }}{% endif %}
+      {% else %}
+        fails: {{ helpers.failed_gates(r) or "—" }}
+      {% endif %}
+    </span>
+    <span class="summary-meta">
+      {% if r.ad_grade %}AD: {{ r.ad_grade }}{% endif %}
+    </span>
+  </summary>
+
+  <div class="body">
+    <div class="body-grid">
+      <div>
+        {% if inline_svg.get(r.ticker) %}
+          <div class="chart-container">{{ inline_svg[r.ticker]|safe }}</div>
+        {% elif chart_uri.get(r.ticker) %}
+          <img class="chart" src="{{ chart_uri[r.ticker] }}" alt="{{ r.ticker }} chart">
+        {% else %}
+          <div class="desc"><em>No chart available.</em></div>
+        {% endif %}
+
+        {% if r.patterns %}
+          <h4>Detected patterns</h4>
+          <div class="patterns-list">
+            {% for p in r.patterns|sort(attribute='confidence', reverse=True) %}
+              <div class="pat">
+                <span class="pat-name">{{ p.name }}</span>
+                {% if p.pivot %}<span class="pat-pivot">pivot ${{ "%.2f"|format(p.pivot) }}</span>{% endif %}
+                {% set d = p.evidence.get("dist_to_pivot_pct") %}
+                {% if d is number %}<span class="pat-dist">dist {{ "%+.1f"|format(d * 100) }}%</span>{% endif %}
+                <span class="pat-conf">conf {{ "%.2f"|format(p.confidence) }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="desc"><em>No chart pattern detected above confidence threshold.</em></div>
+        {% endif %}
+      </div>
+
+      <div>
+        {% if r.ad_grade %}
+          <div class="ad-rating">
+            Accumulation/Distribution: <code>{{ r.ad_grade }}</code> ({{ helpers.ad_grade_label(r.ad_grade) }}, up/down flow {{ "%.2f"|format(r.ad_ratio) }})
+          </div>
+        {% endif %}
+
+        <h4>CANSLIM brief</h4>
+        <div class="canslim-brief">
+          {% for L in letters %}
+            {% set cr = r.criteria.get(L) %}
+            {% if cr %}
+              <div class="row">
+                <span class="L">{{ L }}</span>
+                <span class="gate-tag">{{ "GATE" if cr.is_gate else "info" }}</span>
+                <span class="{{ 'res-pass' if cr.passed else 'res-fail' }}">{{ "PASS" if cr.passed else "fail" }}</span>
+                <span class="reason">
+                  {{ helpers.format_value_for_letter(L, cr.value) }}
+                  {{ cr.reason or "(ok)" }}
+                </span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <h4>Price &amp; volume action</h4>
+        <ul class="price-volume">
+          {% set close = n_ev.get("close") %}
+          {% set high_52w = n_ev.get("high_52w") %}
+          {% set dist_high = n_ev.get("dist_to_52w_high_pct") %}
+          {% set adv10 = s_ev.get("adv10") %}
+          {% set adv50 = s_ev.get("adv50") %}
+          {% set ratio = s_ev.get("ratio") %}
+          {% set recent_vol = n_ev.get("recent_vol_ratio") %}
+          {% if close is number and high_52w is number %}
+            <li>
+              Close <code>${{ "%.2f"|format(close) }}</code> —
+              {% if dist_high is number and dist_high < 0.005 %}
+                <strong>at 52w high</strong>
+              {% else %}
+                {{ "%.1f"|format(dist_high * 100) }}% off 52w high (peak ${{ "%.2f"|format(high_52w) }})
+              {% endif %}
+            </li>
+          {% endif %}
+          {% if ratio is number %}
+            <li>
+              Volume trend: ADV10 / ADV50 = <code>{{ "%.2f"|format(ratio) }}×</code> —
+              {% if ratio < 0.95 %}
+                <strong>drying up</strong> (constructive in a base/handle)
+              {% elif ratio >= 1.20 %}
+                <strong>elevated</strong> (institutional accumulation)
+              {% else %}
+                near 50-day average
+              {% endif %}
+            </li>
+          {% endif %}
+          {% if recent_vol is number %}
+            <li>
+              Latest session: <code>{{ "%.2f"|format(recent_vol) }}× ADV50</code>
+              {% if recent_vol >= 1.4 %} ✓ confirmed{% else %} — below 1.4× confirmation threshold{% endif %}
+            </li>
+          {% endif %}
+          {% if n_ev.get("breakout") %}
+            <li><strong>N-criterion flagged BREAKOUT</strong>: within 5% of 52w high AND volume ≥1.4× ADV50</li>
+          {% endif %}
+        </ul>
+
+        {% if entry %}
+          <h4>Entry plan</h4>
+          <div class="entry-plan {{ entry.status_class }}">
+            <h4 style="margin: 0 0 4px; text-transform: none;">{{ entry.status_label }}</h4>
+            <div class="note">{{ entry.note }}</div>
+            <ul>
+              <li><strong>Trigger</strong>: close above <code>${{ "%.2f"|format(entry.pivot) }}</code> on volume ≥ 1.4× ADV50</li>
+              <li><strong>Buy zone</strong>: <code>${{ "%.2f"|format(entry.buy_zone_low) }}</code> → <code>${{ "%.2f"|format(entry.buy_zone_high) }}</code> (pivot to +5%)</li>
+              <li><strong>Initial stop</strong>: <code>${{ "%.2f"|format(entry.stop_loss) }}</code> (-7% from pivot)</li>
+              <li><strong>Position size</strong>: {{ entry.sizing }}</li>
+              <li><strong>Invalidation</strong>: close below <code>${{ "%.2f"|format(entry.invalidation) }}</code> on heavy volume → setup failed</li>
+            </ul>
+          </div>
+        {% endif %}
+
+        {% set used = helpers.override_reasons(r) %}
+        {% if used %}
+          <h4>Leadership override active</h4>
+          <p class="desc">Gate(s) passed via override path: <code>{{ used|join(", ") }}</code> — would otherwise have failed strict CANSLIM.</p>
+        {% endif %}
+
+        {% if r.errors %}
+          <p class="desc"><em>Data warnings: {{ r.errors|length }} fetch issue(s) during this scan.</em></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</details>

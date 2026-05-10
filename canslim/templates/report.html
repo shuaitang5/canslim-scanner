@@ -1,0 +1,676 @@
+{# CANSLIM Scan Report — single self-contained HTML file.
+
+Sections:
+  - Sticky header: market regime + summary
+  - Tab nav: All / Matches / Buyable / Watchlist / Basing / Override
+  - Sticky TOC sidebar: ticker list with status dots
+  - Main: per-candidate <details> blocks
+  - Footer: data integrity
+
+No external assets. Vanilla JS for search/filter/sort. Native HTML5
+collapsibles. Styling system: monospace numerics, system-ui prose.
+#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CANSLIM Scan — {{ manifest.run_id }}</title>
+<style>
+  /* === Tokens ============================================== */
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f7f8f9;
+    --bg-darker: #eceef0;
+    --border: #d8dde3;
+    --border-strong: #b8c0c8;
+    --text: #1a1f2b;
+    --text-muted: #5b6473;
+    --accent: #1a4480;
+    --pass: #2e7d32;
+    --fail: #c62828;
+    --warn: #e9740b;
+    --info: #0277bd;
+    --buyzone: #c8e6c9;
+    --extended: #ffe0b2;
+    --forming: #e1f5fe;
+    --approaching: #fff9c4;
+    --mono: ui-monospace, "SF Mono", "Menlo", "Cascadia Mono", monospace;
+    --sans: -apple-system, "Inter", "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font: 13px/1.5 var(--sans);
+    color: var(--text);
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+  }
+  code, .mono { font-family: var(--mono); }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* === Layout ============================================== */
+  header.app {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+  }
+  .app-title { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .app-title h1 { margin: 0; font-size: 14px; font-weight: 600; }
+  .app-title .meta { color: var(--text-muted); font-size: 12px; font-family: var(--mono); }
+  .regime-badge {
+    display: inline-block; padding: 1px 8px; border-radius: 3px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+  }
+  .regime-uptrend { background: var(--pass); color: white; }
+  .regime-caution { background: var(--warn); color: white; }
+  .regime-down { background: var(--fail); color: white; }
+
+  .summary-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px; margin-top: 8px;
+  }
+  .market-context { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+  .market-context > details > summary { font-size: 12px; cursor: pointer; padding: 2px 0; }
+  .market-context > details > summary::-webkit-details-marker { color: var(--text-muted); }
+  .mc-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px; margin-top: 8px;
+  }
+  .mc-charts {
+    display: grid; grid-template-columns: 2fr 1fr;
+    gap: 12px; margin-top: 10px;
+  }
+  @media (max-width: 900px) { .mc-charts { grid-template-columns: 1fr; } }
+  .mc-chart { min-width: 0; }
+  .mc-chart-label {
+    font-size: 11px; color: var(--text-muted);
+    margin-bottom: 3px; padding-left: 2px;
+  }
+  .mc-stat { font-size: 11px; color: var(--text-muted); }
+  .mc-stat .mc-label { display: block; }
+  .mc-stat .mc-value {
+    display: block; color: var(--text); font-size: 18px; font-weight: 600;
+    font-family: var(--mono);
+  }
+  .mc-stat .mc-sub { display: block; font-size: 10px; }
+  .vix-complacent { color: var(--info); }
+  .vix-normal { color: var(--text); }
+  .vix-elevated { color: var(--warn); }
+  .vix-fear { color: var(--fail); }
+  .mc-h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+           color: var(--text-muted); font-weight: 600; margin: 12px 0 4px; }
+  .mc-sectors td.pos { color: var(--pass); }
+  .mc-sectors td.neg { color: var(--fail); }
+  .stat { font-size: 11px; color: var(--text-muted); }
+  .stat .v { display: block; color: var(--text); font-size: 18px; font-weight: 600; font-family: var(--mono); }
+
+  nav.tabs {
+    position: sticky; top: 67px; z-index: 40;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 0 16px; display: flex; gap: 0; overflow-x: auto;
+  }
+  nav.tabs button {
+    background: transparent; border: none;
+    padding: 10px 14px; font: inherit; font-size: 12px;
+    color: var(--text-muted); cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  nav.tabs button.active { color: var(--accent); border-bottom-color: var(--accent); }
+  nav.tabs button .count {
+    margin-left: 4px; padding: 0 6px; border-radius: 3px;
+    background: var(--bg-darker); font-size: 10px; font-family: var(--mono);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    gap: 0;
+  }
+  aside.toc {
+    position: sticky; top: 105px; align-self: start;
+    height: calc(100vh - 105px); overflow-y: auto;
+    border-right: 1px solid var(--border); padding: 10px 0;
+    font-size: 12px;
+  }
+  aside.toc .toc-search { padding: 0 12px 8px; }
+  aside.toc .toc-search input {
+    width: 100%; padding: 5px 8px; border: 1px solid var(--border);
+    border-radius: 3px; font: inherit; font-family: var(--mono);
+  }
+  aside.toc ul { list-style: none; padding: 0; margin: 0; }
+  aside.toc li a {
+    display: flex; gap: 8px; align-items: baseline;
+    padding: 3px 12px; color: var(--text);
+  }
+  aside.toc li a:hover { background: var(--bg-alt); text-decoration: none; }
+  aside.toc li a.match-row { font-weight: 600; }
+  aside.toc .ticker-name { font-family: var(--mono); flex: 1; }
+  aside.toc .score { color: var(--text-muted); font-family: var(--mono); font-size: 11px; }
+  aside.toc .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    display: inline-block; flex-shrink: 0;
+  }
+  aside.toc .dot-match { background: var(--pass); }
+  aside.toc .dot-buyable { background: var(--info); }
+  aside.toc .dot-watchlist { background: var(--warn); }
+  aside.toc .dot-basing { background: var(--text-muted); }
+
+  main { padding: 16px 24px; min-width: 0; }
+  section.bucket { margin-bottom: 32px; }
+  section.bucket h2 {
+    font-size: 16px; margin: 0 0 8px 0;
+    padding-bottom: 6px; border-bottom: 1px solid var(--border);
+  }
+  section.bucket .desc { color: var(--text-muted); font-size: 12px; margin-bottom: 12px; }
+
+  /* === Tables ============================================== */
+  table.compact {
+    width: 100%; border-collapse: collapse; font-size: 12px;
+    margin: 8px 0;
+  }
+  table.compact th, table.compact td {
+    text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.compact th {
+    background: var(--bg-alt); font-weight: 600; font-size: 11px;
+    cursor: pointer; user-select: none;
+  }
+  table.compact th:hover { background: var(--bg-darker); }
+  table.compact tbody tr:hover { background: var(--bg-alt); }
+  table.compact td.num { font-family: var(--mono); text-align: right; }
+  table.compact .ticker-cell {
+    font-family: var(--mono); font-weight: 600; color: var(--accent);
+  }
+
+  /* === Candidate blocks ==================================== */
+  details.candidate {
+    border: 1px solid var(--border); border-radius: 4px;
+    margin-bottom: 8px; background: var(--bg);
+  }
+  details.candidate[open] {
+    background: var(--bg);
+    border-color: var(--border-strong);
+  }
+  details.candidate > summary {
+    list-style: none; cursor: pointer;
+    padding: 8px 12px; display: grid;
+    grid-template-columns: 80px 60px 100px 110px 1fr auto;
+    gap: 12px; align-items: baseline;
+    font-size: 12px;
+  }
+  details.candidate > summary::-webkit-details-marker { display: none; }
+  details.candidate > summary::before {
+    content: "▶"; font-size: 9px; color: var(--text-muted);
+    margin-right: 4px; transform-origin: center;
+    transition: transform 0.1s;
+  }
+  details.candidate[open] > summary::before { transform: rotate(90deg); }
+  details.candidate .ticker {
+    font-family: var(--mono); font-weight: 700; color: var(--accent); font-size: 14px;
+  }
+  details.candidate .score { font-family: var(--mono); color: var(--text-muted); }
+  details.candidate .gates { font-family: var(--mono); font-size: 13px; letter-spacing: 0.03em; }
+  details.candidate .status {
+    font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 3px;
+  }
+  .status-MATCH { background: var(--pass); color: white; }
+  .status-near-miss { background: var(--bg-darker); color: var(--text-muted); }
+  details.candidate .summary-meta {
+    color: var(--text-muted); font-family: var(--mono); font-size: 11px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  details.candidate .body {
+    padding: 12px 14px 16px 14px; border-top: 1px solid var(--border);
+  }
+
+  /* Two-column body layout for charts + analysis */
+  .body-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  @media (max-width: 1100px) { .body-grid { grid-template-columns: 1fr; } }
+  .body-grid img.chart { width: 100%; height: auto; border: 1px solid var(--border); border-radius: 3px; }
+  .chart-container { width: 100%; }
+  .canslim-chart { width: 100%; height: auto; display: block;
+                   border: 1px solid var(--border); border-radius: 3px; background: #fff; }
+  .canslim-chart .candles rect:hover { stroke: #000; stroke-width: 0.8; }
+  .canslim-chart .pivot, .canslim-chart .stop { pointer-events: none; }
+
+  /* CANSLIM brief grid */
+  .canslim-brief { font-size: 12px; }
+  .canslim-brief .row { display: grid; grid-template-columns: 24px 50px 30px 1fr; gap: 6px; padding: 2px 0; }
+  .canslim-brief .L { font-weight: 700; font-family: var(--mono); }
+  .canslim-brief .gate-tag { color: var(--text-muted); font-size: 10px; }
+  .canslim-brief .res-pass { color: var(--pass); font-weight: 600; }
+  .canslim-brief .res-fail { color: var(--fail); font-weight: 600; }
+  .canslim-brief .reason { color: var(--text-muted); font-size: 11px; }
+
+  .ad-rating { font-size: 12px; margin: 4px 0 8px; }
+  .ad-rating code { background: var(--bg-darker); padding: 1px 5px; border-radius: 2px; font-weight: 700; }
+
+  .price-volume { font-size: 12px; }
+  .price-volume li { margin: 3px 0; }
+
+  /* Entry plan card */
+  .entry-plan {
+    border-radius: 4px; padding: 10px 12px; font-size: 12px;
+    border-left: 3px solid var(--info); background: var(--bg-alt);
+  }
+  .entry-plan.forming { border-left-color: var(--info); background: var(--forming); }
+  .entry-plan.approaching { border-left-color: var(--warn); background: var(--approaching); }
+  .entry-plan.buyzone { border-left-color: var(--pass); background: var(--buyzone); }
+  .entry-plan.extended { border-left-color: var(--fail); background: var(--extended); }
+  .entry-plan h4 { margin: 0 0 4px 0; font-size: 13px; }
+  .entry-plan .note { font-size: 12px; color: var(--text); margin-bottom: 6px; }
+  .entry-plan ul { margin: 4px 0 0 0; padding-left: 18px; }
+  .entry-plan ul li { margin: 2px 0; }
+
+  /* Patterns list */
+  .patterns-list { font-size: 12px; }
+  .patterns-list .pat { display: flex; gap: 8px; padding: 2px 0; align-items: baseline; }
+  .patterns-list .pat-name { font-family: var(--mono); font-weight: 600; }
+  .patterns-list .pat-pivot, .patterns-list .pat-dist, .patterns-list .pat-conf {
+    color: var(--text-muted); font-family: var(--mono); font-size: 11px;
+  }
+
+  /* Section headers in body */
+  .body h4 {
+    margin: 14px 0 4px 0; font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600;
+  }
+
+  /* Hidden tab content */
+  .bucket.hidden { display: none; }
+
+  /* Search highlight */
+  details.candidate.filtered-out { display: none; }
+
+  footer {
+    border-top: 1px solid var(--border); margin-top: 32px; padding: 16px;
+    font-size: 11px; color: var(--text-muted);
+  }
+  footer table { width: auto; min-width: 400px; }
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="app-title">
+    <h1>CANSLIM Scan</h1>
+    <span class="meta">{{ manifest.run_id }}</span>
+    <span class="meta">universe: {{ manifest.universe_name }} ({{ manifest.universe_size }} tickers)</span>
+    {% if regime %}
+      {% set rcls = "regime-uptrend" if regime.uptrend else "regime-caution" %}
+      <span class="regime-badge {{ rcls }}">{{ "UPTREND" if regime.uptrend else "CAUTION" }}</span>
+      <span class="meta">{{ regime_index_label }} {{ regime.spy_close|fmt_money }} · 50d {{ regime.spy_sma50|fmt_money }} · 200d {{ regime.spy_sma200|fmt_money }}</span>
+    {% endif %}
+  </div>
+  <div class="summary-row">
+    <div class="stat">candidates after pre-filter <span class="v">{{ manifest.candidates_after_prefilter }}</span></div>
+    <div class="stat">scanned <span class="v">{{ manifest.scanned }}</span></div>
+    <div class="stat">full matches <span class="v">{{ matches|length }}</span></div>
+    <div class="stat">buyable now <span class="v">{{ buyable|length }}</span></div>
+    <div class="stat">override watchlist <span class="v">{{ overrides|length }}</span></div>
+    <div class="stat">errors <span class="v">{{ manifest.errored }}</span></div>
+  </div>
+
+  {% if manifest.market_context %}
+    {% set mc = manifest.market_context %}
+    <div class="market-context">
+      <details open>
+        <summary><strong>Market context</strong>{% if mc.note %} — <span class="meta">{{ mc.note }}</span>{% endif %}</summary>
+
+        {% if market_charts.get("__market__") or market_charts.get("__vix__") %}
+          <div class="mc-charts">
+            {% if market_charts.get("__market__") %}
+              <div class="mc-chart">
+                <div class="mc-chart-label">Market index ({{ regime_index_label }}) · red dashes mark distribution days</div>
+                {{ market_charts["__market__"]|safe }}
+              </div>
+            {% endif %}
+            {% if market_charts.get("__vix__") %}
+              <div class="mc-chart">
+                <div class="mc-chart-label">VIX (fear gauge) · 15/20/30 thresholds</div>
+                {{ market_charts["__vix__"]|safe }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <div class="mc-grid">
+          {% if mc.vix_close is number %}
+            <div class="mc-stat">
+              <span class="mc-label">VIX</span>
+              <span class="mc-value vix-{{ mc.vix_label }}">{{ "%.1f"|format(mc.vix_close) }}</span>
+              <span class="mc-sub">{{ mc.vix_label }}{% if mc.vix_sma50 is number %} · 50d {{ "%.1f"|format(mc.vix_sma50) }}{% endif %}</span>
+            </div>
+          {% endif %}
+          {% if mc.distribution_days_25 is number %}
+            {% set dd = mc.distribution_days_25 %}
+            <div class="mc-stat">
+              <span class="mc-label">Distribution days (25)</span>
+              <span class="mc-value {% if dd >= 7 %}vix-fear{% elif dd >= 5 %}vix-elevated{% else %}vix-normal{% endif %}">{{ dd }}</span>
+              <span class="mc-sub">≥5 caution · ≥7 warning</span>
+            </div>
+          {% endif %}
+          {% if mc.pct_above_50d_ma is number %}
+            <div class="mc-stat">
+              <span class="mc-label">Breadth (50d)</span>
+              <span class="mc-value">{{ "%.0f"|format(mc.pct_above_50d_ma * 100) }}%</span>
+              <span class="mc-sub">above 50-day MA</span>
+            </div>
+          {% endif %}
+          {% if mc.pct_above_200d_ma is number %}
+            <div class="mc-stat">
+              <span class="mc-label">Breadth (200d)</span>
+              <span class="mc-value">{{ "%.0f"|format(mc.pct_above_200d_ma * 100) }}%</span>
+              <span class="mc-sub">above 200-day MA</span>
+            </div>
+          {% endif %}
+          {% if mc.new_highs is number and mc.new_lows is number %}
+            <div class="mc-stat">
+              <span class="mc-label">New 52w highs : lows</span>
+              <span class="mc-value">{{ mc.new_highs }} : {{ mc.new_lows }}</span>
+              <span class="mc-sub">{% if mc.new_lows %}{{ "%.1f"|format(mc.new_highs / mc.new_lows) }}x{% else %}∞{% endif %}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if mc.sectors %}
+          <h4 class="mc-h4">Sector standings (30-day return, ranked)</h4>
+          <table class="compact mc-sectors">
+            <thead><tr>
+              <th>Sector</th><th>ETF</th>
+              <th class="num">30d Return</th><th class="num">RS%ile</th>
+              <th>Above 50d</th><th>Above 200d</th>
+            </tr></thead>
+            <tbody>
+              {% for s in mc.sectors %}
+                <tr>
+                  <td>{{ s.name }}</td>
+                  <td class="mono">{{ s.symbol }}</td>
+                  <td class="num {% if s.return_30d_pct > 0 %}pos{% else %}neg{% endif %}">{{ "%+.1f"|format(s.return_30d_pct) }}%</td>
+                  <td class="num">{{ "%.2f"|format(s.rs_percentile) if s.rs_percentile is number else "—" }}</td>
+                  <td class="mono">{{ "✓" if s.above_50d_ma else "✗" }}</td>
+                  <td class="mono">{{ "✓" if s.above_200d_ma else "✗" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      </details>
+    </div>
+  {% endif %}
+</header>
+
+<nav class="tabs" id="tabs">
+  <button data-bucket="all" class="active">All<span class="count">{{ matches|length + buyable|length + watchlist|length + basing|length }}</span></button>
+  <button data-bucket="matches">Full Matches<span class="count">{{ matches|length }}</span></button>
+  <button data-bucket="buyable">Buyable Now<span class="count">{{ buyable|length }}</span></button>
+  <button data-bucket="watchlist">Watchlist<span class="count">{{ watchlist|length }}</span></button>
+  <button data-bucket="basing">Basing<span class="count">{{ basing|length }}</span></button>
+  <button data-bucket="overrides">Override Watchlist<span class="count">{{ overrides|length }}</span></button>
+  <button data-bucket="patterns">Patterns<span class="count">{{ pattern_hits|length }}</span></button>
+</nav>
+
+<div class="layout">
+
+  <aside class="toc">
+    <div class="toc-search">
+      <input type="search" id="toc-search" placeholder="Filter ticker..." autocomplete="off">
+    </div>
+    <ul id="toc">
+      {% for r in matches %}
+        <li><a href="#c-{{ r.ticker }}" class="match-row" data-ticker="{{ r.ticker }}">
+          <span class="status-dot dot-match" title="full match"></span>
+          <span class="ticker-name">{{ r.ticker }}</span>
+          <span class="score">{{ "%.2f"|format(r.composite_score) }}</span>
+        </a></li>
+      {% endfor %}
+      {% for r in buyable %}
+        <li><a href="#c-{{ r.ticker }}" data-ticker="{{ r.ticker }}">
+          <span class="status-dot dot-buyable" title="buyable"></span>
+          <span class="ticker-name">{{ r.ticker }}</span>
+          <span class="score">{{ "%.2f"|format(r.composite_score) }}</span>
+        </a></li>
+      {% endfor %}
+      {% for r in watchlist %}
+        <li><a href="#c-{{ r.ticker }}" data-ticker="{{ r.ticker }}">
+          <span class="status-dot dot-watchlist" title="watchlist"></span>
+          <span class="ticker-name">{{ r.ticker }}</span>
+          <span class="score">{{ "%.2f"|format(r.composite_score) }}</span>
+        </a></li>
+      {% endfor %}
+      {% for r in basing %}
+        <li><a href="#c-{{ r.ticker }}" data-ticker="{{ r.ticker }}">
+          <span class="status-dot dot-basing" title="basing"></span>
+          <span class="ticker-name">{{ r.ticker }}</span>
+          <span class="score">{{ "%.2f"|format(r.composite_score) }}</span>
+        </a></li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <main>
+
+    {# === Top summary tables (always visible regardless of tab) === #}
+
+    <section class="bucket bucket-all" data-bucket="all">
+
+      {% if near_matches %}
+      <h2>Top {{ near_matches|length }} by composite score (near-matches)</h2>
+      <table class="compact sortable">
+        <thead><tr>
+          <th>#</th><th>Ticker</th><th class="num">Score</th>
+          <th class="mono">CANSLIM</th><th>Fails</th>
+          <th class="num">RS%ile</th><th>Patterns</th>
+        </tr></thead>
+        <tbody>
+        {% for r in near_matches %}
+          {% set l = r.criteria.get("L") %}
+          <tr>
+            <td class="num">{{ loop.index }}</td>
+            <td class="ticker-cell"><a href="#c-{{ r.ticker }}">{{ r.ticker }}</a></td>
+            <td class="num">{{ "%.2f"|format(r.composite_score) }}</td>
+            <td class="mono">{{ helpers.gate_flags(r) }}</td>
+            <td class="mono">{{ helpers.failed_gates(r) or "—" }}</td>
+            <td class="num">{{ "%.2f"|format(helpers.num(l.value if l else None)) }}</td>
+            <td>{{ helpers.patterns_label(r.patterns) or "—" }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+
+    </section>
+
+    {# === Full matches === #}
+    <section class="bucket bucket-matches" data-bucket="matches">
+      {% if matches %}
+        <h2>Full matches <span class="meta">— all gates pass</span></h2>
+        <p class="desc">All 5 hard CANSLIM gates passed. Composite ranked. Treat these as the framework's strongest signals.</p>
+        {% for r in matches %}
+          {% include "_candidate.html" %}
+        {% endfor %}
+      {% else %}
+        <h2>Full matches</h2>
+        <p class="desc"><em>No tickers passed all gate criteria in this run.</em></p>
+      {% endif %}
+    </section>
+
+    {# === Buyable now === #}
+    <section class="bucket bucket-buyable" data-bucket="buyable">
+      <h2>Buyable now</h2>
+      <p class="desc">Pattern detected and price within ±5% of pivot. Most actionable today.</p>
+      {% for r in buyable %}
+        {% include "_candidate.html" %}
+      {% else %}
+        <p class="desc"><em>No buyable-zone candidates today.</em></p>
+      {% endfor %}
+    </section>
+
+    {# === Watchlist === #}
+    <section class="bucket bucket-watchlist" data-bucket="watchlist">
+      <h2>Watchlist</h2>
+      <p class="desc">Pattern setup exists but extended past pivot, or waiting for volume confirmation.</p>
+      {% for r in watchlist %}
+        {% include "_candidate.html" %}
+      {% else %}
+        <p class="desc"><em>None.</em></p>
+      {% endfor %}
+    </section>
+
+    {# === Basing === #}
+    <section class="bucket bucket-basing" data-bucket="basing">
+      <h2>Basing (no pivot yet)</h2>
+      <p class="desc">Strong fundamentals, no clean pivot detected. Re-check in 2-4 weeks.</p>
+      {% for r in basing %}
+        {% include "_candidate.html" %}
+      {% else %}
+        <p class="desc"><em>None.</em></p>
+      {% endfor %}
+    </section>
+
+    {# === Override watchlist === #}
+    <section class="bucket bucket-overrides hidden" data-bucket="overrides">
+      <h2>Leadership-override watchlist</h2>
+      <p class="desc">Tickers where a strict gate failed but a relaxation path applies — turnaround names with top-decile RS + pattern (A:leadership), or constructive-base names with drying volume (S:pattern).</p>
+      <table class="compact sortable">
+        <thead><tr>
+          <th>Ticker</th><th class="num">Score</th><th class="num">Gates</th>
+          <th class="mono">CANSLIM</th><th>Override(s)</th>
+          <th class="num">RS%ile</th><th>Pattern</th>
+        </tr></thead>
+        <tbody>
+          {% for r, used in overrides %}
+            {% set l = r.criteria.get("L") %}
+            <tr>
+              <td class="ticker-cell"><a href="#c-{{ r.ticker }}">{{ r.ticker }}</a></td>
+              <td class="num">{{ "%.2f"|format(r.composite_score) }}</td>
+              <td class="num">{{ helpers.gate_pass_count(r) }}/5</td>
+              <td class="mono">{{ helpers.gate_flags(r) }}</td>
+              <td>{{ used|join(", ") }}</td>
+              <td class="num">{{ "%.2f"|format(helpers.num(l.value if l else None)) }}</td>
+              <td>{{ helpers.patterns_label(r.patterns) or "—" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    {# === Patterns === #}
+    <section class="bucket bucket-patterns hidden" data-bucket="patterns">
+      <h2>Detected chart patterns</h2>
+      <p class="desc">Tickers with at least one detected pattern, sorted by max confidence.</p>
+      <table class="compact sortable">
+        <thead><tr>
+          <th>Ticker</th><th class="num">Score</th><th>Pattern</th>
+          <th class="num">Confidence</th><th class="num">Pivot</th><th class="num">Dist</th>
+        </tr></thead>
+        <tbody>
+          {% for r in pattern_hits %}
+            {% set sorted_pats = r.patterns|sort(attribute='confidence', reverse=True) %}
+            {% for p in sorted_pats[:2] %}
+              <tr>
+                <td class="ticker-cell"><a href="#c-{{ r.ticker }}">{{ r.ticker }}</a></td>
+                <td class="num">{{ "%.2f"|format(r.composite_score) }}</td>
+                <td class="mono">{{ p.name }}</td>
+                <td class="num">{{ "%.2f"|format(p.confidence) }}</td>
+                <td class="num">{% if p.pivot %}${{ "%.2f"|format(p.pivot) }}{% else %}—{% endif %}</td>
+                <td class="num">
+                  {% set d = p.evidence.get("dist_to_pivot_pct") %}
+                  {% if d is number %}{{ "%+.1f"|format(d * 100) }}%{% else %}—{% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      <p>Config hash: <code>{{ manifest.config_hash }}</code> · Generated by canslim scanner.</p>
+    </footer>
+  </main>
+</div>
+
+<script>
+  // === Tab navigation ===
+  const tabs = document.querySelectorAll("nav.tabs button");
+  const buckets = document.querySelectorAll("section.bucket");
+  tabs.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.dataset.bucket;
+      tabs.forEach(b => b.classList.toggle("active", b === btn));
+      if (target === "all") {
+        buckets.forEach(s => s.classList.remove("hidden"));
+      } else {
+        buckets.forEach(s => s.classList.toggle("hidden", s.dataset.bucket !== target));
+      }
+    });
+  });
+
+  // === Ticker search (filters TOC + main candidates) ===
+  const search = document.getElementById("toc-search");
+  search.addEventListener("input", () => {
+    const q = search.value.trim().toLowerCase();
+    document.querySelectorAll("aside.toc li").forEach(li => {
+      const t = (li.querySelector(".ticker-name")?.textContent || "").toLowerCase();
+      li.style.display = t.includes(q) ? "" : "none";
+    });
+    document.querySelectorAll("details.candidate").forEach(d => {
+      const t = (d.dataset.ticker || "").toLowerCase();
+      d.classList.toggle("filtered-out", q && !t.includes(q));
+    });
+  });
+
+  // === TOC click: expand the candidate ===
+  document.querySelectorAll("aside.toc a").forEach(a => {
+    a.addEventListener("click", () => {
+      const target = document.querySelector(a.getAttribute("href"));
+      if (target && target.tagName === "DETAILS") {
+        target.open = true;
+      }
+    });
+  });
+
+  // === Sortable tables ===
+  document.querySelectorAll("table.sortable").forEach(table => {
+    table.querySelectorAll("th").forEach((th, idx) => {
+      th.addEventListener("click", () => {
+        const tbody = table.querySelector("tbody");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+        const isNum = th.classList.contains("num");
+        const asc = th.dataset.sortDir !== "asc";
+        rows.sort((a, b) => {
+          const av = a.children[idx]?.textContent.trim();
+          const bv = b.children[idx]?.textContent.trim();
+          if (isNum) {
+            const an = parseFloat(av.replace(/[^-\d.]/g, "")) || 0;
+            const bn = parseFloat(bv.replace(/[^-\d.]/g, "")) || 0;
+            return asc ? an - bn : bn - an;
+          }
+          return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+        });
+        rows.forEach(r => tbody.appendChild(r));
+        table.querySelectorAll("th").forEach(t => delete t.dataset.sortDir);
+        th.dataset.sortDir = asc ? "asc" : "desc";
+      });
+    });
+  });
+
+  // === Auto-expand on hash navigation ===
+  function expandHashTarget() {
+    if (location.hash) {
+      const t = document.querySelector(location.hash);
+      if (t && t.tagName === "DETAILS") t.open = true;
+    }
+  }
+  window.addEventListener("hashchange", expandHashTarget);
+  expandHashTarget();
+</script>
+</body>
+</html>
