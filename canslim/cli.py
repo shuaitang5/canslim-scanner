@@ -256,6 +256,165 @@ def report_pdf(
     console.print(f"[green]PDF written:[/green] {pdf_path}")
 
 
+@app.command("publish")
+def publish(
+    run: Optional[Path] = typer.Argument(
+        None,
+        help="Run directory or report.md to publish. Defaults to most recent run in ./out/runs/.",
+    ),
+    docs_dir: Path = typer.Option(Path("docs"), "--docs", help="Output docs directory (default: ./docs)"),
+    out_dir: Path = typer.Option(Path("out"), "--out", help="Scan output dir to source from"),
+) -> None:
+    """Publish a scan report to ./docs/runs/<run-id>/ for GitHub Pages.
+
+    Each published run is archived under `docs/runs/<run-id>/`, and the top-level
+    `docs/index.html` is regenerated as a landing page listing all archived runs
+    with metadata (data date, universe, # matches). Push the docs/ commit to your
+    repo to update the live site.
+
+    Run with no argument to publish the most recent scan.
+    """
+    import json as _json
+    import shutil
+
+    runs_dir = out_dir / "runs"
+    if run is None:
+        if not runs_dir.exists():
+            console.print(f"[red]No runs dir found:[/red] {runs_dir}")
+            raise typer.Exit(code=2)
+        candidates = sorted(
+            (p for p in runs_dir.iterdir() if (p / "index.html").exists()),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )
+        if not candidates:
+            console.print(f"[red]No runs with index.html found under[/red] {runs_dir}")
+            raise typer.Exit(code=2)
+        run = candidates[0]
+        console.print(f"[dim]Using most recent run: {run.name}[/dim]")
+    elif run.is_file():
+        run = run.parent
+
+    src_html = run / "index.html"
+    if not src_html.exists():
+        console.print(f"[red]No index.html in[/red] {run} — run a scan first or pass an explicit path")
+        raise typer.Exit(code=2)
+
+    # Archive the run under docs/runs/<run-id>/
+    run_id = run.name
+    dest = docs_dir / "runs" / run_id
+    dest.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src_html, dest / "index.html")
+    console.print(f"[green]Archived:[/green] {dest / 'index.html'}")
+
+    # Regenerate docs/index.html as a landing page listing every archived run
+    archive_dir = docs_dir / "runs"
+    archived = sorted(
+        [p for p in archive_dir.iterdir() if (p / "index.html").exists()],
+        key=lambda p: p.name,
+        reverse=True,
+    )
+    rows: list[str] = []
+    for p in archived:
+        manifest_p = out_dir / "runs" / p.name / "run_manifest.json"
+        as_of = matches = scanned = universe = "—"
+        if manifest_p.exists():
+            try:
+                m = _json.loads(manifest_p.read_text())
+                regime = m.get("market_regime") or {}
+                as_of = regime.get("as_of") or m.get("started_at", "—")[:10]
+                matches = m.get("matches", "—")
+                scanned = m.get("scanned", "—")
+                universe = m.get("universe_name", "—")
+            except Exception:
+                pass
+        rows.append(
+            f'<tr>'
+            f'<td><a href="runs/{p.name}/">{as_of}</a></td>'
+            f'<td class="mono">{p.name}</td>'
+            f'<td>{universe}</td>'
+            f'<td class="num">{matches}</td>'
+            f'<td class="num">{scanned}</td>'
+            f'</tr>'
+        )
+
+    landing_html = _build_landing_page(rows)
+    (docs_dir / "index.html").write_text(landing_html)
+    (docs_dir / ".nojekyll").touch()
+    console.print(f"[green]Landing page:[/green] {docs_dir / 'index.html'} ({len(archived)} run(s) listed)")
+    console.print()
+    console.print("[dim]To publish to your live site:[/dim]")
+    console.print(f"[dim]  git add {docs_dir}/ && git commit -m 'publish {run_id}' && git push[/dim]")
+
+
+def _build_landing_page(rows: list[str]) -> str:
+    """Static landing page listing all archived scan runs."""
+    body = "\n".join(rows) if rows else '<tr><td colspan="5">No runs archived yet.</td></tr>'
+    return f"""<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CANSLIM Scan Reports</title>
+<style>
+  :root {{ --text:#1a1f2b; --muted:#5b6473; --border:#d8dde3; --accent:#1a4480; --bg-alt:#f7f8f9; }}
+  * {{ box-sizing: border-box; }}
+  body {{ font: 14px/1.5 -apple-system, "Inter", system-ui, sans-serif;
+          color: var(--text); margin: 0 auto; padding: 24px; max-width: 900px; }}
+  h1 {{ font-size: 20px; margin: 0 0 4px 0; }}
+  .lede {{ color: var(--muted); font-size: 13px; margin-bottom: 20px; }}
+  .lede a {{ color: var(--accent); text-decoration: none; }}
+  .lede a:hover {{ text-decoration: underline; }}
+  table {{ border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 13px; }}
+  th, td {{ text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }}
+  th {{ background: var(--bg-alt); font-size: 11px; text-transform: uppercase;
+        letter-spacing: 0.05em; color: var(--muted); }}
+  td.num {{ text-align: right; font-family: ui-monospace, "SF Mono", Menlo, monospace; }}
+  td.mono {{ font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; color: var(--muted); }}
+  td a {{ color: var(--accent); text-decoration: none; font-weight: 600; }}
+  td a:hover {{ text-decoration: underline; }}
+  tbody tr:hover {{ background: var(--bg-alt); }}
+  .footer {{ color: var(--muted); font-size: 11px; margin-top: 24px; padding-top: 12px;
+             border-top: 1px solid var(--border); }}
+  .footer a {{ color: var(--accent); }}
+  @media (max-width: 600px) {{
+    body {{ padding: 14px; }}
+    table {{ font-size: 12px; }}
+    th, td {{ padding: 6px 6px; }}
+    td.mono {{ font-size: 10px; }}
+  }}
+</style>
+</head>
+<body>
+<h1>CANSLIM Scan Reports</h1>
+<p class="lede">
+  Daily scans of the US equity universe against William O'Neil's CANSLIM framework
+  (with leadership-override paths for turnaround setups). Click any data date below
+  to view the full report — full matches, near-misses, override watchlist, market
+  context (VIX/breadth/sectors), and per-ticker entry plans.
+  Source: <a href="https://github.com/zhoutongchar/canslim-scanner">github.com/zhoutongchar/canslim-scanner</a>
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Data date</th>
+      <th>Run ID</th>
+      <th>Universe</th>
+      <th class="num">Matches</th>
+      <th class="num">Scanned</th>
+    </tr>
+  </thead>
+  <tbody>
+{body}
+  </tbody>
+</table>
+<p class="footer">
+  Most recent at top. Each report is self-contained HTML with inline SVG charts.
+  See <a href="https://github.com/zhoutongchar/canslim-scanner">README</a> for methodology.
+</p>
+</body>
+</html>"""
+
+
 @app.command("serve")
 def serve(
     out_dir: Path = typer.Option(Path("out"), "--out", "-o", help="Output dir to serve"),
