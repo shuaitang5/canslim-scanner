@@ -386,7 +386,7 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
   {% if manifest.market_context %}
     {% set mc = manifest.market_context %}
     <div class="market-context">
-      <details>
+      <details open>
         <summary><strong>Market context</strong>{% if mc.note %} — <span class="meta">{{ mc.note }}</span>{% endif %}</summary>
 
         {% if market_charts.get("__market__") or market_charts.get("__vix__") %}
