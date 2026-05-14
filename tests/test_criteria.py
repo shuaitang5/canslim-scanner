@@ -73,6 +73,26 @@ class TestCurrent:
         assert not res.passed
         assert "not accelerating" in res.reason
 
+    def test_abstains_when_no_earnings_bundle(self):
+        # Fundamentals fetch failed entirely — eb=None must mark data_available=False
+        res = CurrentEarnings().evaluate(_ctx(earnings=None))
+        assert res.data_available is False
+        assert not res.passed
+        assert "no earnings data available" in res.reason
+
+    def test_evaluates_when_insufficient_quarters(self):
+        # Recent IPO: data was fetched but only 3 quarters exist. Real evaluation
+        # (not a fetch failure) — data_available stays True, just fails the gate.
+        eb = EarningsBundle(
+            ticker="T",
+            quarterly_eps=[1.0, 0.8, 0.5],
+            quarterly_periods=["2025-Q3", "2025-Q2", "2025-Q1"],
+        )
+        res = CurrentEarnings().evaluate(_ctx(earnings=eb))
+        assert res.data_available is True  # not a fetch failure
+        assert not res.passed
+        assert "insufficient quarterly EPS history" in res.reason
+
     def test_turnaround_passes_gate(self):
         # Q4 year ago was a loss, this Q4 is a solid profit. O'Neil: that's a C pass.
         eb = EarningsBundle(
@@ -211,6 +231,17 @@ class TestSupplyDemand:
         res = SupplyDemand().evaluate(_ctx(price_features=pf, float_shares=5_000_000_000))
         assert not res.passed
 
+    def test_abstains_when_float_shares_missing(self):
+        # Previously a missing float_shares silently passed the supply check —
+        # the new behavior marks data_available=False and refuses to pass.
+        pf = _price_features(adv10=2_000_000, adv50=1_500_000)  # demand passes
+        res = SupplyDemand().evaluate(_ctx(price_features=pf, float_shares=None))
+        assert res.data_available is False, (
+            f"missing float should abstain, got data_available={res.data_available}"
+        )
+        assert not res.passed, "abstained criterion must not pass the gate"
+        assert "float-shares fetch unavailable" in res.reason
+
     def test_pattern_override_passes_with_dry_up_volume(self):
         # ADV10/ADV50 = 0.94 (drying volume) — would normally fail, but a high-confidence
         # high_tight_flag is detected. Should pass via pattern override.
@@ -274,6 +305,15 @@ class TestInstitutional:
         )
         res = Institutional().evaluate(_ctx(institutional=snap))
         assert not res.passed
+
+    def test_abstains_when_no_snapshot(self):
+        # Today's VICR case: institutional fetch returned None — criterion must
+        # mark data_available=False so the composite score & gate logic abstain
+        # rather than dragging the ticker out of rankings.
+        res = Institutional().evaluate(_ctx(institutional=None))
+        assert res.data_available is False
+        assert not res.passed
+        assert "no institutional snapshot available" in res.reason
 
 
 class TestSECParser:

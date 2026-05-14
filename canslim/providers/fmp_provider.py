@@ -147,10 +147,10 @@ class FMPProvider(DataProvider):
     # ---- institutional
 
     async def get_institutional(self, ticker: str) -> Optional[InstitutionalSnapshot]:
+        cached = self.cache.read_json("institutional", self.name, ticker)
         if self.cache.is_json_fresh("institutional", self.name, ticker, self.cache_cfg.institutional_ttl_hours):
-            blob = self.cache.read_json("institutional", self.name, ticker)
-            if blob:
-                return _snap_from_cache(blob)
+            if cached:
+                return _snap_from_cache(cached)
         # Stable API: /institutional-ownership/symbol-ownership?symbol=AAPL
         holders = await self._get(
             "/institutional-ownership/symbol-ownership",
@@ -159,6 +159,10 @@ class FMPProvider(DataProvider):
         )
 
         if not holders:
+            # Stale-data fallback: fresh FMP fetch returned nothing. Use last
+            # cached institutional snapshot if we have it.
+            if cached:
+                return _snap_from_cache(cached)
             return None
         # Aggregate naive signals: count rows with `change > 0` vs `change < 0`
         total_shares = 0.0

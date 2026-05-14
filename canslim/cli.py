@@ -90,11 +90,44 @@ def scan(
     )
     n_errors = len(manifest.errors)
     n_skipped_data = sum(1 for r in results if r.status == "skipped_missing_data")
-    console.print(
-        f"[green]done[/green] — matches={manifest.matches} scanned={manifest.scanned} "
-        f"pending={manifest.pending_budget} errors={manifest.errored} "
-        f"fetch_errors={n_errors} skipped_missing={n_skipped_data}"
+
+    # Loud data-quality summary so silent fetch failures don't slip past.
+    # Threshold: if >5% of pre-filtered tickers had price-fetch issues OR
+    # >5% of scanned tickers had any per-criterion abstain due to missing
+    # data, log a WARNING and recommend re-running with --force-refresh.
+    skipped_pct = n_skipped_data / max(manifest.universe_size, 1)
+    abstained_scans = sum(
+        1 for r in results
+        if r.status == "scanned" and any(
+            cr.is_gate and not cr.data_available for cr in r.criteria.values()
+        )
     )
+    abstained_pct = abstained_scans / max(manifest.scanned or 1, 1)
+
+    summary_color = "green"
+    health_warn: list[str] = []
+    if skipped_pct > 0.50:
+        summary_color = "yellow"
+        health_warn.append(
+            f"{skipped_pct:.1%} of universe had no price data ({n_skipped_data} tickers) — "
+            "yfinance throttling likely; consider --force-refresh"
+        )
+    if abstained_scans > 0:
+        if abstained_pct > 0.05:
+            summary_color = "yellow"
+        health_warn.append(
+            f"{abstained_scans} of {manifest.scanned} scanned tickers had gates abstain "
+            f"due to missing data (institutional/fundamentals/float). Re-run to retry."
+        )
+
+    console.print(
+        f"[{summary_color}]done[/{summary_color}] — matches={manifest.matches} scanned={manifest.scanned} "
+        f"pending={manifest.pending_budget} errors={manifest.errored} "
+        f"fetch_errors={n_errors} skipped_missing={n_skipped_data} abstained={abstained_scans}"
+    )
+    for w in health_warn:
+        console.print(f"[yellow]⚠ data quality:[/yellow] {w}")
+
     html_path = report_path.parent / "index.html"
     if html_path.exists():
         console.print(f"html:   {html_path}")
@@ -102,6 +135,24 @@ def scan(
     pdf_path = report_path.with_suffix(".pdf")
     if pdf_path.exists():
         console.print(f"pdf:    {pdf_path}")
+
+    # Annotate manifest with degraded flag so `canslim publish` can refuse
+    # without --allow-degraded. Done by re-writing run_manifest.json with
+    # a non-schema extra field for now (avoids breaking pydantic strict mode).
+    if health_warn:
+        manifest_path = report_path.parent / "run_manifest.json"
+        try:
+            import json as _json
+            m = _json.loads(manifest_path.read_text())
+            m["_data_quality_warnings"] = health_warn
+            manifest_path.write_text(_json.dumps(m, indent=2, default=str))
+        except Exception:
+            pass
+
+    # Exit code 2 if data quality is meaningfully degraded — callers can chain
+    # with `|| true` if they want to ignore but cron/CI will see the signal.
+    if abstained_scans > 0 or skipped_pct > 0.50:
+        raise typer.Exit(code=2)
 
 
 @app.command("check-providers")
@@ -264,6 +315,10 @@ def publish(
     ),
     docs_dir: Path = typer.Option(Path("docs"), "--docs", help="Output docs directory (default: ./docs)"),
     out_dir: Path = typer.Option(Path("out"), "--out", help="Scan output dir to source from"),
+    allow_degraded: bool = typer.Option(
+        False, "--allow-degraded",
+        help="Publish even if the source scan was flagged with data-quality warnings",
+    ),
 ) -> None:
     """Publish a scan report to ./docs/runs/<run-id>/ for GitHub Pages.
 
@@ -299,6 +354,24 @@ def publish(
     if not src_html.exists():
         console.print(f"[red]No index.html in[/red] {run} — run a scan first or pass an explicit path")
         raise typer.Exit(code=2)
+
+    # Refuse to publish degraded scans unless explicitly allowed.
+    manifest_p = run / "run_manifest.json"
+    if manifest_p.exists():
+        try:
+            import json as _json
+            m = _json.loads(manifest_p.read_text())
+            warnings = m.get("_data_quality_warnings") or []
+            if warnings and not allow_degraded:
+                console.print(f"[red]Refusing to publish {run.name} — data quality is degraded:[/red]")
+                for w in warnings:
+                    console.print(f"  • {w}")
+                console.print("\n[dim]Re-run the scan with --force-refresh, or use[/dim]")
+                console.print(f"[dim]  canslim publish {run.name} --allow-degraded[/dim]")
+                console.print("[dim]if you want to publish anyway.[/dim]")
+                raise typer.Exit(code=2)
+        except FileNotFoundError:
+            pass
 
     # Archive the run under docs/runs/<run-id>/
     run_id = run.name

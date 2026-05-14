@@ -492,11 +492,14 @@ def _patterns_cell(patterns) -> str:
 
 
 def _gate_flags(r: ScanResult) -> str:
+    """Compact CANSLIM letters: UPPER=pass, lower=fail, ?=abstain (no data)."""
     out = []
     for letter in LETTERS:
         cr = r.criteria.get(letter)
         if cr is None:
             out.append("·")
+        elif not cr.data_available:
+            out.append("?")
         elif cr.passed:
             out.append(letter)
         else:

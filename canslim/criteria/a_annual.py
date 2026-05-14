@@ -26,10 +26,17 @@ class AnnualEarnings(Criterion):
         th = ctx.thresholds
         required = th.a_required_years
 
-        if eb is None or len(eb.annual_eps) < required + 1:
+        if eb is None:
             return CriterionResult(
                 letter=self.letter, passed=False, is_gate=True,
-                reason=f"need {required + 1} years of annual EPS, got {0 if eb is None else len(eb.annual_eps)}",
+                reason="no earnings data available (fundamentals fetch failed)",
+                threshold=th.a_min_annual_yoy,
+                data_available=False,
+            )
+        if len(eb.annual_eps) < required + 1:
+            return CriterionResult(
+                letter=self.letter, passed=False, is_gate=True,
+                reason=f"need {required + 1} years of annual EPS, got {len(eb.annual_eps)}",
                 threshold=th.a_min_annual_yoy,
             )
 

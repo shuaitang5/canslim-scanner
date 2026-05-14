@@ -109,10 +109,14 @@ def render_html(
 # ---------- Helpers used by the template (also exported so tests can hit them) ----------
 
 def _gate_flags(r: ScanResult) -> str:
+    """Compact CANSLIM string: UPPER=pass, lower=fail, ?=abstain (no data)."""
     out: list[str] = []
     for L in LETTERS:
         cr = r.criteria.get(L)
         if cr is None:
+            out.append("?")
+            continue
+        if not cr.data_available:
             out.append("?")
             continue
         out.append(L if cr.passed else L.lower())

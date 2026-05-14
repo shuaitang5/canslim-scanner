@@ -146,10 +146,18 @@ class YFinanceProvider(DataProvider):
 
         async with self._sem:
             info = await asyncio.to_thread(self._get_info_sync, ticker)
-        if info is None:
-            return None
-        self.cache.write_json("info", self.name, ticker, info)
-        return info.get("float_shares")
+        if info is not None:
+            self.cache.write_json("info", self.name, ticker, info)
+            return info.get("float_shares")
+        # Stale-data fallback: fresh fetch failed. Float-share counts barely
+        # change day-to-day (corporate actions are rare and visible). Return
+        # cached value if we have it — better than treating mega-caps as
+        # "unknown float" and abstaining on S.
+        if cached and cached.get("float_shares") is not None:
+            age_h = self.cache.json_age_hours("info", self.name, ticker) or 0.0
+            log.debug("Float fetch failed for %s — using stale cache (%.1fh old)", ticker, age_h)
+            return cached.get("float_shares")
+        return None
 
     def _get_info_sync(self, ticker: str) -> Optional[dict]:
         """Resilient info lookup.
@@ -215,7 +223,7 @@ class YFinanceProvider(DataProvider):
         if cached and self.cache.is_json_fresh(
             "institutional", self.name, ticker, self.cache_cfg.institutional_ttl_hours
         ):
-            return _snap_from_cache(cached)
+            return _snap_from_cache(cached, age_hours=0.0)
         async with self._sem:
             snap = await asyncio.to_thread(self._get_institutional_sync, ticker)
         if snap is not None:
@@ -232,7 +240,15 @@ class YFinanceProvider(DataProvider):
                     "closed_positions": snap.closed_positions,
                 },
             )
-        return snap
+            return snap
+        # Stale-data fallback: fresh fetch failed but we have a cached value
+        # from before. Institutional ownership barely changes day-to-day; using
+        # last-known-good data is far better than failing the I criterion silently.
+        if cached:
+            age_h = self.cache.json_age_hours("institutional", self.name, ticker) or 0.0
+            log.debug("Institutional fetch failed for %s — using stale cache (%.1fh old)", ticker, age_h)
+            return _snap_from_cache(cached, age_hours=age_h)
+        return None
 
     def _get_institutional_sync(self, ticker: str) -> Optional[InstitutionalSnapshot]:
         t = self._yf.Ticker(ticker)
@@ -356,7 +372,10 @@ def _as_float(v) -> Optional[float]:
         return None
 
 
-def _snap_from_cache(d: dict) -> InstitutionalSnapshot:
+def _snap_from_cache(d: dict, age_hours: float = 0.0) -> InstitutionalSnapshot:
+    """Hydrate an InstitutionalSnapshot from cached JSON. `age_hours>0` flags
+    the snapshot as stale (fresh fetch failed, we're using last-known-good)."""
+    days = int(age_hours / 24)
     return InstitutionalSnapshot(
         ticker=d["ticker"],
         reported_at=date.fromisoformat(d["reported_at"]),
@@ -364,4 +383,6 @@ def _snap_from_cache(d: dict) -> InstitutionalSnapshot:
         qoq_delta_pct=d.get("qoq_delta_pct"),
         new_positions=int(d.get("new_positions", 0)),
         closed_positions=int(d.get("closed_positions", 0)),
+        data_age_days=days,
+        is_stale=age_hours > 0,
     )

@@ -78,10 +78,24 @@ class InstitutionalSnapshot(BaseModel):
     qoq_delta_pct: Optional[float] = None
     new_positions: int = 0
     closed_positions: int = 0
+    # Staleness markers set by the provider when a fresh fetch failed and we
+    # had to fall back to last-known-good cached data. data_age_days==0 means
+    # the value is from today; >0 means the cache TTL had expired but we kept
+    # the value instead of returning None. Criteria can decide whether to
+    # accept stale or treat as unavailable based on age.
+    data_age_days: int = 0
+    is_stale: bool = False
 
 
 class CriterionResult(BaseModel):
-    """Result of evaluating one CANSLIM letter against one ticker."""
+    """Result of evaluating one CANSLIM letter against one ticker.
+
+    `data_available=False` means we couldn't fetch the data needed to evaluate
+    this criterion — distinct from "evaluated and failed". The composite-score
+    aggregation and gate-pass logic both treat data-unavailable criteria as
+    "abstain" rather than "fail" so missing data doesn't silently collapse
+    scores or hide otherwise-strong candidates.
+    """
 
     letter: str
     passed: bool
@@ -91,6 +105,11 @@ class CriterionResult(BaseModel):
     threshold: Optional[float] = None
     evidence: dict[str, Any] = Field(default_factory=dict)
     reason: str = ""
+    # True when the criterion was able to evaluate against real data; False
+    # when required inputs were missing (e.g., institutional fetch failed).
+    # When False, `passed` is also False but the criterion ABSTAINS from
+    # gate logic instead of failing it.
+    data_available: bool = True
 
 
 class ManagementEvent(BaseModel):

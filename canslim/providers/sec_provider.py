@@ -161,10 +161,22 @@ class SECProvider(DataProvider):
         if cik is None:
             # Ticker not in SEC map (e.g. ETF, foreign, or delisted) — no EDGAR data
             return EarningsBundle(ticker=ticker)
-        facts = await self._get_json(FACTS_URL.format(cik=cik))
-        bundle = _bundle_from_facts(ticker, facts)
-        self.cache.write_json("fundamentals", self.name, ticker, bundle.model_dump(mode="json"))
-        return bundle
+        try:
+            facts = await self._get_json(FACTS_URL.format(cik=cik))
+            bundle = _bundle_from_facts(ticker, facts)
+            self.cache.write_json("fundamentals", self.name, ticker, bundle.model_dump(mode="json"))
+            return bundle
+        except Exception as e:
+            # Stale-data fallback: fresh fetch failed (SEC throttled, network, etc.).
+            # SEC fundamentals barely change between scans (quarterly filings) — return
+            # the last cached version rather than letting C/A criteria silently fail.
+            blob = self.cache.read_json("fundamentals", self.name, ticker)
+            if blob:
+                log.debug("SEC fundamentals fetch failed for %s — using stale cache: %s", ticker, e)
+                return EarningsBundle.model_validate(
+                    {k: v for k, v in blob.items() if not k.startswith("_")}
+                )
+            raise
 
     async def get_institutional(self, ticker: str) -> Optional[InstitutionalSnapshot]:
         # EDGAR has 13F filings but aggregation is non-trivial; defer.

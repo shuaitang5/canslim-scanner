@@ -27,10 +27,20 @@ class CurrentEarnings(Criterion):
     def evaluate(self, ctx: CriterionContext) -> CriterionResult:
         eb = ctx.earnings
         th = ctx.thresholds
-        if eb is None or len(eb.quarterly_eps) < 5:
+        if eb is None:
             return CriterionResult(
                 letter=self.letter, passed=False, is_gate=True,
-                reason="insufficient quarterly EPS (<5 quarters)",
+                reason="no earnings data available (fundamentals fetch failed)",
+                threshold=th.c_min_yoy,
+                data_available=False,
+            )
+        if len(eb.quarterly_eps) < 5:
+            # Distinct from "fetch failed": data was fetched but there aren't enough
+            # quarters of public history (e.g., recent IPOs like CRCL, RKLB).
+            # Real evaluation — just fails the eligibility check.
+            return CriterionResult(
+                letter=self.letter, passed=False, is_gate=True,
+                reason=f"insufficient quarterly EPS history ({len(eb.quarterly_eps)} of 5 needed)",
                 threshold=th.c_min_yoy,
             )
         # quarterly_eps[0] = most recent, index 4 = same quarter a year ago

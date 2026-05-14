@@ -74,7 +74,11 @@ entry plan.
               <div class="row">
                 <span class="L">{{ L }}</span>
                 <span class="gate-tag">{{ "GATE" if cr.is_gate else "info" }}</span>
-                <span class="{{ 'res-pass' if cr.passed else 'res-fail' }}">{{ "PASS" if cr.passed else "fail" }}</span>
+                {% if not cr.data_available %}
+                  <span class="res-abstain" title="Data fetch failed — criterion abstains rather than failing">— N/A</span>
+                {% else %}
+                  <span class="{{ 'res-pass' if cr.passed else 'res-fail' }}">{{ "PASS" if cr.passed else "fail" }}</span>
+                {% endif %}
                 <span class="reason">
                   {{ helpers.format_value_for_letter(L, cr.value) }}
                   {{ cr.reason or "(ok)" }}

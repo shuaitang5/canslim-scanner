@@ -101,6 +101,14 @@ class CacheStore:
         age = (time.time() - p.stat().st_mtime) / 3600.0
         return age <= ttl_hours
 
+    def json_age_hours(self, kind: str, provider: str, ticker: str) -> Optional[float]:
+        """Age of JSON cache file in hours; None if no cache exists."""
+        safe = ticker.replace("/", "-").upper()
+        p = self.root / kind / provider / f"{safe}.json"
+        if not p.exists():
+            return None
+        return (time.time() - p.stat().st_mtime) / 3600.0
+
     # ---- negative cache (records failed fetches so re-runs back off briefly)
 
     def _neg_path(self, kind: str, provider: str, ticker: str) -> Path:

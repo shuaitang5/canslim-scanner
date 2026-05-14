@@ -449,14 +449,34 @@ class Scanner:
                     res = crit.evaluate(ctx)
                 except Exception as e:
                     log.debug("criterion %s failed for %s: %s", letter, ticker, e)
-                    res = CriterionResult(letter=letter.upper(), passed=False, is_gate=crit.is_gate, reason=f"error: {e}")
+                    res = CriterionResult(
+                        letter=letter.upper(), passed=False, is_gate=crit.is_gate,
+                        reason=f"error: {e}", data_available=False,
+                    )
             criteria_results[letter.upper()] = res
             w = float(weights.get(letter, 0.0))
-            if w > 0:
+            # Only criteria that actually evaluated against real data contribute
+            # to the composite score. Otherwise a single fetch failure (e.g.,
+            # institutional data missing for VICR) would drag a perfect-1.00
+            # score down to 0.79 and silently drop the ticker from rankings.
+            if w > 0 and res.data_available:
                 composite += res.score * w
                 total_w += w
-            if res.is_gate and not res.passed:
+            # Gate logic: a gate that couldn't be evaluated is an "abstain", not
+            # a "fail". The ticker can't be a full match (we don't know), but it
+            # shouldn't fall into "near miss with N gates failed" — it goes into
+            # a separate incomplete-data bucket via abstained_gates.
+            if res.is_gate and not res.passed and res.data_available:
                 gate_pass_all = False
+
+        # Count abstained gates — used by downstream report bucketing
+        abstained_gates = [L for L, r in criteria_results.items() if r.is_gate and not r.data_available]
+        if abstained_gates:
+            # If any gate abstained we can't claim full match (don't know enough),
+            # but we shouldn't treat as failed either. Mark gate_pass_all False
+            # so it doesn't surface as "MATCH"; the report will distinguish
+            # abstain vs fail via the criterion's data_available flag.
+            gate_pass_all = False
 
         composite = composite / total_w if total_w else 0.0
         ad = self._compute_ad(ticker)

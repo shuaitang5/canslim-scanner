@@ -20,7 +20,8 @@ class Institutional(Criterion):
         if snap is None:
             return CriterionResult(
                 letter=self.letter, passed=False, is_gate=True,
-                reason="no institutional data",
+                reason="no institutional snapshot available (fetch failed and no cache fallback)",
+                data_available=False,
             )
 
         has_ownership = snap.inst_own_pct > 0 or snap.new_positions > 0
