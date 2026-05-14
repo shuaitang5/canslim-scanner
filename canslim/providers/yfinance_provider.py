@@ -141,22 +141,31 @@ class YFinanceProvider(DataProvider):
 
     async def get_shares_float(self, ticker: str) -> Optional[float]:
         cached = self.cache.read_json("info", self.name, ticker)
-        if cached and self.cache.is_json_fresh("info", self.name, ticker, self.cache_cfg.fundamentals_ttl_hours):
-            return cached.get("float_shares")
+        cached_float: Optional[float] = (
+            cached.get("float_shares") if cached is not None else None
+        )
+        # Critical: only short-circuit on a fresh cache that ACTUALLY has the value.
+        # Previously we'd accept `float_shares: null` from a partial earlier fetch,
+        # which silently abstained on S forever until cache expired (7 days).
+        if cached_float is not None and self.cache.is_json_fresh(
+            "info", self.name, ticker, self.cache_cfg.fundamentals_ttl_hours
+        ):
+            return cached_float
 
+        # Cache is missing the value (or stale) — try a fresh fetch.
         async with self._sem:
             info = await asyncio.to_thread(self._get_info_sync, ticker)
-        if info is not None:
+        if info is not None and info.get("float_shares") is not None:
             self.cache.write_json("info", self.name, ticker, info)
-            return info.get("float_shares")
-        # Stale-data fallback: fresh fetch failed. Float-share counts barely
-        # change day-to-day (corporate actions are rare and visible). Return
-        # cached value if we have it — better than treating mega-caps as
-        # "unknown float" and abstaining on S.
-        if cached and cached.get("float_shares") is not None:
+            return info["float_shares"]
+
+        # Fresh fetch returned nothing useful. Stale-data fallback: float-share
+        # counts barely change day-to-day, so a known-good value from a previous
+        # successful fetch is better than abstaining on S indefinitely.
+        if cached_float is not None:
             age_h = self.cache.json_age_hours("info", self.name, ticker) or 0.0
             log.debug("Float fetch failed for %s — using stale cache (%.1fh old)", ticker, age_h)
-            return cached.get("float_shares")
+            return cached_float
         return None
 
     def _get_info_sync(self, ticker: str) -> Optional[dict]:
@@ -220,7 +229,9 @@ class YFinanceProvider(DataProvider):
 
     async def get_institutional(self, ticker: str) -> Optional[InstitutionalSnapshot]:
         cached = self.cache.read_json("institutional", self.name, ticker)
-        if cached and self.cache.is_json_fresh(
+        # Same fix as get_shares_float: only short-circuit on a fresh cache
+        # that actually has the value we need.
+        if cached is not None and cached.get("inst_own_pct") is not None and self.cache.is_json_fresh(
             "institutional", self.name, ticker, self.cache_cfg.institutional_ttl_hours
         ):
             return _snap_from_cache(cached, age_hours=0.0)
@@ -244,7 +255,7 @@ class YFinanceProvider(DataProvider):
         # Stale-data fallback: fresh fetch failed but we have a cached value
         # from before. Institutional ownership barely changes day-to-day; using
         # last-known-good data is far better than failing the I criterion silently.
-        if cached:
+        if cached is not None and cached.get("inst_own_pct") is not None:
             age_h = self.cache.json_age_hours("institutional", self.name, ticker) or 0.0
             log.debug("Institutional fetch failed for %s — using stale cache (%.1fh old)", ticker, age_h)
             return _snap_from_cache(cached, age_hours=age_h)

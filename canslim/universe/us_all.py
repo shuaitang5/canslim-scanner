@@ -72,7 +72,14 @@ class USAllUniverse(Universe):
                 r"\bPreferred\b|Preferred Stock|Preference|"
                 r"\bNotes?\b|\bBonds?\b|Debenture|Subordinated|"
                 r"Trust Units?|Beneficial Interest|"
-                r"Closed End|Closed-End|Closed End Fund|Investment Trust"
+                r"Closed End|Closed-End|Closed End Fund|Investment Trust|"
+                # ETNs (e.g. "iPath Bloomberg Commodity Index Total Return ETN") sneak past
+                # the ETF column flag — Nasdaq Trader marks them ETF=N. Filter by name.
+                r"\bETNs?\b|"
+                # Closed-end funds nearly always have "Fund" or "Trust" in their name
+                # (BlackRock/Nuveen/Virtus/Cohen & Steers/iShares). Operating growth
+                # companies almost never do, so a whole-word match is safe.
+                r"\bFund\b|\bTrust\b"
             )
             df = df[~df[name_col].astype(str).str.contains(non_common, case=False, regex=True, na=False)]
 

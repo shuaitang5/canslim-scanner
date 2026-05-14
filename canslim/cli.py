@@ -104,13 +104,27 @@ def scan(
     )
     abstained_pct = abstained_scans / max(manifest.scanned or 1, 1)
 
+    # Distinguish "yfinance failed to fetch during this run" from "this ticker has
+    # no recent prices ever" — only the former indicates a degraded run. The
+    # us_all universe always carries a long tail of delisted/thinly-traded tickers
+    # whose cached prices are empty; those aren't a quality signal.
+    fresh_price_failures = 0
+    fresh_price_attempts = 0
+    for fs in manifest.fetch_summary or []:
+        if fs.kind == "prices":
+            fresh_price_failures += int(fs.failures or 0) + int(fs.skipped_negative_cache or 0)
+            fresh_price_attempts += int(fs.fresh_fetches or 0) + int(fs.failures or 0)
+
     summary_color = "green"
     health_warn: list[str] = []
-    if skipped_pct > 0.50:
+    # Only flag price-fetch degradation when we actually tried fetching this run
+    # AND a meaningful fraction failed. A pure-cache run skipping stale-listed
+    # tickers is normal operation, not a quality issue.
+    if fresh_price_attempts > 100 and fresh_price_failures / max(fresh_price_attempts, 1) > 0.20:
         summary_color = "yellow"
         health_warn.append(
-            f"{skipped_pct:.1%} of universe had no price data ({n_skipped_data} tickers) — "
-            "yfinance throttling likely; consider --force-refresh"
+            f"{fresh_price_failures}/{fresh_price_attempts} price fetches failed this run — "
+            "yfinance throttling likely; consider re-running with --force-refresh"
         )
     if abstained_scans > 0:
         if abstained_pct > 0.05:
@@ -151,7 +165,10 @@ def scan(
 
     # Exit code 2 if data quality is meaningfully degraded — callers can chain
     # with `|| true` if they want to ignore but cron/CI will see the signal.
-    if abstained_scans > 0 or skipped_pct > 0.50:
+    # Trigger only on abstains (real gate-data gaps) or in-run price-fetch
+    # failures — NOT on the always-large stale-listed tail of us_all.
+    if abstained_scans > 0 or (fresh_price_attempts > 100 and
+                                fresh_price_failures / max(fresh_price_attempts, 1) > 0.20):
         raise typer.Exit(code=2)
 
 
