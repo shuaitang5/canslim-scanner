@@ -179,6 +179,7 @@ class ScanResult(BaseModel):
     errors: list[FetchError] = Field(default_factory=list)
     ad_grade: Optional[str] = None  # Accumulation/Distribution rating: A (strong acc) -> E (heavy dist)
     ad_ratio: Optional[float] = None  # up-flow / (up+down) flow, 0..1
+    market_cap: Optional[float] = None  # USD market capitalization at scan time (None when unavailable)
     management_events_90d: list[ManagementEvent] = Field(default_factory=list)
     # Recent SEC 8-K Item 5.02 filings (officer/director changes). Populated only for top
     # candidates during the post-scan enrichment step — null/empty for most tickers.

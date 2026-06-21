@@ -375,13 +375,17 @@ class Scanner:
         regime: MarketRegime,
         as_of: date,
     ) -> ScanResult:
-        # Fetch fundamentals + institutional + float (concurrent)
+        # Fetch fundamentals + institutional + float + market cap (concurrent).
+        # Float and market cap both come from the SAME cached yfinance info blob
+        # (one fast_info call), so adding the cap fetch costs no extra network I/O.
         fundamentals_task = self._get_fundamentals(ticker)
         institutional_task = self._get_institutional(ticker)
         float_task = self.yf.get_shares_float(ticker)
+        mcap_task = self.yf.get_market_cap(ticker)
         try:
-            eb, inst, fshares = await asyncio.gather(
-                fundamentals_task, institutional_task, float_task, return_exceptions=True
+            eb, inst, fshares, mcap = await asyncio.gather(
+                fundamentals_task, institutional_task, float_task, mcap_task,
+                return_exceptions=True,
             )
         except Exception as e:
             return ScanResult(
@@ -402,9 +406,28 @@ class Scanner:
             inst = None
         if isinstance(fshares, Exception):
             fshares = None
+        if isinstance(mcap, Exception):
+            mcap = None
+        market_cap = float(mcap) if isinstance(mcap, (int, float)) else None
 
         if not isinstance(eb, EarningsBundle) and eb is not None:
             eb = None
+
+        # Early market-cap gate: reject sub-floor names right after the cheap
+        # info fetch, BEFORE running any criteria. This is the $1B floor. We only
+        # reject when market cap is KNOWN and below the floor — an unavailable
+        # cap abstains (doesn't silently drop a name on a missing data point),
+        # matching the scanner's abstain-on-missing-data philosophy elsewhere.
+        min_cap = self.settings.criteria.prefilter_min_market_cap_usd
+        if min_cap > 0 and market_cap is not None and market_cap < min_cap:
+            return ScanResult(
+                ticker=ticker, as_of=as_of, passed=False, composite_score=0.0,
+                market_cap=market_cap,
+                status="skipped_missing_data",
+                status_reason=(
+                    f"market cap ${market_cap/1e9:.2f}B below ${min_cap/1e9:.2f}B floor"
+                ),
+            )
 
         # Detect patterns up-front so the A criterion can use them for the
         # leadership-turnaround override.
@@ -418,6 +441,7 @@ class Scanner:
             earnings=eb if isinstance(eb, EarningsBundle) else None,
             institutional=inst if inst is not None and not isinstance(inst, Exception) else None,
             float_shares=fshares if isinstance(fshares, float) else (float(fshares) if fshares else None),
+            market_cap=market_cap,
             rs_percentile=rs_pct,
             patterns=patterns,
         )
@@ -504,6 +528,7 @@ class Scanner:
             errors=per_ticker_errors,
             ad_grade=ad.grade if ad else None,
             ad_ratio=ad.ratio if ad else None,
+            market_cap=market_cap,
             status="scanned",
         )
 

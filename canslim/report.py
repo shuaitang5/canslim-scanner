@@ -129,6 +129,7 @@ def _write_results_parquet(path: Path, results: list[ScanResult]) -> None:
             "composite_score": r.composite_score,
             "status": r.status,
             "error": r.error,
+            "market_cap": r.market_cap,
         }
         for letter in LETTERS:
             cr = r.criteria.get(letter)
@@ -193,8 +194,8 @@ def _render_markdown(
     if matches:
         lines.append("## Matches (all gates passed)")
         lines.append("")
-        lines.append("| Ticker | Score | Passes | Close | 52w-high dist | C YoY | 3y CAGR | RS %ile | Inst % |")
-        lines.append("|---|---|---|---|---|---|---|---|---|")
+        lines.append("| Ticker | Score | Passes | Close | Mkt Cap | 52w-high dist | C YoY | 3y CAGR | RS %ile | Inst % |")
+        lines.append("|---|---|---|---|---|---|---|---|---|---|")
         for r in matches:
             lines.append(_summary_row(r))
         lines.append("")
@@ -534,8 +535,18 @@ def _summary_row(r: ScanResult) -> str:
     inst_pct = _num(i.value if i else None)
     return (
         f"| {r.ticker} | {r.composite_score:.2f} | `{passes}` | {close:.2f} | "
+        f"{_fmt_mktcap(r.market_cap)} | "
         f"{dist:.1%} | {c_yoy_s} | {cagr_s} | {rs_pct:.2f} | {inst_pct:.1%} |"
     )
+
+
+def _fmt_mktcap(v) -> str:
+    """Compact USD market cap: $2.1B, $340B, $1.2T. '—' when unknown."""
+    if v is None or not isinstance(v, (int, float)) or v != v or v <= 0:
+        return "—"
+    if v >= 1e12:
+        return f"${v / 1e12:.2f}T"
+    return f"${v / 1e9:.1f}B"
 
 
 def _num(v) -> float:

@@ -83,6 +83,10 @@ criteria:
   prefilter_min_price: 5.0
   prefilter_min_adv50_usd: 1000000
   prefilter_max_dist_to_52w_high: 0.25
+  # Minimum market cap (USD). Early gate after the cheap shares/cap fetch,
+  # before fundamentals — rejects sub-floor names without burning SEC calls.
+  # 0 disables. Default $1B excludes micro/small caps.
+  prefilter_min_market_cap_usd: 1000000000
 
 weights:
   c: 1.0

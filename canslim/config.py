@@ -82,6 +82,12 @@ class CriteriaThresholds(BaseModel):
     prefilter_min_price: float = 5.0
     prefilter_min_adv50_usd: float = 1_000_000.0
     prefilter_max_dist_to_52w_high: float = 0.25
+    # Minimum market capitalization (USD). Applied as an early gate right after
+    # the cheap per-candidate info fetch (shares/float/market-cap all come from
+    # one yfinance fast_info call), BEFORE the expensive fundamentals/criteria
+    # stage — so sub-floor names are rejected without burning SEC/FMP calls.
+    # 0 disables the floor. Default = $1B (no micro/small caps).
+    prefilter_min_market_cap_usd: float = 1_000_000_000.0
 
 
 class CompositeWeights(BaseModel):

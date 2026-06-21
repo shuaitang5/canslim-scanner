@@ -278,6 +278,15 @@ def _entry_status(r: ScanResult) -> dict:
 
 # ---------- Internal ----------
 
+def _fmt_mktcap(v) -> str:
+    """Compact USD market cap: $2.1B, $340B, $1.2T. '—' when unknown."""
+    if not isinstance(v, (int, float)) or v != v or v <= 0:
+        return "—"
+    if v >= 1e12:
+        return f"${v / 1e12:.2f}T"
+    return f"${v / 1e9:.1f}B"
+
+
 def _jinja_env() -> jinja2.Environment:
     """Jinja2 environment that loads templates from canslim/templates/."""
     template_dir = Path(__file__).parent / "templates"
@@ -293,6 +302,7 @@ def _jinja_env() -> jinja2.Environment:
     env.filters["fmt_money"] = lambda v: f"${v:,.2f}" if isinstance(v, (int, float)) else "—"
     env.filters["fmt_int"] = lambda v: f"{int(v):,}" if isinstance(v, (int, float)) else "—"
     env.filters["fmt_ratio"] = lambda v: f"{v:.2f}" if isinstance(v, (int, float)) else "—"
+    env.filters["fmt_mktcap"] = _fmt_mktcap
     env.filters["tojson_safe"] = lambda v: json.dumps(v, default=str)
     return env
 
