@@ -324,8 +324,8 @@ def _near_matches_section(results: list[ScanResult], top_n: int, exclude_full_ma
         return []
 
     lines = [f"## Top {len(top)} by composite score" + (" (near-matches)" if exclude_full_matches else ""), ""]
-    lines.append("| # | Ticker | Score | C A N S L I M | Gates failed | C YoY | 3y CAGR | RS %ile | Patterns | S reason |")
-    lines.append("|---|---|---|---|---|---|---|---|---|---|")
+    lines.append("| # | Ticker | Score | Mkt Cap | C A N S L I M | Gates failed | C YoY | 3y CAGR | RS %ile | Patterns | S reason |")
+    lines.append("|---|---|---|---|---|---|---|---|---|---|---|")
     for idx, r in enumerate(top, start=1):
         flags = _gate_flags(r)
         failed = _failed_gates(r)
@@ -341,7 +341,7 @@ def _near_matches_section(results: list[ScanResult], top_n: int, exclude_full_ma
         s_reason = (s.reason if s else "") or ""
         patterns_cell = _patterns_cell(r.patterns) or "—"
         lines.append(
-            f"| {idx} | {r.ticker} | {r.composite_score:.2f} | {flags} | {failed or '—'} | "
+            f"| {idx} | {r.ticker} | {r.composite_score:.2f} | {_fmt_mktcap(r.market_cap)} | {flags} | {failed or '—'} | "
             f"{c_yoy_s} | {cagr_s} | {rs:.2f} | {patterns_cell} | {s_reason[:40]} |"
         )
     lines.append("")
