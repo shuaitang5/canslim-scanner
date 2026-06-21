@@ -245,13 +245,30 @@ def _render_markdown(
         lines.append(", ".join(sorted({r.ticker for r in pending})))
         lines.append("")
 
+    # Unknown market cap — fail-closed bucket. These names cleared everything the
+    # scanner could check, but we could NOT confirm they clear the $1B floor (the
+    # cap field was unavailable). They are NEVER published as matches; surfaced
+    # here so the chairman can eyeball what was set aside rather than silently
+    # dropped.
+    needs_review = [r for r in results if r.status == "unknown_market_cap"]
+    if needs_review:
+        lines.append(f"## Unknown market cap — needs review ({len(needs_review)})")
+        lines.append("")
+        lines.append("_Excluded from Matches (cannot confirm >= $1B floor). Verify cap manually._")
+        lines.append("")
+        lines.append(", ".join(sorted({r.ticker for r in needs_review})))
+        lines.append("")
+
     lines.extend(_data_integrity_section(results, manifest))
 
     return "\n".join(lines)
 
 
 def _data_integrity_section(results: list[ScanResult], manifest: RunManifest) -> list[str]:
-    skipped = [r for r in results if r.status == "skipped_missing_data"]
+    # "skipped_missing_data" = no scan possible (no prices / pre-filtered out).
+    # "rejected_market_cap"  = scan skipped on purpose: cap KNOWN and below floor.
+    # Both belong in the set-aside table; their status_reason already reads right.
+    skipped = [r for r in results if r.status in ("skipped_missing_data", "rejected_market_cap")]
     errors = list(manifest.errors)
     if not errors and not skipped and not manifest.fetch_summary:
         return []
@@ -541,8 +558,11 @@ def _summary_row(r: ScanResult) -> str:
 
 
 def _fmt_mktcap(v) -> str:
-    """Compact USD market cap: $2.1B, $340B, $1.2T. '—' when unknown."""
-    if v is None or not isinstance(v, (int, float)) or v != v or v <= 0:
+    """Compact USD market cap: $2.1B, $340B, $1.2T. '—' when unknown.
+
+    Canonical implementation — html_report imports this (deduped, was copied).
+    """
+    if not isinstance(v, (int, float)) or v != v or v <= 0:
         return "—"
     if v >= 1e12:
         return f"${v / 1e12:.2f}T"

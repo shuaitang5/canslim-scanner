@@ -413,21 +413,40 @@ class Scanner:
         if not isinstance(eb, EarningsBundle) and eb is not None:
             eb = None
 
-        # Early market-cap gate: reject sub-floor names right after the cheap
-        # info fetch, BEFORE running any criteria. This is the $1B floor. We only
-        # reject when market cap is KNOWN and below the floor — an unavailable
-        # cap abstains (doesn't silently drop a name on a missing data point),
-        # matching the scanner's abstain-on-missing-data philosophy elsewhere.
+        # Early market-cap gate: enforce the $1B floor right after the cheap info
+        # fetch, BEFORE running any criteria. The floor is the chairman's #1 hard
+        # requirement ("no stocks under $1B") on an OUTWARD-FACING page, so it
+        # FAILS CLOSED — a name can only clear the gate when its cap is KNOWN and
+        # at/above the floor.
+        #   - cap KNOWN, < floor   -> reject  (status="rejected_market_cap")
+        #   - cap UNKNOWN/None      -> exclude (status="unknown_market_cap"): we
+        #     can't prove it's >=$1B, so it must NOT publish as a match. It is set
+        #     aside in its own "needs review" bucket (not silently dropped), but
+        #     passed stays False so it never reaches the public Matches section.
+        #   - cap KNOWN, >= floor   -> pass through to the criteria below.
+        # Missing-cap is most common for thin/illiquid small caps — exactly the
+        # names the floor exists to exclude — so abstaining here would fail OPEN.
         min_cap = self.settings.criteria.prefilter_min_market_cap_usd
-        if min_cap > 0 and market_cap is not None and market_cap < min_cap:
-            return ScanResult(
-                ticker=ticker, as_of=as_of, passed=False, composite_score=0.0,
-                market_cap=market_cap,
-                status="skipped_missing_data",
-                status_reason=(
-                    f"market cap ${market_cap/1e9:.2f}B below ${min_cap/1e9:.2f}B floor"
-                ),
-            )
+        if min_cap > 0:
+            if market_cap is None:
+                return ScanResult(
+                    ticker=ticker, as_of=as_of, passed=False, composite_score=0.0,
+                    market_cap=None,
+                    status="unknown_market_cap",
+                    status_reason=(
+                        f"market cap unavailable; cannot confirm >= ${min_cap/1e9:.2f}B "
+                        f"floor (fail-closed, set aside for review)"
+                    ),
+                )
+            if market_cap < min_cap:
+                return ScanResult(
+                    ticker=ticker, as_of=as_of, passed=False, composite_score=0.0,
+                    market_cap=market_cap,
+                    status="rejected_market_cap",
+                    status_reason=(
+                        f"market cap ${market_cap/1e9:.2f}B below ${min_cap/1e9:.2f}B floor"
+                    ),
+                )
 
         # Detect patterns up-front so the A criterion can use them for the
         # leadership-turnaround override.

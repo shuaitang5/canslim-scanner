@@ -1,21 +1,17 @@
-"""Adversarial probe of the $1B market-cap floor (Beck).
+"""Regression guard for the $1B market-cap floor — fail-closed (Beck + fix).
 
-The chairman's #1 hard requirement is "no stocks under $1B". The gate in
-``scanner._evaluate_one`` only rejects when market cap is KNOWN and below the
-floor; an UNKNOWN cap (yfinance returned None) abstains and the name is scanned
-through every CANSLIM criterion as normal.
+The chairman's #1 hard requirement is "no stocks under $1B" on an OUTWARD-FACING
+page. The gate in ``scanner._evaluate_one`` now FAILS CLOSED: a name clears it
+only when its cap is KNOWN and at/above the floor. When the cap is UNAVAILABLE
+(yfinance returned None) the name is EXCLUDED from matches and set aside in the
+``unknown_market_cap`` "needs review" bucket — it can never publish as a match.
 
-These tests pin down the consequence of that design choice: a genuinely sub-$1B
-company whose ``marketCap`` field happens to be missing from yfinance (common
-for thin/illiquid names — exactly the small caps the floor is meant to exclude)
-is NOT blocked by the floor. If its fundamentals/technicals otherwise pass, it
-surfaces as a full MATCH on the public report with an em-dash where the cap
-should be.
-
-``test_unknown_cap_subfloor_name_leaks_into_matches`` is the load-bearing one:
-it is expected to PASS today, which is exactly why it documents a requirement
-violation. If the gate is later changed to EXCLUDE unknown-cap names (treat a
-hard floor as fail-closed), flip the assertion.
+Originally this file documented the opposite (abstain = fail-OPEN) leak: a
+genuinely sub-$1B company whose ``marketCap`` field was missing — common for the
+thin/illiquid small caps the floor exists to exclude — slipped through as a full
+MATCH with an em-dash where the cap should be. ``test_unknown_cap_subfloor_name``
+below is the load-bearing one: it now asserts the fix (``not res.passed`` +
+``status == "unknown_market_cap"``), so a regression to abstain would fail it.
 """
 
 from __future__ import annotations
@@ -127,7 +123,7 @@ def test_known_subfloor_name_still_rejected_even_when_all_gates_would_pass():
     scanner = _scanner(min_cap=1_000_000_000.0, market_cap={"SMALL": 500_000_000.0})
     res = _evaluate(scanner, "SMALL")
     assert not res.passed
-    assert res.status == "skipped_missing_data"
+    assert res.status == "rejected_market_cap"
     assert res.criteria == {}  # never evaluated -> truly blocked
 
 
@@ -141,23 +137,22 @@ def test_above_floor_name_with_all_gates_is_a_full_match():
     assert res.passed, "control large-cap should pass every gate -> full match"
 
 
-def test_unknown_cap_subfloor_name_leaks_into_matches():
-    """LOAD-BEARING: a company that is REALLY sub-$1B but whose yfinance cap is
-    None is NOT blocked by the floor. With all other gates passing it becomes a
-    full MATCH (passed=True) and would be published with cap shown as '—'.
+def test_unknown_cap_subfloor_name_is_failed_closed_not_a_match():
+    """LOAD-BEARING: a company whose yfinance cap is None must be FAILED CLOSED.
+    With every other gate passing it would, under the old abstain policy, have
+    become a full MATCH (passed=True) and published with cap shown as '—' — a
+    genuinely sub-$1B name slipping onto the chairman's public page.
 
-    This is the requirement violation: the chairman said "no stocks under $1B",
-    but the abstain-on-unknown policy lets a sub-$1B name through whenever the
-    cap field is missing. Documented here; flip to ``assert not res.passed`` if
-    the gate is changed to fail-closed (exclude unknown cap)."""
+    Fixed behavior: an unknown cap cannot clear the $1B floor. The name is
+    excluded from matches (passed=False) and routed to the ``unknown_market_cap``
+    "needs review" bucket — visible to the chairman, never published as a match.
+    The gate fires EARLY, so no criteria run."""
     scanner = _scanner(min_cap=1_000_000_000.0, market_cap={"GHOST": None})
     res = _evaluate(scanner, "GHOST")
-    assert res.status == "scanned", "unknown cap abstains rather than rejecting"
-    assert res.market_cap is None
-    # The leak: every gate passed, so the name is a full match despite being
-    # (in reality) a sub-floor company with no cap data to prove otherwise.
-    assert res.passed, (
-        "CURRENT BEHAVIOR: unknown-cap name passes all gates and becomes a "
-        "MATCH. A genuinely sub-$1B name with a missing cap field would be "
-        "published on the chairman's public page, violating the $1B floor."
+    assert not res.passed, (
+        "FAIL-CLOSED: an unknown-cap name must NOT pass the $1B floor. It cannot "
+        "be proven >= $1B, so it must never publish as a match on the public page."
     )
+    assert res.status == "unknown_market_cap", "unknown cap is set aside for review, not scanned"
+    assert res.market_cap is None
+    assert res.criteria == {}, "gate fires early; no criteria evaluated"

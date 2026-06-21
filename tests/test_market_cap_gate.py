@@ -93,7 +93,8 @@ def test_sub_floor_market_cap_is_rejected():
     scanner = _scanner(min_cap=1_000_000_000.0, market_cap={"SMALL": 500_000_000.0})
     res = _evaluate(scanner, "SMALL")
     assert not res.passed, "a $0.5B name must not pass when the floor is $1B"
-    assert res.status == "skipped_missing_data"
+    # Dedicated status: the cap is KNOWN (not "missing data") and below the floor.
+    assert res.status == "rejected_market_cap"
     assert "below" in (res.status_reason or "")
     assert res.market_cap == 500_000_000.0  # cap still surfaced on the result
     # Gate is EARLY: criteria were never evaluated, so no per-letter results.
@@ -119,12 +120,17 @@ def test_above_floor_large_cap_is_scanned_as_full_candidate():
     assert res.criteria["A"].passed
 
 
-def test_unknown_market_cap_abstains_not_rejected():
-    # Missing cap data must NOT drop the name on a single missing data point.
+def test_unknown_market_cap_fails_closed():
+    # The $1B floor is a HARD outward-facing requirement, so an unavailable cap
+    # FAILS CLOSED: the name cannot be proven >= floor, so it is excluded from
+    # matches and set aside in the unknown_market_cap "needs review" bucket
+    # (not silently dropped, but never published as a match).
     scanner = _scanner(min_cap=1_000_000_000.0, market_cap={})  # no cap for ticker
     res = _evaluate(scanner, "NOCAP")
-    assert res.status == "scanned", "unknown market cap should abstain, not reject"
+    assert not res.passed, "unknown cap must not pass a hard floor"
+    assert res.status == "unknown_market_cap"
     assert res.market_cap is None
+    assert res.criteria == {}  # gate is early; no criteria evaluated
 
 
 def test_floor_zero_disables_gate():

@@ -183,7 +183,14 @@ class ScanResult(BaseModel):
     management_events_90d: list[ManagementEvent] = Field(default_factory=list)
     # Recent SEC 8-K Item 5.02 filings (officer/director changes). Populated only for top
     # candidates during the post-scan enrichment step — null/empty for most tickers.
-    status: Literal["scanned", "pending_budget", "skipped_missing_data", "error"] = "scanned"
+    status: Literal[
+        "scanned",
+        "pending_budget",
+        "skipped_missing_data",
+        "rejected_market_cap",  # cap KNOWN and below the $1B floor — hard reject
+        "unknown_market_cap",   # cap UNAVAILABLE — fail-closed on the floor, set aside for review
+        "error",
+    ] = "scanned"
     status_reason: Optional[str] = None  # human-readable context, e.g. "no prices downloaded"
     error: Optional[str] = None
 

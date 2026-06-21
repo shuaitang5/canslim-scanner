@@ -22,6 +22,7 @@ import jinja2
 import pandas as pd
 
 from canslim.models import RunManifest, ScanResult
+from canslim.report import _fmt_mktcap
 
 
 LETTERS = ["C", "A", "N", "S", "L", "I", "M"]
@@ -278,13 +279,8 @@ def _entry_status(r: ScanResult) -> dict:
 
 # ---------- Internal ----------
 
-def _fmt_mktcap(v) -> str:
-    """Compact USD market cap: $2.1B, $340B, $1.2T. '—' when unknown."""
-    if not isinstance(v, (int, float)) or v != v or v <= 0:
-        return "—"
-    if v >= 1e12:
-        return f"${v / 1e12:.2f}T"
-    return f"${v / 1e9:.1f}B"
+# _fmt_mktcap is the single canonical implementation in canslim.report; imported
+# above and registered as a Jinja filter below.
 
 
 def _jinja_env() -> jinja2.Environment:
