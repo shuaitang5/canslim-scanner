@@ -8,9 +8,12 @@ providers:
     max_retries: 4
   sec:
     # SEC EDGAR — free, unlimited, authoritative US fundamentals.
-    # Put your name + email in `api_key` (reused as User-Agent) — SEC fair-use policy requires it.
+    # SEC fair-use needs a contact string in the User-Agent (it isn't verified).
+    # Set it via the SEC_USER_AGENT env var/secret (preferred — keeps personal
+    # emails out of the repo), or uncomment api_key below for a local literal.
     enabled: true
-    api_key: "canslim-user you@example.com"
+    api_key_env: SEC_USER_AGENT
+    # api_key: "canslim-scanner you@example.com"
     concurrency: 5                     # SEC rate limit is ~10 req/sec; we stay under
     request_timeout_s: 20
     max_retries: 4
@@ -83,6 +86,10 @@ criteria:
   prefilter_min_price: 5.0
   prefilter_min_adv50_usd: 1000000
   prefilter_max_dist_to_52w_high: 0.25
+  # Minimum market cap (USD). Early gate after the cheap shares/cap fetch,
+  # before fundamentals — rejects sub-floor names without burning SEC calls.
+  # 0 disables. Default $1B excludes micro/small caps.
+  prefilter_min_market_cap_usd: 1000000000
 
 weights:
   c: 1.0

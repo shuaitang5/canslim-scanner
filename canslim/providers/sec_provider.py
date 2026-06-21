@@ -64,7 +64,11 @@ class SECProvider(DataProvider):
         self.cfg = cfg
         self.cache_cfg = cache_cfg
         self.cache = cache
-        ua = user_agent or cfg.api_key or "canslim-scanner contact@example.com"
+        # SEC just needs *a* contact string in the User-Agent; it doesn't verify
+        # it. Resolve via env/secret (api_key_env) first so the real value never
+        # has to be committed, then any literal api_key, then a non-personal
+        # role-alias default. Never hard-code a personal email here.
+        ua = user_agent or cfg.resolved_api_key() or "canslim-scanner contact@example.com"
         if "@" not in ua:
             # SEC requires contact info in UA; append a sentinel if the user gave just a name
             ua = f"{ua} contact@example.com"

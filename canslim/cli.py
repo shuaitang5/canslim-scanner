@@ -90,6 +90,9 @@ def scan(
     )
     n_errors = len(manifest.errors)
     n_skipped_data = sum(1 for r in results if r.status == "skipped_missing_data")
+    n_rejected_mcap = sum(1 for r in results if r.status == "rejected_market_cap")
+    # Fail-closed $1B floor: cap unavailable -> excluded from matches, set aside.
+    n_unknown_mcap = sum(1 for r in results if r.status == "unknown_market_cap")
 
     # Loud data-quality summary so silent fetch failures don't slip past.
     # Threshold: if >5% of pre-filtered tickers had price-fetch issues OR
@@ -137,7 +140,8 @@ def scan(
     console.print(
         f"[{summary_color}]done[/{summary_color}] — matches={manifest.matches} scanned={manifest.scanned} "
         f"pending={manifest.pending_budget} errors={manifest.errored} "
-        f"fetch_errors={n_errors} skipped_missing={n_skipped_data} abstained={abstained_scans}"
+        f"fetch_errors={n_errors} skipped_missing={n_skipped_data} "
+        f"rejected_mcap={n_rejected_mcap} unknown_mcap={n_unknown_mcap} abstained={abstained_scans}"
     )
     for w in health_warn:
         console.print(f"[yellow]⚠ data quality:[/yellow] {w}")

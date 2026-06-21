@@ -18,6 +18,7 @@ class CriterionContext:
     earnings: Optional[EarningsBundle] = None
     institutional: Optional[InstitutionalSnapshot] = None
     float_shares: Optional[float] = None
+    market_cap: Optional[float] = None  # USD; gated as an early floor by the scanner, also readable by criteria
     rs_percentile: Optional[float] = None  # filled by scanner after cross-sectional rank
     patterns: list[PatternMatch] = field(default_factory=list)
 

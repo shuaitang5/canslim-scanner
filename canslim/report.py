@@ -129,6 +129,7 @@ def _write_results_parquet(path: Path, results: list[ScanResult]) -> None:
             "composite_score": r.composite_score,
             "status": r.status,
             "error": r.error,
+            "market_cap": r.market_cap,
         }
         for letter in LETTERS:
             cr = r.criteria.get(letter)
@@ -193,8 +194,8 @@ def _render_markdown(
     if matches:
         lines.append("## Matches (all gates passed)")
         lines.append("")
-        lines.append("| Ticker | Score | Passes | Close | 52w-high dist | C YoY | 3y CAGR | RS %ile | Inst % |")
-        lines.append("|---|---|---|---|---|---|---|---|---|")
+        lines.append("| Ticker | Score | Passes | Close | Mkt Cap | 52w-high dist | C YoY | 3y CAGR | RS %ile | Inst % |")
+        lines.append("|---|---|---|---|---|---|---|---|---|---|")
         for r in matches:
             lines.append(_summary_row(r))
         lines.append("")
@@ -244,13 +245,30 @@ def _render_markdown(
         lines.append(", ".join(sorted({r.ticker for r in pending})))
         lines.append("")
 
+    # Unknown market cap — fail-closed bucket. These names cleared everything the
+    # scanner could check, but we could NOT confirm they clear the $1B floor (the
+    # cap field was unavailable). They are NEVER published as matches; surfaced
+    # here so the chairman can eyeball what was set aside rather than silently
+    # dropped.
+    needs_review = [r for r in results if r.status == "unknown_market_cap"]
+    if needs_review:
+        lines.append(f"## Unknown market cap — needs review ({len(needs_review)})")
+        lines.append("")
+        lines.append("_Excluded from Matches (cannot confirm >= $1B floor). Verify cap manually._")
+        lines.append("")
+        lines.append(", ".join(sorted({r.ticker for r in needs_review})))
+        lines.append("")
+
     lines.extend(_data_integrity_section(results, manifest))
 
     return "\n".join(lines)
 
 
 def _data_integrity_section(results: list[ScanResult], manifest: RunManifest) -> list[str]:
-    skipped = [r for r in results if r.status == "skipped_missing_data"]
+    # "skipped_missing_data" = no scan possible (no prices / pre-filtered out).
+    # "rejected_market_cap"  = scan skipped on purpose: cap KNOWN and below floor.
+    # Both belong in the set-aside table; their status_reason already reads right.
+    skipped = [r for r in results if r.status in ("skipped_missing_data", "rejected_market_cap")]
     errors = list(manifest.errors)
     if not errors and not skipped and not manifest.fetch_summary:
         return []
@@ -323,8 +341,8 @@ def _near_matches_section(results: list[ScanResult], top_n: int, exclude_full_ma
         return []
 
     lines = [f"## Top {len(top)} by composite score" + (" (near-matches)" if exclude_full_matches else ""), ""]
-    lines.append("| # | Ticker | Score | C A N S L I M | Gates failed | C YoY | 3y CAGR | RS %ile | Patterns | S reason |")
-    lines.append("|---|---|---|---|---|---|---|---|---|---|")
+    lines.append("| # | Ticker | Score | Mkt Cap | C A N S L I M | Gates failed | C YoY | 3y CAGR | RS %ile | Patterns | S reason |")
+    lines.append("|---|---|---|---|---|---|---|---|---|---|---|")
     for idx, r in enumerate(top, start=1):
         flags = _gate_flags(r)
         failed = _failed_gates(r)
@@ -340,7 +358,7 @@ def _near_matches_section(results: list[ScanResult], top_n: int, exclude_full_ma
         s_reason = (s.reason if s else "") or ""
         patterns_cell = _patterns_cell(r.patterns) or "—"
         lines.append(
-            f"| {idx} | {r.ticker} | {r.composite_score:.2f} | {flags} | {failed or '—'} | "
+            f"| {idx} | {r.ticker} | {r.composite_score:.2f} | {_fmt_mktcap(r.market_cap)} | {flags} | {failed or '—'} | "
             f"{c_yoy_s} | {cagr_s} | {rs:.2f} | {patterns_cell} | {s_reason[:40]} |"
         )
     lines.append("")
@@ -534,8 +552,21 @@ def _summary_row(r: ScanResult) -> str:
     inst_pct = _num(i.value if i else None)
     return (
         f"| {r.ticker} | {r.composite_score:.2f} | `{passes}` | {close:.2f} | "
+        f"{_fmt_mktcap(r.market_cap)} | "
         f"{dist:.1%} | {c_yoy_s} | {cagr_s} | {rs_pct:.2f} | {inst_pct:.1%} |"
     )
+
+
+def _fmt_mktcap(v) -> str:
+    """Compact USD market cap: $2.1B, $340B, $1.2T. '—' when unknown.
+
+    Canonical implementation — html_report imports this (deduped, was copied).
+    """
+    if not isinstance(v, (int, float)) or v != v or v <= 0:
+        return "—"
+    if v >= 1e12:
+        return f"${v / 1e12:.2f}T"
+    return f"${v / 1e9:.1f}B"
 
 
 def _num(v) -> float:

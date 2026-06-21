@@ -564,6 +564,7 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
       <table class="compact sortable">
         <thead><tr>
           <th>#</th><th>Ticker</th><th class="num">Score</th>
+          <th class="num">Mkt Cap</th>
           <th class="mono">CANSLIM</th><th>Fails</th>
           <th class="num">RS%ile</th><th>Patterns</th>
         </tr></thead>
@@ -574,6 +575,7 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
             <td class="num">{{ loop.index }}</td>
             <td class="ticker-cell"><a href="#c-{{ r.ticker }}">{{ r.ticker }}</a></td>
             <td class="num">{{ "%.2f"|format(r.composite_score) }}</td>
+            <td class="num">{{ r.market_cap|fmt_mktcap }}</td>
             <td class="mono">{{ helpers.gate_flags(r) }}</td>
             <td class="mono">{{ helpers.failed_gates(r) or "—" }}</td>
             <td class="num">{{ "%.2f"|format(helpers.num(l.value if l else None)) }}</td>

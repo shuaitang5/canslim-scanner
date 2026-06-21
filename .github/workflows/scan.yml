@@ -1,0 +1,100 @@
+name: scan-and-publish
+
+# Self-updating CANSLIM scanner.
+#  - Scheduled weekday run after US market close, regenerates docs/ and commits
+#    it back to main so GitHub Pages republishes automatically (no laptop needed).
+#  - Manual runs via the Actions tab let you pick the universe and force-refresh.
+# Data is 100% free: yfinance (no key) + SEC EDGAR. SEC requires a User-Agent
+# contact string (not verified); it's supplied via the SEC_USER_AGENT env below
+# (set the repo secret of the same name to override the non-personal default).
+
+on:
+  schedule:
+    # 22:00 UTC = ~6pm ET / 3pm PT, after the US cash session closes (21:00 UTC).
+    # Mon–Fri only — markets are shut on weekends. GitHub cron is always UTC.
+    - cron: "0 22 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      universe:
+        description: "Universe to scan"
+        type: choice
+        default: sp500
+        options:
+          - sp500
+          - us_all
+      force_refresh:
+        description: "Bypass caches and re-fetch every ticker"
+        type: boolean
+        default: false
+
+# Allow the job to push the regenerated docs/ commit back to the repo.
+permissions:
+  contents: write
+
+# Never run two publishing jobs at once (they both commit to main).
+concurrency:
+  group: scan-and-publish
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    # us_all hits thousands of tickers over yfinance + SEC; give it room but
+    # stay well under the 6h hard cap. sp500 finishes in a few minutes.
+    timeout-minutes: 120
+    # SEC fair-use needs a contact string in the User-Agent (it isn't verified).
+    # canslim.yaml reads it from SEC_USER_AGENT (providers.sec.api_key_env).
+    # Set a repo secret SEC_USER_AGENT to override; otherwise a non-personal
+    # role-alias default keeps scheduled runs working without leaking an email.
+    env:
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT || 'canslim-scanner contact@example.com' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Resolve run parameters
+        id: params
+        run: |
+          UNIVERSE="${{ github.event.inputs.universe }}"
+          echo "universe=${UNIVERSE:-sp500}" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event.inputs.force_refresh }}" = "true" ]; then
+            echo "force_flag=--force-refresh" >> "$GITHUB_OUTPUT"
+          else
+            echo "force_flag=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Provider health check
+        run: canslim check-providers --config canslim.yaml
+
+      - name: Scan
+        run: |
+          canslim scan \
+            --config canslim.yaml \
+            --universe "${{ steps.params.outputs.universe }}" \
+            ${{ steps.params.outputs.force_flag }}
+
+      - name: Publish to docs/
+        run: canslim publish --out out --docs docs
+
+      - name: Commit regenerated docs/
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          if git diff --staged --quiet; then
+            echo "No docs changes to commit."
+          else
+            git commit -m "Publish ${{ steps.params.outputs.universe }} scan ($(date -u +%Y-%m-%d) UTC) [skip ci]"
+            git push
+          fi

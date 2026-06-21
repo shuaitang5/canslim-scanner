@@ -1,4 +1,4 @@
-# canslim.yaml — copy to canslim.yaml and edit. Secrets can alternatively be set via env vars.
+# canslim.yaml — working config. Secrets can alternatively be set via env vars.
 
 providers:
   yfinance:
@@ -7,13 +7,18 @@ providers:
     request_timeout_s: 20
     max_retries: 4
   sec:
+    # SEC EDGAR — free, unlimited, authoritative US fundamentals.
+    # The User-Agent (SEC fair-use needs a contact string; it isn't verified) is
+    # resolved from env/secret SEC_USER_AGENT first, else a non-personal
+    # role-alias default baked into the provider. Never commit a personal email.
+    # Override via:  export SEC_USER_AGENT="canslim-scanner you@example.com"
     enabled: true
-    api_key: "canslim-user you@example.com"
-    concurrency: 5
+    api_key_env: SEC_USER_AGENT        # leave api_key unset so the secret/env wins
+    concurrency: 5                     # SEC rate limit is ~10 req/sec; we stay under
     request_timeout_s: 20
     max_retries: 4
   fmp:
-    enabled: false
+    enabled: false                     # paid; intentionally disabled — free providers only
     api_key_env: FMP_API_KEY
     daily_budget: 250
     concurrency: 2
@@ -36,6 +41,9 @@ criteria:
   a_required_years: 3
   a_min_roe_pct: 0.17
   a_allow_cagr_fallback: true
+  a_leadership_override_enabled: true
+  a_leadership_override_min_rs: 0.90
+  a_leadership_override_min_pattern_conf: 0.65
 
   # N — 52-week-high proximity (info only)
   n_max_dist_to_high_pct: 0.15
@@ -45,6 +53,13 @@ criteria:
   # S — supply/demand
   s_min_adv10_over_adv50: 1.2
   s_max_float_shares: 1000000000
+  s_pattern_override_enabled: true
+  s_pattern_override_min_conf: 0.65
+  s_pattern_override_patterns:
+    - cup_with_handle
+    - high_tight_flag
+    - three_weeks_tight
+    - flat_base
 
   # L — leader
   l_min_rs_percentile: 0.70
@@ -57,6 +72,9 @@ criteria:
   prefilter_min_price: 5.0
   prefilter_min_adv50_usd: 1000000
   prefilter_max_dist_to_52w_high: 0.25
+  # Minimum market cap (USD) — must-have floor. Early gate after the cheap
+  # shares/cap fetch, before fundamentals. $1B excludes micro/small caps.
+  prefilter_min_market_cap_usd: 1000000000
 
 weights:
   c: 1.0
@@ -68,7 +86,8 @@ weights:
   m: 0.5
 
 scanner:
-  default_universe: custom             # sp500 | us_all | custom
-  universe_file: tickers.txt           # required when default_universe=custom
+  default_universe: sp500              # sp500 | us_all | custom
+  # universe_file: tickers.txt         # required when default_universe=custom
   out_dir: out
   max_workers: 16
+  generate_pdf: false

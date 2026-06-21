@@ -22,6 +22,7 @@ import jinja2
 import pandas as pd
 
 from canslim.models import RunManifest, ScanResult
+from canslim.report import _fmt_mktcap
 
 
 LETTERS = ["C", "A", "N", "S", "L", "I", "M"]
@@ -278,6 +279,10 @@ def _entry_status(r: ScanResult) -> dict:
 
 # ---------- Internal ----------
 
+# _fmt_mktcap is the single canonical implementation in canslim.report; imported
+# above and registered as a Jinja filter below.
+
+
 def _jinja_env() -> jinja2.Environment:
     """Jinja2 environment that loads templates from canslim/templates/."""
     template_dir = Path(__file__).parent / "templates"
@@ -293,6 +298,7 @@ def _jinja_env() -> jinja2.Environment:
     env.filters["fmt_money"] = lambda v: f"${v:,.2f}" if isinstance(v, (int, float)) else "—"
     env.filters["fmt_int"] = lambda v: f"{int(v):,}" if isinstance(v, (int, float)) else "—"
     env.filters["fmt_ratio"] = lambda v: f"{v:.2f}" if isinstance(v, (int, float)) else "—"
+    env.filters["fmt_mktcap"] = _fmt_mktcap
     env.filters["tojson_safe"] = lambda v: json.dumps(v, default=str)
     return env
 

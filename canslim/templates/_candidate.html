@@ -26,7 +26,8 @@ entry plan.
       {% endif %}
     </span>
     <span class="summary-meta">
-      {% if r.ad_grade %}AD: {{ r.ad_grade }}{% endif %}
+      {% if r.market_cap %}{{ r.market_cap|fmt_mktcap }}{% endif %}
+      {% if r.ad_grade %} · AD: {{ r.ad_grade }}{% endif %}
     </span>
   </summary>
 

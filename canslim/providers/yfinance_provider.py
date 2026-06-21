@@ -168,6 +168,37 @@ class YFinanceProvider(DataProvider):
             return cached_float
         return None
 
+    async def get_market_cap(self, ticker: str) -> Optional[float]:
+        """Latest market capitalization (USD), reusing the same `info` cache blob
+        that `get_shares_float` populates — `_get_info_sync` already pulls
+        `marketCap` from yfinance `fast_info` (no crumb, survives 401s), so a
+        cache hit costs zero extra network calls. Mirrors `get_shares_float`'s
+        fresh-fetch + stale-fallback policy (market cap drifts slowly day to day,
+        so last-known-good beats abstaining)."""
+        cached = self.cache.read_json("info", self.name, ticker)
+        cached_cap: Optional[float] = (
+            cached.get("market_cap") if cached is not None else None
+        )
+        if cached_cap is not None and self.cache.is_json_fresh(
+            "info", self.name, ticker, self.cache_cfg.fundamentals_ttl_hours
+        ):
+            return cached_cap
+
+        async with self._sem:
+            info = await asyncio.to_thread(self._get_info_sync, ticker)
+        if info is not None and info.get("market_cap") is not None:
+            # Merge into the existing blob so we don't clobber float_shares etc.
+            merged = dict(cached or {})
+            merged.update({k: v for k, v in info.items() if v is not None})
+            self.cache.write_json("info", self.name, ticker, merged)
+            return info["market_cap"]
+
+        if cached_cap is not None:
+            age_h = self.cache.json_age_hours("info", self.name, ticker) or 0.0
+            log.debug("Market-cap fetch failed for %s — using stale cache (%.1fh old)", ticker, age_h)
+            return cached_cap
+        return None
+
     def _get_info_sync(self, ticker: str) -> Optional[dict]:
         """Resilient info lookup.
 
