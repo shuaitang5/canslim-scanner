@@ -4,8 +4,9 @@ name: scan-and-publish
 #  - Scheduled weekday run after US market close, regenerates docs/ and commits
 #    it back to main so GitHub Pages republishes automatically (no laptop needed).
 #  - Manual runs via the Actions tab let you pick the universe and force-refresh.
-# Data is 100% free: yfinance (no key) + SEC EDGAR. SEC requires a User-Agent,
-# which is committed in canslim.yaml (providers.sec.api_key).
+# Data is 100% free: yfinance (no key) + SEC EDGAR. SEC requires a User-Agent
+# contact string (not verified); it's supplied via the SEC_USER_AGENT env below
+# (set the repo secret of the same name to override the non-personal default).
 
 on:
   schedule:
@@ -41,6 +42,12 @@ jobs:
     # us_all hits thousands of tickers over yfinance + SEC; give it room but
     # stay well under the 6h hard cap. sp500 finishes in a few minutes.
     timeout-minutes: 120
+    # SEC fair-use needs a contact string in the User-Agent (it isn't verified).
+    # canslim.yaml reads it from SEC_USER_AGENT (providers.sec.api_key_env).
+    # Set a repo secret SEC_USER_AGENT to override; otherwise a non-personal
+    # role-alias default keeps scheduled runs working without leaking an email.
+    env:
+      SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT || 'canslim-scanner contact@example.com' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -75,9 +75,10 @@ claim exactly.
 - No secret leakage: only default `GITHUB_TOKEN` via checkout + `permissions: contents: write`.
 - Cron `0 22 * * 1-5` (after US close, weekdays) sane; `concurrency` group prevents double commits.
 
-**Nit (privacy):** the committed SEC User-Agent exposes the chairman's real email
-`tangshua@amazon.com` in a PUBLIC repo (scrapeable → spam). Suggest a role/alias address or a
-non-personal contact. Not a blocker.
+**Nit (privacy):** the committed SEC User-Agent exposed the chairman's real
+amazon.com email in a PUBLIC repo (scrapeable → spam). FIXED: scrubbed to a
+non-personal role alias and moved to the SEC_USER_AGENT env/secret. (Address
+redacted from this doc too.)
 
 ## 4. Merge state — clean
 main == origin/main == c0b8344 (NOT merged). docs/ untouched on the branch. 21 historical

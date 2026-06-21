@@ -8,10 +8,12 @@ providers:
     max_retries: 4
   sec:
     # SEC EDGAR — free, unlimited, authoritative US fundamentals.
-    # `api_key` is reused as the User-Agent — SEC fair-use policy REQUIRES a
-    # name + contact email. Keep this populated or SEC fundamentals are skipped.
+    # The User-Agent (SEC fair-use needs a contact string; it isn't verified) is
+    # resolved from env/secret SEC_USER_AGENT first, else a non-personal
+    # role-alias default baked into the provider. Never commit a personal email.
+    # Override via:  export SEC_USER_AGENT="canslim-scanner you@example.com"
     enabled: true
-    api_key: "canslim-user tangshua@amazon.com"
+    api_key_env: SEC_USER_AGENT        # leave api_key unset so the secret/env wins
     concurrency: 5                     # SEC rate limit is ~10 req/sec; we stay under
     request_timeout_s: 20
     max_retries: 4
