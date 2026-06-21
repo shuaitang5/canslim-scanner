@@ -7,6 +7,7 @@ from typing import Optional
 import httpx
 import pandas as pd
 
+from canslim.universe._http import BROWSER_UA
 from canslim.universe.base import Universe
 
 log = logging.getLogger(__name__)
@@ -36,7 +37,11 @@ class USAllUniverse(Universe):
 
     def load(self) -> list[str]:
         tickers: set[str] = set()
-        with httpx.Client(timeout=self.timeout, follow_redirects=True) as client:
+        # Send a real browser UA so a strict datacenter-IP filter on the runner
+        # can't 403 the listing files (same precaution as the sp500 loader).
+        with httpx.Client(
+            timeout=self.timeout, follow_redirects=True, headers={"User-Agent": BROWSER_UA}
+        ) as client:
             tickers.update(self._parse(self._fetch(client, self.nasdaq_url), source="nasdaq"))
             tickers.update(self._parse(self._fetch(client, self.other_url), source="other"))
         return sorted(tickers)
