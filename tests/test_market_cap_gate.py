@@ -5,7 +5,24 @@ from datetime import date
 
 from canslim.config import CriteriaThresholds, ProviderConfig, Settings
 from canslim.models import EarningsBundle, MarketRegime, PriceFeatures
+from canslim.providers.sec_provider import _latest_dei_shares
 from canslim.scanner import Scanner
+
+
+def test_latest_dei_shares_picks_most_recent_end():
+    facts = {"facts": {"dei": {"EntityCommonStockSharesOutstanding": {"units": {"shares": [
+        {"val": 1_000, "end": "2025-03-31"},
+        {"val": 2_000, "end": "2026-03-31"},
+        {"val": 1_500, "end": "2024-03-31"},
+    ]}}}}}
+    assert _latest_dei_shares(facts) == 2_000.0
+
+
+def test_latest_dei_shares_absent_concept_returns_none():
+    assert _latest_dei_shares({"facts": {"dei": {}}}) is None
+    assert _latest_dei_shares({}) is None
+    assert _latest_dei_shares({"facts": {"dei": {"EntityCommonStockSharesOutstanding":
+                                                 {"units": {"shares": []}}}}}) is None
 
 
 def _price_features(ticker: str = "TEST", close: float = 100.0) -> PriceFeatures:
@@ -33,14 +50,25 @@ class _FakeYF:
 
     name = "yfinance"
 
-    def __init__(self, market_cap: dict[str, float]) -> None:
+    def __init__(self, market_cap: dict[str, float],
+                 shares_outstanding: dict[str, float] | None = None,
+                 float_shares: dict[str, float | None] | None = None) -> None:
         self._market_cap = market_cap
+        # When set for a ticker, emulates the crumbless fast_info shares count
+        # the scanner uses to RECONSTRUCT cap when the direct fetch returns None.
+        self._shares_outstanding = shares_outstanding or {}
+        # Per-ticker yfinance float override; default 500M (passes the S cap).
+        # Set to None for a ticker to emulate a throttled float fetch.
+        self._float_shares = float_shares or {}
 
     async def get_market_cap(self, ticker: str):
         return self._market_cap.get(ticker)
 
+    async def get_shares_outstanding(self, ticker: str):
+        return self._shares_outstanding.get(ticker)
+
     async def get_shares_float(self, ticker: str):
-        return 500_000_000.0  # passes the S float cap, irrelevant to this test
+        return self._float_shares.get(ticker, 500_000_000.0)
 
     async def get_fundamentals(self, ticker: str) -> EarningsBundle:
         # Strong, ACCELERATING, multi-year-growth earnings so a >=floor name is a
@@ -62,7 +90,9 @@ class _FakeYF:
         return None
 
 
-def _scanner(min_cap: float, market_cap: dict[str, float]) -> Scanner:
+def _scanner(min_cap: float, market_cap: dict[str, float],
+             shares_outstanding: dict[str, float] | None = None,
+             float_shares: dict[str, float | None] | None = None) -> Scanner:
     settings = Settings(
         providers={
             "yfinance": ProviderConfig(enabled=True),
@@ -72,7 +102,7 @@ def _scanner(min_cap: float, market_cap: dict[str, float]) -> Scanner:
         criteria=CriteriaThresholds(prefilter_min_market_cap_usd=min_cap),
     )
     scanner = Scanner(settings)
-    scanner.yf = _FakeYF(market_cap)  # type: ignore[assignment]
+    scanner.yf = _FakeYF(market_cap, shares_outstanding, float_shares)  # type: ignore[assignment]
     scanner.sec = None
     scanner.fmp = None
     return scanner
@@ -131,6 +161,113 @@ def test_unknown_market_cap_fails_closed():
     assert res.status == "unknown_market_cap"
     assert res.market_cap is None
     assert res.criteria == {}  # gate is early; no criteria evaluated
+
+
+class _FakeSEC:
+    """SEC stand-in exposing only the crumbless shares-outstanding source."""
+
+    name = "sec"
+
+    def __init__(self, shares: dict[str, float]) -> None:
+        self._shares = shares
+
+    async def get_shares_outstanding(self, ticker: str):
+        return self._shares.get(ticker)
+
+
+def test_sec_shares_back_float_when_yfinance_float_throttled():
+    # yfinance float fetch throttled (None) -> S gate would abstain. With SEC
+    # shares available, the scanner substitutes them as a conservative float
+    # proxy so the S gate EVALUATES (data_available=True) instead of abstaining.
+    # 30M shares < the 1B-share float cap, so S's supply test passes.
+    scanner = _scanner(
+        min_cap=1_000_000_000.0,
+        market_cap={"SFIX": 5_000_000_000.0},   # cap known, clears the floor
+        shares_outstanding={"SFIX": 30_000_000.0},
+        float_shares={"SFIX": None},            # yfinance float throttled
+    )
+    scanner.sec = _FakeSEC({"SFIX": 30_000_000.0})  # type: ignore[assignment]
+    res = _evaluate(scanner, "SFIX")
+    assert res.status == "scanned"
+    assert res.criteria["S"].data_available is True, "S must evaluate, not abstain"
+    assert res.criteria["S"].evidence["float_shares"] == 30_000_000.0
+
+
+def test_s_gate_still_abstains_when_no_float_source_at_all():
+    # No yfinance float AND no SEC shares -> S genuinely abstains (honest).
+    scanner = _scanner(
+        min_cap=1_000_000_000.0,
+        market_cap={"NOFLT": 5_000_000_000.0},
+        shares_outstanding={},
+        float_shares={"NOFLT": None},
+    )
+    scanner.sec = None
+    res = _evaluate(scanner, "NOFLT")
+    assert res.status == "scanned"
+    assert res.criteria["S"].data_available is False, "no float source -> S abstains"
+
+
+def test_sec_shares_fallback_clears_gate_when_yfinance_throttled():
+    # The decisive runner fix: yfinance cap AND yfinance shares both unavailable
+    # (throttled), but SEC XBRL dei shares ARE available -> scanner reconstructs
+    # cap = close * SEC_shares. close=100 * 30M = $3B clears the $1B floor.
+    scanner = _scanner(min_cap=1_000_000_000.0, market_cap={}, shares_outstanding={})
+    scanner.sec = _FakeSEC({"SECNAME": 30_000_000.0})  # type: ignore[assignment]
+    res = _evaluate(scanner, "SECNAME")
+    assert res.status == "scanned", "SEC shares fallback should clear the gate"
+    assert res.market_cap == 100.0 * 30_000_000.0
+    assert res.criteria != {}
+
+
+def test_sec_shares_fallback_preferred_over_yfinance():
+    # When BOTH sources have shares, SEC (authoritative) is used.
+    scanner = _scanner(
+        min_cap=1_000_000_000.0,
+        market_cap={},
+        shares_outstanding={"BOTH": 11_000_000.0},  # yfinance would give 1.1B
+    )
+    scanner.sec = _FakeSEC({"BOTH": 30_000_000.0})  # SEC gives 3.0B  # type: ignore[assignment]
+    res = _evaluate(scanner, "BOTH")
+    assert res.market_cap == 100.0 * 30_000_000.0, "SEC shares must win"
+
+
+def test_computed_cap_fallback_clears_gate_when_direct_fetch_throttled():
+    # Direct cap fetch returns None (throttled), but the crumbless shares count
+    # is available -> scanner reconstructs cap = close * shares. With close=100
+    # and 30M shares = $3B, the name clears the $1B floor and gets scanned
+    # instead of fail-closing into unknown_market_cap. This is the fix that keeps
+    # a throttled runner from collapsing the scanned universe.
+    scanner = _scanner(
+        min_cap=1_000_000_000.0,
+        market_cap={},                                  # direct fetch throttled
+        shares_outstanding={"THROTTLED": 30_000_000.0},  # 100 * 30M = $3B
+    )
+    res = _evaluate(scanner, "THROTTLED")
+    assert res.status == "scanned", "computed-cap fallback should clear the gate"
+    assert res.market_cap == 100.0 * 30_000_000.0
+    assert res.criteria != {}
+
+
+def test_computed_cap_fallback_still_rejects_sub_floor():
+    # Reconstructed cap below the floor must still REJECT — the fallback can't be
+    # a backdoor around the $1B floor. close=100 * 5M shares = $0.5B < $1B.
+    scanner = _scanner(
+        min_cap=1_000_000_000.0,
+        market_cap={},
+        shares_outstanding={"SMALLCO": 5_000_000.0},
+    )
+    res = _evaluate(scanner, "SMALLCO")
+    assert res.status == "rejected_market_cap"
+    assert res.market_cap == 100.0 * 5_000_000.0
+
+
+def test_unknown_cap_with_no_shares_still_fails_closed():
+    # Neither a direct cap NOR a shares count -> still fail-closed. The fallback
+    # only fires when it can actually compute a cap; it never weakens the floor.
+    scanner = _scanner(min_cap=1_000_000_000.0, market_cap={}, shares_outstanding={})
+    res = _evaluate(scanner, "GHOST")
+    assert res.status == "unknown_market_cap"
+    assert res.market_cap is None
 
 
 def test_floor_zero_disables_gate():

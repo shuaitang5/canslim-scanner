@@ -41,6 +41,149 @@ def _load(config: Optional[Path]) -> Settings:
         raise typer.Exit(code=2)
 
 
+def _count_abstains(results) -> tuple[int, int]:
+    """Count scanned tickers with a gate abstain, split by gating relevance.
+
+    Returns ``(gated_abstains, inst_abstains)``:
+      - ``gated_abstains`` counts a scanned ticker if ANY gate OTHER THAN
+        institutional (I) abstained (data_available False). This is the figure
+        the degraded threshold uses — it reflects genuine fundamental/float data
+        gaps that should gate publishing.
+      - ``inst_abstains`` counts tickers whose I-gate abstained, surfaced for
+        transparency only. The I-signal comes from yfinance's crumbed get_info,
+        which is heavily throttled on a shared datacenter IP, so I-abstains are a
+        normal free-data-stack reality — a ticker that abstains on I still gets
+        scanned and just can't be a *full* match. Gating on I-abstains would
+        block a perfectly valid full-market page, so they are excluded above.
+    """
+    gated = 0
+    inst = 0
+    for r in results:
+        if getattr(r, "status", None) != "scanned":
+            continue
+        crit = r.criteria
+        if any(
+            cr.is_gate and not cr.data_available and L != "I"
+            for L, cr in crit.items()
+        ):
+            gated += 1
+        i = crit.get("I")
+        if i is not None and i.is_gate and not i.data_available:
+            inst += 1
+    return gated, inst
+
+
+def _assess_run_quality(
+    *,
+    scanned: int,
+    universe_size: int,
+    abstained_scans: int,
+    abstained_pct: float,
+    fresh_price_failures: int,
+    fresh_price_attempts: int,
+    max_abstain_fraction: float,
+    unknown_mcap: int = 0,
+    rejected_mcap: int = 0,
+    max_unknown_mcap_fraction: float = 0.25,
+) -> dict:
+    """Decide the run's quality verdict (exit-code / publish policy).
+
+    Pure + filesystem-free so the exit-code policy can be unit-tested directly.
+    Returns a dict: ``{"fatal": bool, "health_warn": [str], "info_notes": [str],
+    "summary_color": str}``.
+
+    Three outcomes (see also: the GitHub workflow scan step):
+
+      FATAL    -> ``fatal=True`` and a ``health_warn``. A real scan did NOT
+                  happen (0 tickers evaluated -> provider chain down). `publish`
+                  refuses regardless; the run exits 2.
+      DEGRADED -> a ``health_warn`` (no ``fatal``). A scan ran but a MEANINGFUL
+                  fraction is suspect: in-run price-fetch throttling, OR abstains
+                  at/above ``max_abstain_fraction``. The warning is written into
+                  the manifest so `publish` refuses without --allow-degraded —
+                  this is the guard that stops a throttled/empty page going live.
+                  Exits 2.
+      BENIGN   -> only ``info_notes`` (no ``health_warn``, no ``fatal``). A real
+                  scan completed against the vast majority of tickers and only a
+                  small fraction (below ``max_abstain_fraction``) abstained on a
+                  transient hiccup (e.g. a yfinance "401 Invalid Crumb"). The run
+                  SUCCEEDS and PUBLISHES — the common us_all case where a few of
+                  thousands of tickers hit a transient data-quality quirk.
+
+    Anything in ``health_warn`` blocks publish (via the manifest) AND triggers a
+    non-zero exit. ``info_notes`` does neither.
+    """
+    health_warn: list[str] = []
+    info_notes: list[str] = []
+    fatal = False
+    summary_color = "green"
+
+    price_throttled = (
+        fresh_price_attempts > 100
+        and fresh_price_failures / max(fresh_price_attempts, 1) > 0.20
+    )
+
+    # FATAL: a "scan" that evaluated nothing isn't a real scan. NOTHING reached
+    # the criteria stage -> the provider chain was down. (Distinct from a
+    # universe that legitimately filtered everything out via cap/pre-filter,
+    # which still produces scanned > 0 results.)
+    if scanned == 0:
+        fatal = True
+        summary_color = "red"
+        health_warn.append(
+            f"scan evaluated 0 tickers (universe_size={universe_size}) — "
+            "provider chain likely down; refusing to publish an empty page"
+        )
+
+    # DEGRADED: in-run price-fetch throttling on a meaningful fraction.
+    if price_throttled:
+        summary_color = "yellow" if not fatal else summary_color
+        health_warn.append(
+            f"{fresh_price_failures}/{fresh_price_attempts} price fetches failed this run — "
+            "yfinance throttling likely; consider re-running with --force-refresh"
+        )
+
+    # DEGRADED: cap-fetch throttling collapsed the scanned set. A name lands in
+    # `unknown_market_cap` ONLY when the (crumbed) market-cap fetch failed — the
+    # same yfinance 401 throttling that hits a cold runner IP — so a large
+    # `unknown_mcap` fraction of the cap-gate population means we couldn't even
+    # determine eligibility for most of the universe and `scanned` collapsed far
+    # below the real full-market scale. This is distinct from `rejected_mcap`
+    # (cap KNOWN and below the $1B floor — a legitimate exclusion). Flagging it
+    # degraded makes the workflow retry with a warmed cap cache, recovering the
+    # universe instead of silently publishing a thin page.
+    cap_gate_pop = scanned + unknown_mcap + rejected_mcap
+    if cap_gate_pop > 100 and unknown_mcap / cap_gate_pop > max_unknown_mcap_fraction:
+        summary_color = "yellow" if not fatal else summary_color
+        health_warn.append(
+            f"{unknown_mcap}/{cap_gate_pop} candidates had an UNKNOWN market cap "
+            f"(>{max_unknown_mcap_fraction:.0%}) — yfinance cap-fetch throttling collapsed "
+            f"the scanned set to {scanned}; re-run with warm caches to recover the universe"
+        )
+
+    # Abstains: benign below the threshold, degraded at/above it.
+    if abstained_scans > 0:
+        msg = (
+            f"{abstained_scans} of {scanned} scanned tickers "
+            f"({abstained_pct:.1%}) had gates abstain due to missing data "
+            f"(institutional/fundamentals/float)."
+        )
+        if abstained_pct >= max_abstain_fraction:
+            summary_color = "yellow" if not fatal else summary_color
+            health_warn.append(msg + " Re-run with --force-refresh to retry.")
+        else:
+            info_notes.append(
+                msg + f" Within tolerance ({max_abstain_fraction:.0%}) — treated as benign."
+            )
+
+    return {
+        "fatal": fatal,
+        "health_warn": health_warn,
+        "info_notes": info_notes,
+        "summary_color": summary_color,
+    }
+
+
 @app.command()
 def scan(
     config: Optional[Path] = typer.Option(None, "--config", "-c", help="Path to canslim.yaml"),
@@ -97,16 +240,21 @@ def scan(
     n_unknown_mcap = sum(1 for r in results if r.status == "unknown_market_cap")
 
     # Loud data-quality summary so silent fetch failures don't slip past.
-    # Threshold: if >5% of pre-filtered tickers had price-fetch issues OR
-    # >5% of scanned tickers had any per-criterion abstain due to missing
-    # data, log a WARNING and recommend re-running with --force-refresh.
-    skipped_pct = n_skipped_data / max(manifest.universe_size, 1)
-    abstained_scans = sum(
-        1 for r in results
-        if r.status == "scanned" and any(
-            cr.is_gate and not cr.data_available for cr in r.criteria.values()
-        )
-    )
+    # The benign/degraded/fatal decision is made by `_assess_run_quality` below.
+    #
+    # The abstain rate measures genuine data-quality gaps that should gate
+    # publishing — but it deliberately EXCLUDES the institutional (I) gate. The
+    # I-signal comes from yfinance's crumbed `get_info` (heldPercentInstitutions),
+    # which is heavily throttled on a shared datacenter IP, so a large fraction
+    # of I-abstains is the normal reality of the free-data stack, NOT a broken
+    # page: a ticker whose I-gate abstained still gets scanned, and it simply
+    # can't become a *full* match (gate_pass_all stays False) — it falls into the
+    # report's incomplete-data bucket. The matches that DO surface always have
+    # full data. Counting I-abstains toward the degraded threshold would block a
+    # perfectly valid full-market page just because institutional sponsorship
+    # couldn't be confirmed for some names. Abstains on C/A/S/L (fundamentals/
+    # float) DO count — those signal real fundamental-data problems.
+    abstained_scans, inst_abstains = _count_abstains(results)
     abstained_pct = abstained_scans / max(manifest.scanned or 1, 1)
 
     # Distinguish "yfinance failed to fetch during this run" from "this ticker has
@@ -120,33 +268,39 @@ def scan(
             fresh_price_failures += int(fs.failures or 0) + int(fs.skipped_negative_cache or 0)
             fresh_price_attempts += int(fs.fresh_fetches or 0) + int(fs.failures or 0)
 
-    summary_color = "green"
-    health_warn: list[str] = []
-    # Only flag price-fetch degradation when we actually tried fetching this run
-    # AND a meaningful fraction failed. A pure-cache run skipping stale-listed
-    # tickers is normal operation, not a quality issue.
-    if fresh_price_attempts > 100 and fresh_price_failures / max(fresh_price_attempts, 1) > 0.20:
-        summary_color = "yellow"
-        health_warn.append(
-            f"{fresh_price_failures}/{fresh_price_attempts} price fetches failed this run — "
-            "yfinance throttling likely; consider re-running with --force-refresh"
-        )
-    if abstained_scans > 0:
-        if abstained_pct > 0.05:
-            summary_color = "yellow"
-        health_warn.append(
-            f"{abstained_scans} of {manifest.scanned} scanned tickers had gates abstain "
-            f"due to missing data (institutional/fundamentals/float). Re-run to retry."
-        )
+    # ---- Exit-code / degrade policy ----------------------------------------
+    # Decided by the pure `_assess_run_quality` helper so it's unit-testable
+    # without live fetches. See that helper for the FATAL / DEGRADED / BENIGN
+    # contract. `health_warn` is the degrade channel (blocks publish + exit 2);
+    # `info_notes` is the benign FYI channel (never blocks, never exits non-zero).
+    verdict = _assess_run_quality(
+        scanned=manifest.scanned,
+        universe_size=manifest.universe_size,
+        abstained_scans=abstained_scans,
+        abstained_pct=abstained_pct,
+        fresh_price_failures=fresh_price_failures,
+        fresh_price_attempts=fresh_price_attempts,
+        max_abstain_fraction=settings.scanner.max_abstain_fraction,
+        unknown_mcap=n_unknown_mcap,
+        rejected_mcap=n_rejected_mcap,
+        max_unknown_mcap_fraction=settings.scanner.max_unknown_mcap_fraction,
+    )
+    summary_color = verdict["summary_color"]
+    health_warn = verdict["health_warn"]
+    info_notes = verdict["info_notes"]
+    fatal = verdict["fatal"]
 
     console.print(
         f"[{summary_color}]done[/{summary_color}] — matches={manifest.matches} scanned={manifest.scanned} "
         f"pending={manifest.pending_budget} errors={manifest.errored} "
         f"fetch_errors={n_errors} skipped_missing={n_skipped_data} "
-        f"rejected_mcap={n_rejected_mcap} unknown_mcap={n_unknown_mcap} abstained={abstained_scans}"
+        f"rejected_mcap={n_rejected_mcap} unknown_mcap={n_unknown_mcap} "
+        f"abstained={abstained_scans} inst_abstained={inst_abstains}"
     )
     for w in health_warn:
         console.print(f"[yellow]⚠ data quality:[/yellow] {w}")
+    for note in info_notes:
+        console.print(f"[dim]· {note}[/dim]")
 
     html_path = report_path.parent / "index.html"
     if html_path.exists():
@@ -159,6 +313,8 @@ def scan(
     # Annotate manifest with degraded flag so `canslim publish` can refuse
     # without --allow-degraded. Done by re-writing run_manifest.json with
     # a non-schema extra field for now (avoids breaking pydantic strict mode).
+    # Only DEGRADE/FATAL signals land here — benign abstains never poison the
+    # manifest, so they never block publishing.
     if health_warn:
         manifest_path = report_path.parent / "run_manifest.json"
         try:
@@ -169,12 +325,15 @@ def scan(
         except Exception:
             pass
 
-    # Exit code 2 if data quality is meaningfully degraded — callers can chain
-    # with `|| true` if they want to ignore but cron/CI will see the signal.
-    # Trigger only on abstains (real gate-data gaps) or in-run price-fetch
-    # failures — NOT on the always-large stale-listed tail of us_all.
-    if abstained_scans > 0 or (fresh_price_attempts > 100 and
-                                fresh_price_failures / max(fresh_price_attempts, 1) > 0.20):
+    # Exit non-zero ONLY for genuinely fatal/degraded conditions:
+    #   - fatal: a real scan didn't happen (0 tickers evaluated), or
+    #   - degraded: a meaningful fraction is suspect (price throttling, or
+    #     abstains >= max_abstain_fraction).
+    # A scan that completed with only a benign sub-threshold sliver of abstains
+    # exits 0 and publishes — that's the whole point of the tolerance. No
+    # blanket `|| true` is needed in the workflow; the degraded-report guard in
+    # `publish` still blocks empty/throttled pages because those set health_warn.
+    if fatal or health_warn:
         raise typer.Exit(code=2)
 
 

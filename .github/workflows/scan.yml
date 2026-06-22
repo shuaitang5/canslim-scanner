@@ -18,10 +18,10 @@ on:
       universe:
         description: "Universe to scan"
         type: choice
-        default: sp500
+        default: us_all
         options:
-          - sp500
           - us_all
+          - sp500
       force_refresh:
         description: "Bypass caches and re-fetch every ticker"
         type: boolean
@@ -39,8 +39,10 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    # us_all hits thousands of tickers over yfinance + SEC; give it room but
-    # stay well under the 6h hard cap. sp500 finishes in a few minutes.
+    # us_all (the default) hits thousands of tickers over yfinance + SEC; give it
+    # room but stay well under the 6h hard cap. A handful of transient per-ticker
+    # abstains is tolerated (canslim scan exits 0 + publishes when under
+    # max_abstain_fraction); only genuinely degraded/empty runs block publishing.
     timeout-minutes: 120
     # SEC fair-use needs a contact string in the User-Agent (it isn't verified).
     # canslim.yaml reads it from SEC_USER_AGENT (providers.sec.api_key_env).
@@ -66,8 +68,11 @@ jobs:
       - name: Resolve run parameters
         id: params
         run: |
+          # Scheduled (cron) runs carry no dispatch input -> default to full-market
+          # us_all, matching the source repo. Manual workflow_dispatch can still
+          # override to sp500 via the universe input.
           UNIVERSE="${{ github.event.inputs.universe }}"
-          echo "universe=${UNIVERSE:-sp500}" >> "$GITHUB_OUTPUT"
+          echo "universe=${UNIVERSE:-us_all}" >> "$GITHUB_OUTPUT"
           if [ "${{ github.event.inputs.force_refresh }}" = "true" ]; then
             echo "force_flag=--force-refresh" >> "$GITHUB_OUTPUT"
           else
@@ -79,12 +84,58 @@ jobs:
 
       - name: Scan
         run: |
-          canslim scan \
-            --config canslim.yaml \
-            --universe "${{ steps.params.outputs.universe }}" \
-            ${{ steps.params.outputs.force_flag }}
+          set -o pipefail
+          # The GitHub runner shares a datacenter IP, so yfinance throttles
+          # (401 "Invalid Crumb") hard on a cold cache — the crumbed market-cap
+          # fetch fails for most tickers, which fail-closes them into
+          # `unknown_market_cap` and collapses the scanned set far below the real
+          # full-market scale. `canslim scan` flags that as DEGRADED (exit != 0).
+          #
+          # Each pass MONOTONICALLY warms the cap/info/price caches on disk:
+          # caps that succeeded stay cached (is_json_fresh -> instant hit next
+          # pass) and the price negative-cache skips known-dead tickers, so every
+          # re-run re-attempts only the still-unknown caps with a fresh crumb and
+          # recovers a few hundred more (observed ~234 -> 472 -> ... per pass).
+          # Loop until the scan reports a healthy (exit 0) run or we exhaust the
+          # attempt budget — bounded well under the 120-min job timeout.
+          #
+          # This is NOT a blanket `|| true`: the LAST attempt's exit code is
+          # authoritative. If every attempt stays degraded, the scan exits != 0
+          # AND the manifest keeps its `_data_quality_warnings`, so the Publish
+          # step's guard still refuses to push a throttled/thin page.
+          # A full-universe pass now reconstructs cap from SEC shares (crumbless,
+          # unthrottled) so it should clear on attempt 1; 3 attempts is a safe
+          # upper bound for the institutional-abstain path while staying well
+          # under the 120-min job timeout (each full pass is ~25-35 min).
+          MAX_ATTEMPTS=3
+          run_scan() {
+            canslim scan \
+              --config canslim.yaml \
+              --universe "${{ steps.params.outputs.universe }}" \
+              ${{ steps.params.outputs.force_flag }}
+          }
+          attempt=1
+          while :; do
+            echo "::group::Scan attempt ${attempt}/${MAX_ATTEMPTS}"
+            if run_scan; then
+              echo "::endgroup::"
+              echo "Scan succeeded on attempt ${attempt}."
+              break
+            fi
+            echo "::endgroup::"
+            if [ "${attempt}" -ge "${MAX_ATTEMPTS}" ]; then
+              echo "::warning::Scan still degraded after ${MAX_ATTEMPTS} attempts — letting the publish guard decide."
+              exit 1   # authoritative failure; manifest warnings block publish anyway
+            fi
+            echo "::warning::Scan attempt ${attempt} came back degraded — re-running with warmed caches + fresh crumbs."
+            attempt=$((attempt + 1))
+            sleep 20
+          done
 
       - name: Publish to docs/
+        # The degraded-report guard inside `publish` is the real safety net: it
+        # refuses to publish a run whose manifest carries data-quality warnings
+        # (empty/throttled), so even a non-zero scan can't push a garbage page.
         run: canslim publish --out out --docs docs
 
       - name: Commit regenerated docs/

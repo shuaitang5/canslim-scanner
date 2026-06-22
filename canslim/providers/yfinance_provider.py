@@ -199,6 +199,34 @@ class YFinanceProvider(DataProvider):
             return cached_cap
         return None
 
+    async def get_shares_outstanding(self, ticker: str) -> Optional[float]:
+        """Shares outstanding, reusing the crumbless `fast_info`/cached info blob.
+
+        Used by the scanner's computed-cap fallback (cap = close * shares) when
+        the direct marketCap fetch is throttled. `fast_info.shares` comes from
+        the spark-chart endpoint (no crumb), so this survives the 401 storms that
+        knock out `get_info`. Mirrors get_market_cap's fresh + stale-cache policy."""
+        cached = self.cache.read_json("info", self.name, ticker)
+        cached_so: Optional[float] = (
+            cached.get("shares_outstanding") if cached is not None else None
+        )
+        if cached_so is not None and self.cache.is_json_fresh(
+            "info", self.name, ticker, self.cache_cfg.fundamentals_ttl_hours
+        ):
+            return cached_so
+
+        async with self._sem:
+            info = await asyncio.to_thread(self._get_info_sync, ticker)
+        if info is not None and info.get("shares_outstanding") is not None:
+            merged = dict(cached or {})
+            merged.update({k: v for k, v in info.items() if v is not None})
+            self.cache.write_json("info", self.name, ticker, merged)
+            return info["shares_outstanding"]
+
+        if cached_so is not None:
+            return cached_so
+        return None
+
     def _get_info_sync(self, ticker: str) -> Optional[dict]:
         """Resilient info lookup.
 
