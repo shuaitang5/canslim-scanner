@@ -321,11 +321,53 @@ class YFinanceProvider(DataProvider):
         return None
 
     def _get_institutional_sync(self, ticker: str) -> Optional[InstitutionalSnapshot]:
+        """Institutional-ownership snapshot from the DEDICATED holder endpoints.
+
+        Primary source is `t.major_holders` / `t.institutional_holders`. Those are
+        served by the holders quoteSummary modules, which (empirically) survive the
+        `401 Invalid Crumb` throttling that knocks out the full `.info` blob on
+        datacenter IPs (e.g. GitHub runners). Depending on `.info` for
+        `heldPercentInstitutions` is what made the I gate abstain (`?`).
+
+        `.info` is kept only as a last-ditch fallback. yfinance does not reliably
+        give QoQ position deltas for free; the I criterion already handles
+        "ownership present, no 13F delta" gracefully, so a populated `inst_own_pct`
+        is all we need to make the gate pass.
+        """
         t = self._yf.Ticker(ticker)
-        info = _try_get_info_with_retry(t, attempts=2)
-        if not info:
-            return None
-        pct = _as_float(info.get("heldPercentInstitutions"))
+
+        pct = _inst_pct_from_major_holders(t)
+
+        # institutional_holders confirms ownership presence and lets us count
+        # top holders. Its per-holder `pctChange` is a weak proxy for 13F deltas:
+        # we treat strictly-positive changes as "new/added" positions so the I
+        # gate's delta path can engage when the data is actually there.
+        new_pos = 0
+        closed_pos = 0
+        try:
+            ih = t.institutional_holders
+        except Exception as e:  # pragma: no cover - upstream variability
+            log.debug("institutional_holders failed for %s: %s", ticker, e)
+            ih = None
+        if ih is not None and hasattr(ih, "empty") and not ih.empty:
+            # If major_holders gave no percentage, fall back to the largest
+            # single holder's pctHeld just so the gate isn't starved of ownership.
+            if pct is None and "pctHeld" in ih.columns:
+                top = ih["pctHeld"].dropna()
+                if not top.empty:
+                    pct = _as_float(top.max())
+            if "pctChange" in ih.columns:
+                changes = ih["pctChange"].dropna()
+                new_pos = int((changes > 0).sum())
+                closed_pos = int((changes < 0).sum())
+
+        # Last-ditch: the throttle-prone .info blob. Only reached when BOTH
+        # dedicated endpoints came back empty.
+        if pct is None:
+            info = _try_get_info_with_retry(t, attempts=2)
+            if info:
+                pct = _as_float(info.get("heldPercentInstitutions"))
+
         if pct is None:
             return None
         return InstitutionalSnapshot(
@@ -333,6 +375,8 @@ class YFinanceProvider(DataProvider):
             reported_at=date.today(),
             inst_own_pct=pct,
             qoq_delta_pct=None,
+            new_positions=new_pos,
+            closed_positions=closed_pos,
         )
 
 
@@ -379,6 +423,69 @@ def _extract_eps_row(df) -> tuple[list[float], list[str]]:
     vals = [float(v) for v in ordered.tolist()]
     periods = [pd.Timestamp(p).date().isoformat() for p in ordered.index]
     return vals, periods
+
+
+def _inst_pct_from_major_holders(t) -> Optional[float]:
+    """Pull the institutional-ownership fraction (0..1) from `t.major_holders`.
+
+    yfinance shapes vary by version:
+      * modern (>=0.2.x): DataFrame indexed by metric name with a single `Value`
+        column, e.g. row `institutionsPercentHeld` -> 0.658.
+      * legacy: a 2-column DataFrame of [percentage-string, label], e.g.
+        `["65.82%", "% of Shares Held by Institutions"]`.
+    Returns a fraction in [0, 1], or None if it can't be parsed.
+    """
+    try:
+        mh = t.major_holders
+    except Exception as e:  # pragma: no cover - upstream variability
+        log.debug("major_holders failed: %s", e)
+        return None
+    if mh is None or not hasattr(mh, "empty") or mh.empty:
+        return None
+
+    # Modern shape: metric name in the index.
+    try:
+        idx = [str(i) for i in mh.index]
+    except Exception:
+        idx = []
+    for key in ("institutionsPercentHeld", "institutionsFloatPercentHeld"):
+        if key in idx:
+            row = mh.loc[key]
+            # row may be a Series (one col) or scalar.
+            val = row.iloc[0] if hasattr(row, "iloc") else row
+            f = _as_float(val)
+            if f is not None:
+                return _normalize_pct(f)
+
+    # Legacy shape: scan the cells for a "% ... Institutions" label paired with a pct.
+    try:
+        for _, r in mh.iterrows():
+            cells = [str(c) for c in r.tolist()]
+            label = " ".join(cells).lower()
+            if "institution" in label:
+                for c in r.tolist():
+                    f = _parse_pct_cell(c)
+                    if f is not None:
+                        return _normalize_pct(f)
+    except Exception as e:  # pragma: no cover - upstream variability
+        log.debug("major_holders legacy parse failed: %s", e)
+    return None
+
+
+def _parse_pct_cell(v) -> Optional[float]:
+    """Parse a cell that may be a float or a '65.82%' string into a float."""
+    if isinstance(v, str):
+        s = v.strip().rstrip("%")
+        try:
+            return float(s)
+        except ValueError:
+            return None
+    return _as_float(v)
+
+
+def _normalize_pct(f: float) -> float:
+    """Coerce a percentage to a 0..1 fraction (handles values given as 0-100)."""
+    return f / 100.0 if f > 1.0 else f
 
 
 def _try_fast_info(t) -> Optional[dict]:
