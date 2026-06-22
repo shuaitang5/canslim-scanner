@@ -169,6 +169,135 @@ def test_none_everywhere_returns_none():
     assert _run(prov.get_institutional("NADA")) is None
 
 
+# ---- bounded retry + stale-cache-preferred-over-abstain ----------------------
+
+
+class _FlakyTicker(_FakeTicker):
+    """A straggler that gets throttled on the first N attempts, then succeeds.
+
+    Simulates a transient yfinance throttle on the dedicated holder endpoints
+    under a full us_all scan: the data IS gettable, the run just transiently
+    fails on the first call(s). `major_holders` raises until `fail_first`
+    attempts have elapsed, after which it returns real ownership data.
+    """
+
+    def __init__(self, inst_pct: float, fail_first: int):
+        super().__init__(info={})
+        self._inst_pct = inst_pct
+        self._fail_first = fail_first
+        self.calls = 0
+
+    @property
+    def major_holders(self):
+        self.calls += 1
+        if self.calls <= self._fail_first:
+            raise RuntimeError("429 Too Many Requests (throttled)")
+        return _modern_major_holders(self._inst_pct)
+
+    @property
+    def institutional_holders(self):
+        # Mirror the throttle on the second endpoint too.
+        if self.calls <= self._fail_first:
+            return None
+        return _institutional_holders([0.1, 0.2])
+
+
+def test_bounded_retry_recovers_transient_throttle():
+    """A throttle on the 1st attempt is recovered by the bounded retry within
+    the same run — no stale cache needed, no abstain."""
+    ticker = _FlakyTicker(inst_pct=0.6582, fail_first=1)  # fails once, then OK
+    prov = _provider({"ACA": ticker})
+    # default config -> 3 attempts; backoff is zeroed so the test stays fast
+    prov.cache_cfg.institutional_retry_backoff_s = 0.0
+
+    snap = _run(prov.get_institutional("ACA"))
+
+    assert snap is not None, "bounded retry must recover a transient throttle"
+    assert abs(snap.inst_own_pct - 0.6582) < 1e-6
+    assert snap.is_stale is False  # came from a fresh fetch, not stale cache
+    assert ticker.calls >= 2, "should have retried past the first throttled call"
+
+
+def test_retry_attempts_are_bounded():
+    """A persistently-throttled straggler with NO cache abstains after exactly
+    `institutional_retry_attempts` tries — the retry can't run away."""
+    ticker = _FlakyTicker(inst_pct=0.5, fail_first=99)  # never succeeds
+    prov = _provider({"PHIN": ticker})
+    prov.cache_cfg.institutional_retry_attempts = 3
+    prov.cache_cfg.institutional_retry_backoff_s = 0.0
+
+    snap = _run(prov.get_institutional("PHIN"))
+
+    assert snap is None, "no data ever existed -> abstain is the correct last resort"
+    assert ticker.calls == 3, "must stop at the bounded attempt count, not loop forever"
+
+
+def test_stale_cache_preferred_over_abstain():
+    """A throttled straggler that HAS a persisted last-known-good value renders
+    from stale cache instead of abstaining (`?`). This is the runner path once
+    the cache persists across runs."""
+    import json
+    from pathlib import Path
+
+    # A ticker whose dedicated endpoints + info are all throttled/empty now.
+    ticker = _FakeTicker(major_holders=None, institutional_holders=None, info={})
+    prov = _provider({"PHIN": ticker})
+
+    # Seed a stale-but-good institutional snapshot from a prior run, then
+    # back-date its mtime well beyond the TTL so the fresh path is forced.
+    prov.cache.write_json(
+        "institutional",
+        prov.name,
+        "PHIN",
+        {
+            "ticker": "PHIN",
+            "reported_at": "2026-03-31",
+            "inst_own_pct": 0.842,
+            "qoq_delta_pct": None,
+            "new_positions": 0,
+            "closed_positions": 0,
+        },
+    )
+    p = Path(prov.cache.root) / "institutional" / prov.name / "PHIN.json"
+    old = p.stat().st_mtime - (prov.cache_cfg.institutional_ttl_hours + 48) * 3600
+    import os as _os
+    _os.utime(p, (old, old))
+
+    snap = _run(prov.get_institutional("PHIN"))
+
+    assert snap is not None, "stale cache must be preferred over abstaining"
+    assert abs(snap.inst_own_pct - 0.842) < 1e-6
+    assert snap.is_stale is True, "snapshot must be flagged as last-known-good"
+    assert snap.data_age_days >= 7
+
+
+def test_stale_cache_skips_extra_retries():
+    """When a usable stale value exists, a throttled fetch falls back to it after
+    a SINGLE attempt — it does NOT burn the full retry budget (runtime guard for
+    a cold-but-persisted cache over ~1500 tickers)."""
+    import os as _os
+    from pathlib import Path
+
+    ticker = _FlakyTicker(inst_pct=0.5, fail_first=99)  # always throttled
+    prov = _provider({"WMT": ticker})
+    prov.cache_cfg.institutional_retry_attempts = 3
+    prov.cache_cfg.institutional_retry_backoff_s = 0.0
+
+    prov.cache.write_json(
+        "institutional", prov.name, "WMT",
+        {"ticker": "WMT", "reported_at": "2026-03-31", "inst_own_pct": 0.77,
+         "qoq_delta_pct": None, "new_positions": 0, "closed_positions": 0},
+    )
+    p = Path(prov.cache.root) / "institutional" / prov.name / "WMT.json"
+    old = p.stat().st_mtime - (prov.cache_cfg.institutional_ttl_hours + 1) * 3600
+    _os.utime(p, (old, old))
+
+    snap = _run(prov.get_institutional("WMT"))
+
+    assert snap is not None and snap.is_stale is True
+    assert ticker.calls == 1, "stale value present -> only ONE fetch attempt, no retry storm"
+
+
 def test_snapshot_makes_i_gate_pass():
     """End-to-end: the populated snapshot must make the I criterion PASS
     (uppercase I), not abstain — that's what kills the report's `?`."""

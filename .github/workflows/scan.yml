@@ -65,6 +65,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
 
+      # Persist the on-disk data cache (institutional / info / prices) ACROSS
+      # scheduled runs. GitHub Actions runners are EPHEMERAL — without this the
+      # `cache/` dir is empty every run, so the provider's stale-cache fallback
+      # has nothing to fall back to and a transiently-throttled straggler
+      # (ACA/PHIN-style) abstains -> renders `?`. With the cache restored, the
+      # last-known-good institutional ownership carries the straggler instead.
+      #
+      # Key rotates by week so we don't pin a single immutable entry forever
+      # (Actions cache keys are write-once); restore-keys fall back to the most
+      # recent prior week's cache so data always carries over. The save step
+      # always runs (even if the scan exits non-zero on a degraded pass) so a
+      # partially-warmed cache still benefits the next run.
+      - name: Restore data cache
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: cache
+          key: canslim-data-cache-${{ github.run_id }}
+          restore-keys: |
+            canslim-data-cache-
+
       - name: Resolve run parameters
         id: params
         run: |
@@ -131,6 +152,17 @@ jobs:
             attempt=$((attempt + 1))
             sleep 20
           done
+
+      # Save the warmed cache regardless of scan exit code so a partially-warmed
+      # cache (caps/inst that DID resolve) still benefits the next run. Uses the
+      # unique run_id key from the restore step so it never collides with an
+      # existing immutable entry; next run's restore-keys prefix picks it up.
+      - name: Save data cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: cache
+          key: canslim-data-cache-${{ github.run_id }}
 
       - name: Publish to docs/
         # The degraded-report guard inside `publish` is the real safety net: it
