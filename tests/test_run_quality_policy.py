@@ -52,6 +52,9 @@ def _assess(**kw):
         fresh_price_failures=0,
         fresh_price_attempts=2000,
         max_abstain_fraction=THRESH,
+        unknown_mcap=0,
+        rejected_mcap=0,
+        max_unknown_mcap_fraction=0.25,
     )
     base.update(kw)
     return _assess_run_quality(**base)
@@ -124,6 +127,40 @@ def test_price_failures_below_attempt_floor_not_degraded():
     v = _assess(scanned=80, fresh_price_failures=40, fresh_price_attempts=80)
     assert v["health_warn"] == []
     assert v["fatal"] is False
+
+
+def test_high_unknown_mcap_is_degraded():
+    # Cap-fetch throttling collapsed the scanned set: 1711 of (237+1711+79)=2027
+    # cap-gated candidates had an UNKNOWN cap (84%) — the real thin-page case.
+    # Must be DEGRADED so the workflow retries with a warm cap cache instead of
+    # publishing a 237-ticker page when the real universe is ~2000.
+    v = _assess(scanned=237, unknown_mcap=1711, rejected_mcap=79,
+                abstained_scans=11, abstained_pct=11 / 237)
+    assert v["fatal"] is False
+    assert any("UNKNOWN market cap" in w for w in v["health_warn"])
+    assert v["summary_color"] == "yellow"
+
+
+def test_normal_unknown_mcap_tail_is_benign():
+    # A modest unknown-cap tail (thin/illiquid names whose cap genuinely isn't
+    # published) below the threshold is normal full-market operation — benign.
+    v = _assess(scanned=1900, unknown_mcap=200, rejected_mcap=300)
+    assert v["health_warn"] == []
+    assert v["fatal"] is False
+
+
+def test_rejected_mcap_never_counts_as_degraded():
+    # rejected_market_cap = cap KNOWN and below the $1B floor = a legitimate
+    # exclusion. A universe that's mostly sub-$1B must NOT be flagged degraded.
+    v = _assess(scanned=200, unknown_mcap=0, rejected_mcap=1800)
+    assert v["health_warn"] == []
+    assert v["fatal"] is False
+
+
+def test_unknown_mcap_below_cap_gate_floor_not_degraded():
+    # Tiny cap-gate population (<=100) is the small-universe case, not throttling.
+    v = _assess(scanned=10, unknown_mcap=80, rejected_mcap=5)
+    assert v["health_warn"] == []
 
 
 def test_threshold_is_configurable():

@@ -50,6 +50,9 @@ def _assess_run_quality(
     fresh_price_failures: int,
     fresh_price_attempts: int,
     max_abstain_fraction: float,
+    unknown_mcap: int = 0,
+    rejected_mcap: int = 0,
+    max_unknown_mcap_fraction: float = 0.25,
 ) -> dict:
     """Decide the run's quality verdict (exit-code / publish policy).
 
@@ -106,6 +109,24 @@ def _assess_run_quality(
         health_warn.append(
             f"{fresh_price_failures}/{fresh_price_attempts} price fetches failed this run — "
             "yfinance throttling likely; consider re-running with --force-refresh"
+        )
+
+    # DEGRADED: cap-fetch throttling collapsed the scanned set. A name lands in
+    # `unknown_market_cap` ONLY when the (crumbed) market-cap fetch failed — the
+    # same yfinance 401 throttling that hits a cold runner IP — so a large
+    # `unknown_mcap` fraction of the cap-gate population means we couldn't even
+    # determine eligibility for most of the universe and `scanned` collapsed far
+    # below the real full-market scale. This is distinct from `rejected_mcap`
+    # (cap KNOWN and below the $1B floor — a legitimate exclusion). Flagging it
+    # degraded makes the workflow retry with a warmed cap cache, recovering the
+    # universe instead of silently publishing a thin page.
+    cap_gate_pop = scanned + unknown_mcap + rejected_mcap
+    if cap_gate_pop > 100 and unknown_mcap / cap_gate_pop > max_unknown_mcap_fraction:
+        summary_color = "yellow" if not fatal else summary_color
+        health_warn.append(
+            f"{unknown_mcap}/{cap_gate_pop} candidates had an UNKNOWN market cap "
+            f"(>{max_unknown_mcap_fraction:.0%}) — yfinance cap-fetch throttling collapsed "
+            f"the scanned set to {scanned}; re-run with warm caches to recover the universe"
         )
 
     # Abstains: benign below the threshold, degraded at/above it.
@@ -220,6 +241,9 @@ def scan(
         fresh_price_failures=fresh_price_failures,
         fresh_price_attempts=fresh_price_attempts,
         max_abstain_fraction=settings.scanner.max_abstain_fraction,
+        unknown_mcap=n_unknown_mcap,
+        rejected_mcap=n_rejected_mcap,
+        max_unknown_mcap_fraction=settings.scanner.max_unknown_mcap_fraction,
     )
     summary_color = verdict["summary_color"]
     health_warn = verdict["health_warn"]

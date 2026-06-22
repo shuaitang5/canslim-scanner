@@ -116,6 +116,14 @@ class ScannerConfig(BaseModel):
     # thousands of tickers; a handful of transient abstains is normal operation,
     # not a quality failure — this floor stops them from aborting the whole run.
     max_abstain_fraction: float = 0.05
+    # Fraction of cap-gated candidates allowed to land in `unknown_market_cap`
+    # (the crumbed yfinance market-cap fetch FAILED — not "cap known, below the
+    # floor") before the run is treated as DEGRADED. A high fraction means
+    # cap-fetch throttling collapsed the scanned set far below the real
+    # full-market scale, so the run should retry with a warmed cap cache rather
+    # than publish a thin page. Distinct from rejected_market_cap (a legitimate
+    # below-$1B exclusion), which never counts here.
+    max_unknown_mcap_fraction: float = 0.25
     embed_charts_base64: bool = True  # embed chart PNGs as data-URIs so report.md is self-contained
     market_index: str = "SPY"  # M-gate benchmark. Use ^HSI for Hong Kong, ^GSPTSE for Canada, etc.
     # Auto-generate a PDF of the report alongside the markdown. Requires Chrome /
