@@ -33,11 +33,18 @@ class _FakeYF:
 
     name = "yfinance"
 
-    def __init__(self, market_cap: dict[str, float]) -> None:
+    def __init__(self, market_cap: dict[str, float],
+                 shares_outstanding: dict[str, float] | None = None) -> None:
         self._market_cap = market_cap
+        # When set for a ticker, emulates the crumbless fast_info shares count
+        # the scanner uses to RECONSTRUCT cap when the direct fetch returns None.
+        self._shares_outstanding = shares_outstanding or {}
 
     async def get_market_cap(self, ticker: str):
         return self._market_cap.get(ticker)
+
+    async def get_shares_outstanding(self, ticker: str):
+        return self._shares_outstanding.get(ticker)
 
     async def get_shares_float(self, ticker: str):
         return 500_000_000.0  # passes the S float cap, irrelevant to this test
@@ -62,7 +69,8 @@ class _FakeYF:
         return None
 
 
-def _scanner(min_cap: float, market_cap: dict[str, float]) -> Scanner:
+def _scanner(min_cap: float, market_cap: dict[str, float],
+             shares_outstanding: dict[str, float] | None = None) -> Scanner:
     settings = Settings(
         providers={
             "yfinance": ProviderConfig(enabled=True),
@@ -72,7 +80,7 @@ def _scanner(min_cap: float, market_cap: dict[str, float]) -> Scanner:
         criteria=CriteriaThresholds(prefilter_min_market_cap_usd=min_cap),
     )
     scanner = Scanner(settings)
-    scanner.yf = _FakeYF(market_cap)  # type: ignore[assignment]
+    scanner.yf = _FakeYF(market_cap, shares_outstanding)  # type: ignore[assignment]
     scanner.sec = None
     scanner.fmp = None
     return scanner
@@ -131,6 +139,45 @@ def test_unknown_market_cap_fails_closed():
     assert res.status == "unknown_market_cap"
     assert res.market_cap is None
     assert res.criteria == {}  # gate is early; no criteria evaluated
+
+
+def test_computed_cap_fallback_clears_gate_when_direct_fetch_throttled():
+    # Direct cap fetch returns None (throttled), but the crumbless shares count
+    # is available -> scanner reconstructs cap = close * shares. With close=100
+    # and 30M shares = $3B, the name clears the $1B floor and gets scanned
+    # instead of fail-closing into unknown_market_cap. This is the fix that keeps
+    # a throttled runner from collapsing the scanned universe.
+    scanner = _scanner(
+        min_cap=1_000_000_000.0,
+        market_cap={},                                  # direct fetch throttled
+        shares_outstanding={"THROTTLED": 30_000_000.0},  # 100 * 30M = $3B
+    )
+    res = _evaluate(scanner, "THROTTLED")
+    assert res.status == "scanned", "computed-cap fallback should clear the gate"
+    assert res.market_cap == 100.0 * 30_000_000.0
+    assert res.criteria != {}
+
+
+def test_computed_cap_fallback_still_rejects_sub_floor():
+    # Reconstructed cap below the floor must still REJECT — the fallback can't be
+    # a backdoor around the $1B floor. close=100 * 5M shares = $0.5B < $1B.
+    scanner = _scanner(
+        min_cap=1_000_000_000.0,
+        market_cap={},
+        shares_outstanding={"SMALLCO": 5_000_000.0},
+    )
+    res = _evaluate(scanner, "SMALLCO")
+    assert res.status == "rejected_market_cap"
+    assert res.market_cap == 100.0 * 5_000_000.0
+
+
+def test_unknown_cap_with_no_shares_still_fails_closed():
+    # Neither a direct cap NOR a shares count -> still fail-closed. The fallback
+    # only fires when it can actually compute a cap; it never weakens the floor.
+    scanner = _scanner(min_cap=1_000_000_000.0, market_cap={}, shares_outstanding={})
+    res = _evaluate(scanner, "GHOST")
+    assert res.status == "unknown_market_cap"
+    assert res.market_cap is None
 
 
 def test_floor_zero_disables_gate():

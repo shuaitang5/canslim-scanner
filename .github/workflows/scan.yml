@@ -85,31 +85,48 @@ jobs:
       - name: Scan
         run: |
           set -o pipefail
-          # The GitHub runner shares a datacenter IP, so yfinance can throttle
-          # (401 "Invalid Crumb") hard on a cold cache — collapsing the scanned
-          # set and pushing the abstain fraction over the degraded threshold.
-          # A second pass re-crumbs the session AND reuses caches the first pass
-          # warmed (successful price/info/institutional fetches persist on disk;
-          # the price negative-cache skips known-dead tickers), so it concentrates
-          # effort on the previously-throttled fetches and usually clears the bar.
+          # The GitHub runner shares a datacenter IP, so yfinance throttles
+          # (401 "Invalid Crumb") hard on a cold cache — the crumbed market-cap
+          # fetch fails for most tickers, which fail-closes them into
+          # `unknown_market_cap` and collapses the scanned set far below the real
+          # full-market scale. `canslim scan` flags that as DEGRADED (exit != 0).
           #
-          # This is NOT a blanket `|| true`: if BOTH attempts come back degraded,
-          # the scan exit code stays non-zero AND the manifest carries
-          # `_data_quality_warnings`, so the Publish step's guard still refuses to
-          # push a throttled/empty page. We only swallow the FIRST attempt's exit.
+          # Each pass MONOTONICALLY warms the cap/info/price caches on disk:
+          # caps that succeeded stay cached (is_json_fresh -> instant hit next
+          # pass) and the price negative-cache skips known-dead tickers, so every
+          # re-run re-attempts only the still-unknown caps with a fresh crumb and
+          # recovers a few hundred more (observed ~234 -> 472 -> ... per pass).
+          # Loop until the scan reports a healthy (exit 0) run or we exhaust the
+          # attempt budget — bounded well under the 120-min job timeout.
+          #
+          # This is NOT a blanket `|| true`: the LAST attempt's exit code is
+          # authoritative. If every attempt stays degraded, the scan exits != 0
+          # AND the manifest keeps its `_data_quality_warnings`, so the Publish
+          # step's guard still refuses to push a throttled/thin page.
+          MAX_ATTEMPTS=10
           run_scan() {
             canslim scan \
               --config canslim.yaml \
               --universe "${{ steps.params.outputs.universe }}" \
               ${{ steps.params.outputs.force_flag }}
           }
-          if run_scan; then
-            echo "Scan succeeded on attempt 1."
-          else
-            echo "::warning::Scan attempt 1 came back degraded — retrying once with warm caches + fresh crumbs."
-            sleep 30
-            run_scan  # second (final) attempt — its exit code is authoritative
-          fi
+          attempt=1
+          while :; do
+            echo "::group::Scan attempt ${attempt}/${MAX_ATTEMPTS}"
+            if run_scan; then
+              echo "::endgroup::"
+              echo "Scan succeeded on attempt ${attempt}."
+              break
+            fi
+            echo "::endgroup::"
+            if [ "${attempt}" -ge "${MAX_ATTEMPTS}" ]; then
+              echo "::warning::Scan still degraded after ${MAX_ATTEMPTS} attempts — letting the publish guard decide."
+              exit 1   # authoritative failure; manifest warnings block publish anyway
+            fi
+            echo "::warning::Scan attempt ${attempt} came back degraded — re-running with warmed caches + fresh crumbs."
+            attempt=$((attempt + 1))
+            sleep 20
+          done
 
       - name: Publish to docs/
         # The degraded-report guard inside `publish` is the real safety net: it

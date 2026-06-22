@@ -410,6 +410,30 @@ class Scanner:
             mcap = None
         market_cap = float(mcap) if isinstance(mcap, (int, float)) else None
 
+        # Crumbless computed-cap fallback. On a throttled runner the direct
+        # marketCap fetch (which can fall through to the crumbed `get_info`)
+        # often 401s, leaving market_cap=None -> the ticker fail-closes into
+        # `unknown_market_cap` and never gets scanned, collapsing the universe.
+        # But we usually still have shares_outstanding (from the crumbless
+        # `fast_info` spark endpoint) AND the latest close (from the already-
+        # downloaded, crumbless price batch). cap = close * shares_outstanding
+        # reconstructs the cap without any crumbed call, so the $1B gate can be
+        # evaluated for the vast majority of names even under heavy throttling.
+        if market_cap is None and pf is not None and pf.close > 0:
+            shares_out = None
+            if isinstance(fshares, Exception):
+                fshares = None
+            try:
+                shares_out = await self.yf.get_shares_outstanding(ticker)
+            except Exception:
+                shares_out = None
+            if shares_out and shares_out > 0:
+                market_cap = float(pf.close) * float(shares_out)
+                log.debug(
+                    "%s: computed cap %.3fB from close*shares (direct fetch missing)",
+                    ticker, market_cap / 1e9,
+                )
+
         if not isinstance(eb, EarningsBundle) and eb is not None:
             eb = None
 
