@@ -169,6 +169,12 @@ class SECProvider(DataProvider):
             facts = await self._get_json(FACTS_URL.format(cik=cik))
             bundle = _bundle_from_facts(ticker, facts)
             self.cache.write_json("fundamentals", self.name, ticker, bundle.model_dump(mode="json"))
+            # Opportunistically cache shares-outstanding from the SAME payload so
+            # the scanner's computed-cap fallback (get_shares_outstanding) hits a
+            # warm cache instead of re-fetching companyfacts for the whole universe.
+            shares = _latest_dei_shares(facts)
+            if shares is not None and shares > 0:
+                self.cache.write_json("shares_outstanding", self.name, ticker, {"shares": shares})
             return bundle
         except Exception as e:
             # Stale-data fallback: fresh fetch failed (SEC throttled, network, etc.).
@@ -181,6 +187,42 @@ class SECProvider(DataProvider):
                     {k: v for k, v in blob.items() if not k.startswith("_")}
                 )
             raise
+
+    async def get_shares_outstanding(self, ticker: str) -> Optional[float]:
+        """Latest common-shares-outstanding from SEC XBRL `dei` facts.
+
+        Authoritative, FREE, and CRUMBLESS — the same SEC companyfacts endpoint
+        the fundamentals fetch uses succeeds on the GitHub runner even when
+        yfinance's crumbed info/fast_info calls are throttled (401). The scanner
+        multiplies this by the (crumbless) latest close to reconstruct market cap
+        so the $1B gate evaluates for the full universe instead of fail-closing
+        most names into `unknown_market_cap`.
+
+        Reads `dei:EntityCommonStockSharesOutstanding` (cover-page shares count),
+        taking the most recently dated value. Cached for a week (shares drift
+        slowly), with a stale-cache fallback on fetch failure.
+        """
+        cache_kind = "shares_outstanding"
+        if self.cache.is_json_fresh(cache_kind, self.name, ticker, self.cache_cfg.fundamentals_ttl_hours):
+            blob = self.cache.read_json(cache_kind, self.name, ticker)
+            if blob and blob.get("shares") is not None:
+                return float(blob["shares"])
+        cik = await self.cik_for(ticker)
+        if cik is None:
+            return None
+        try:
+            facts = await self._get_json(FACTS_URL.format(cik=cik))
+            shares = _latest_dei_shares(facts)
+            if shares is not None and shares > 0:
+                self.cache.write_json(cache_kind, self.name, ticker, {"shares": shares})
+                return float(shares)
+        except Exception as e:
+            blob = self.cache.read_json(cache_kind, self.name, ticker)
+            if blob and blob.get("shares") is not None:
+                log.debug("SEC shares fetch failed for %s — using stale cache: %s", ticker, e)
+                return float(blob["shares"])
+            log.debug("SEC shares fetch failed for %s: %s", ticker, e)
+        return None
 
     async def get_institutional(self, ticker: str) -> Optional[InstitutionalSnapshot]:
         # EDGAR has 13F filings but aggregation is non-trivial; defer.
@@ -239,6 +281,37 @@ class SECProvider(DataProvider):
                 "url": url_filing,
             })
         return out
+
+
+def _latest_dei_shares(facts: dict) -> Optional[float]:
+    """Most recent `dei:EntityCommonStockSharesOutstanding` value from XBRL facts.
+
+    The cover-page shares count, filed with every 10-K/10-Q/20-F. We take the
+    entry with the latest `end` date across all unit buckets. Returns None when
+    the concept is absent (rare for an SEC filer) or unparseable.
+    """
+    if not isinstance(facts, dict):
+        return None
+    dei_root = (facts.get("facts", {}) or {}).get("dei", {}) or {}
+    node = dei_root.get("EntityCommonStockSharesOutstanding")
+    if not node:
+        return None
+    units = node.get("units", {}) or {}
+    # The value lives under a "shares" unit bucket; fall back to whatever exists.
+    entries = units.get("shares") or (next(iter(units.values())) if units else [])
+    best_val: Optional[float] = None
+    best_end = ""
+    for e in entries:
+        try:
+            val = float(e.get("val"))
+        except (TypeError, ValueError):
+            continue
+        end = str(e.get("end") or "")
+        # Prefer the most recent reported `end` date; ties keep the larger filed val.
+        if end > best_end or (end == best_end and best_val is not None and val > best_val):
+            best_end = end
+            best_val = val
+    return best_val if best_val and best_val > 0 else None
 
 
 def _bundle_from_facts(ticker: str, facts: dict) -> EarningsBundle:

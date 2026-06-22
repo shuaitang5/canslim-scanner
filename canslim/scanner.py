@@ -411,22 +411,30 @@ class Scanner:
         market_cap = float(mcap) if isinstance(mcap, (int, float)) else None
 
         # Crumbless computed-cap fallback. On a throttled runner the direct
-        # marketCap fetch (which can fall through to the crumbed `get_info`)
-        # often 401s, leaving market_cap=None -> the ticker fail-closes into
-        # `unknown_market_cap` and never gets scanned, collapsing the universe.
-        # But we usually still have shares_outstanding (from the crumbless
-        # `fast_info` spark endpoint) AND the latest close (from the already-
-        # downloaded, crumbless price batch). cap = close * shares_outstanding
-        # reconstructs the cap without any crumbed call, so the $1B gate can be
-        # evaluated for the vast majority of names even under heavy throttling.
+        # yfinance marketCap fetch (which falls through to the crumbed
+        # `get_info`/`fast_info`) 401s for most names, leaving market_cap=None ->
+        # the ticker fail-closes into `unknown_market_cap` and never gets scanned,
+        # collapsing the universe. Reconstruct cap = latest_close * shares_out
+        # using sources that DON'T depend on the yfinance crumb:
+        #   - close: from the already-downloaded, crumbless price batch (pf.close)
+        #   - shares: SEC XBRL dei facts FIRST (the SEC companyfacts endpoint is
+        #     free + unthrottled on the runner), then yfinance fast_info shares as
+        #     a secondary. SEC is the decisive lever — its fetches succeed when
+        #     every yfinance crumbed call is being 401'd.
+        # This never weakens the floor: the reconstructed cap is gated exactly
+        # like a directly-fetched one (sub-$1B still rejects below).
         if market_cap is None and pf is not None and pf.close > 0:
-            shares_out = None
-            if isinstance(fshares, Exception):
-                fshares = None
-            try:
-                shares_out = await self.yf.get_shares_outstanding(ticker)
-            except Exception:
-                shares_out = None
+            shares_out: Optional[float] = None
+            if self.sec is not None:
+                try:
+                    shares_out = await self.sec.get_shares_outstanding(ticker)
+                except Exception:
+                    shares_out = None
+            if not shares_out:
+                try:
+                    shares_out = await self.yf.get_shares_outstanding(ticker)
+                except Exception:
+                    shares_out = None
             if shares_out and shares_out > 0:
                 market_cap = float(pf.close) * float(shares_out)
                 log.debug(

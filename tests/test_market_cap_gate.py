@@ -5,7 +5,24 @@ from datetime import date
 
 from canslim.config import CriteriaThresholds, ProviderConfig, Settings
 from canslim.models import EarningsBundle, MarketRegime, PriceFeatures
+from canslim.providers.sec_provider import _latest_dei_shares
 from canslim.scanner import Scanner
+
+
+def test_latest_dei_shares_picks_most_recent_end():
+    facts = {"facts": {"dei": {"EntityCommonStockSharesOutstanding": {"units": {"shares": [
+        {"val": 1_000, "end": "2025-03-31"},
+        {"val": 2_000, "end": "2026-03-31"},
+        {"val": 1_500, "end": "2024-03-31"},
+    ]}}}}}
+    assert _latest_dei_shares(facts) == 2_000.0
+
+
+def test_latest_dei_shares_absent_concept_returns_none():
+    assert _latest_dei_shares({"facts": {"dei": {}}}) is None
+    assert _latest_dei_shares({}) is None
+    assert _latest_dei_shares({"facts": {"dei": {"EntityCommonStockSharesOutstanding":
+                                                 {"units": {"shares": []}}}}}) is None
 
 
 def _price_features(ticker: str = "TEST", close: float = 100.0) -> PriceFeatures:
@@ -139,6 +156,42 @@ def test_unknown_market_cap_fails_closed():
     assert res.status == "unknown_market_cap"
     assert res.market_cap is None
     assert res.criteria == {}  # gate is early; no criteria evaluated
+
+
+class _FakeSEC:
+    """SEC stand-in exposing only the crumbless shares-outstanding source."""
+
+    name = "sec"
+
+    def __init__(self, shares: dict[str, float]) -> None:
+        self._shares = shares
+
+    async def get_shares_outstanding(self, ticker: str):
+        return self._shares.get(ticker)
+
+
+def test_sec_shares_fallback_clears_gate_when_yfinance_throttled():
+    # The decisive runner fix: yfinance cap AND yfinance shares both unavailable
+    # (throttled), but SEC XBRL dei shares ARE available -> scanner reconstructs
+    # cap = close * SEC_shares. close=100 * 30M = $3B clears the $1B floor.
+    scanner = _scanner(min_cap=1_000_000_000.0, market_cap={}, shares_outstanding={})
+    scanner.sec = _FakeSEC({"SECNAME": 30_000_000.0})  # type: ignore[assignment]
+    res = _evaluate(scanner, "SECNAME")
+    assert res.status == "scanned", "SEC shares fallback should clear the gate"
+    assert res.market_cap == 100.0 * 30_000_000.0
+    assert res.criteria != {}
+
+
+def test_sec_shares_fallback_preferred_over_yfinance():
+    # When BOTH sources have shares, SEC (authoritative) is used.
+    scanner = _scanner(
+        min_cap=1_000_000_000.0,
+        market_cap={},
+        shares_outstanding={"BOTH": 11_000_000.0},  # yfinance would give 1.1B
+    )
+    scanner.sec = _FakeSEC({"BOTH": 30_000_000.0})  # SEC gives 3.0B  # type: ignore[assignment]
+    res = _evaluate(scanner, "BOTH")
+    assert res.market_cap == 100.0 * 30_000_000.0, "SEC shares must win"
 
 
 def test_computed_cap_fallback_clears_gate_when_direct_fetch_throttled():

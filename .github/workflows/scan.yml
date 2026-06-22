@@ -103,7 +103,11 @@ jobs:
           # authoritative. If every attempt stays degraded, the scan exits != 0
           # AND the manifest keeps its `_data_quality_warnings`, so the Publish
           # step's guard still refuses to push a throttled/thin page.
-          MAX_ATTEMPTS=10
+          # A full-universe pass now reconstructs cap from SEC shares (crumbless,
+          # unthrottled) so it should clear on attempt 1; 3 attempts is a safe
+          # upper bound for the institutional-abstain path while staying well
+          # under the 120-min job timeout (each full pass is ~25-35 min).
+          MAX_ATTEMPTS=3
           run_scan() {
             canslim scan \
               --config canslim.yaml \
