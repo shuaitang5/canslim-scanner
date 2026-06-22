@@ -288,14 +288,33 @@ class YFinanceProvider(DataProvider):
 
     async def get_institutional(self, ticker: str) -> Optional[InstitutionalSnapshot]:
         cached = self.cache.read_json("institutional", self.name, ticker)
+        has_stale = cached is not None and cached.get("inst_own_pct") is not None
         # Same fix as get_shares_float: only short-circuit on a fresh cache
         # that actually has the value we need.
-        if cached is not None and cached.get("inst_own_pct") is not None and self.cache.is_json_fresh(
+        if has_stale and self.cache.is_json_fresh(
             "institutional", self.name, ticker, self.cache_cfg.institutional_ttl_hours
         ):
             return _snap_from_cache(cached, age_hours=0.0)
-        async with self._sem:
-            snap = await asyncio.to_thread(self._get_institutional_sync, ticker)
+
+        # Order of preference for the I-gate value:
+        #   fresh dedicated-endpoint fetch -> bounded retry -> stale cache -> abstain.
+        # A transient throttle on a few stragglers (ACA/PHIN-style) under a full
+        # us_all scan gets a 2nd/3rd attempt with short backoff BEFORE we give up.
+        # The retry is bounded and only spends extra attempts when it would
+        # otherwise have to abstain — if we already hold a last-known-good value
+        # we skip straight to it (one attempt), since ownership barely moves and
+        # burning 1500*N retries on a cold cache would blow the runtime budget.
+        attempts = max(1, int(self.cache_cfg.institutional_retry_attempts)) if not has_stale else 1
+        backoff = max(0.0, float(self.cache_cfg.institutional_retry_backoff_s))
+        snap: Optional[InstitutionalSnapshot] = None
+        for i in range(attempts):
+            async with self._sem:
+                snap = await asyncio.to_thread(self._get_institutional_sync, ticker)
+            if snap is not None:
+                break
+            if i + 1 < attempts:
+                await asyncio.sleep(backoff * (i + 1))
+
         if snap is not None:
             self.cache.write_json(
                 "institutional",
@@ -311,10 +330,14 @@ class YFinanceProvider(DataProvider):
                 },
             )
             return snap
-        # Stale-data fallback: fresh fetch failed but we have a cached value
-        # from before. Institutional ownership barely changes day-to-day; using
-        # last-known-good data is far better than failing the I criterion silently.
-        if cached is not None and cached.get("inst_own_pct") is not None:
+        # Stale-data fallback: fresh fetch (+ retries) failed but we have a cached
+        # value from before. Institutional ownership barely changes day-to-day;
+        # using last-known-good data is far better than failing the I criterion
+        # silently. This only carries stragglers when the cache PERSISTS across
+        # runs (see actions/cache in scan.yml) — on a truly first-ever run with
+        # no prior cache there's nothing to fall back to and abstaining (`?`) is
+        # the genuine last resort.
+        if has_stale:
             age_h = self.cache.json_age_hours("institutional", self.name, ticker) or 0.0
             log.debug("Institutional fetch failed for %s — using stale cache (%.1fh old)", ticker, age_h)
             return _snap_from_cache(cached, age_hours=age_h)

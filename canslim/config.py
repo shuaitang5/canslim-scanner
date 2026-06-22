@@ -33,6 +33,14 @@ class CacheConfig(BaseModel):
     fundamentals_ttl_hours: float = 24.0 * 7  # ~weekly
     institutional_ttl_hours: float = 24.0 * 7
     failure_ttl_hours: float = 2.0  # negative-cache TTL — how long to back off after a failure
+    # Bounded per-ticker retry for the dedicated institutional holder endpoints.
+    # A transient yfinance throttle on a few stragglers under a full us_all scan
+    # gets a 2nd/3rd attempt with short backoff before we fall back to stale
+    # cache. Kept LOW so it can't blow up runtime on ~1500 tickers: only the
+    # institutional call retries, only when the fresh fetch came back empty, and
+    # only when there's NO usable stale cache to fall back to instead.
+    institutional_retry_attempts: int = 3  # total attempts incl. the first
+    institutional_retry_backoff_s: float = 0.5  # base backoff; grows linearly per retry
 
 
 class CriteriaThresholds(BaseModel):
