@@ -101,10 +101,15 @@ weights:
   m: 0.5
 
 scanner:
-  default_universe: sp500              # sp500 | us_all | custom
+  default_universe: us_all             # sp500 | us_all | custom — full-market by default
   # universe_file: tickers.txt         # required when default_universe=custom
   out_dir: out
   max_workers: 16
+  # Fraction of SCANNED tickers allowed to abstain on a transient data-quality
+  # hiccup before the run is treated as degraded (below this it's benign and the
+  # scan still publishes). Keeps a handful of transient yfinance abstains over
+  # thousands of full-market tickers from aborting the whole run.
+  max_abstain_fraction: 0.05
   # Auto-render the markdown report to PDF after each scan. Requires Chrome
   # (or Chromium / Brave / Edge) installed. Falls back gracefully if missing.
   # Override the binary location via CANSLIM_CHROME env var if needed.

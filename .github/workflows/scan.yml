@@ -18,10 +18,10 @@ on:
       universe:
         description: "Universe to scan"
         type: choice
-        default: sp500
+        default: us_all
         options:
-          - sp500
           - us_all
+          - sp500
       force_refresh:
         description: "Bypass caches and re-fetch every ticker"
         type: boolean
@@ -39,8 +39,10 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    # us_all hits thousands of tickers over yfinance + SEC; give it room but
-    # stay well under the 6h hard cap. sp500 finishes in a few minutes.
+    # us_all (the default) hits thousands of tickers over yfinance + SEC; give it
+    # room but stay well under the 6h hard cap. A handful of transient per-ticker
+    # abstains is tolerated (canslim scan exits 0 + publishes when under
+    # max_abstain_fraction); only genuinely degraded/empty runs block publishing.
     timeout-minutes: 120
     # SEC fair-use needs a contact string in the User-Agent (it isn't verified).
     # canslim.yaml reads it from SEC_USER_AGENT (providers.sec.api_key_env).
@@ -66,8 +68,11 @@ jobs:
       - name: Resolve run parameters
         id: params
         run: |
+          # Scheduled (cron) runs carry no dispatch input -> default to full-market
+          # us_all, matching the source repo. Manual workflow_dispatch can still
+          # override to sp500 via the universe input.
           UNIVERSE="${{ github.event.inputs.universe }}"
-          echo "universe=${UNIVERSE:-sp500}" >> "$GITHUB_OUTPUT"
+          echo "universe=${UNIVERSE:-us_all}" >> "$GITHUB_OUTPUT"
           if [ "${{ github.event.inputs.force_refresh }}" = "true" ]; then
             echo "force_flag=--force-refresh" >> "$GITHUB_OUTPUT"
           else

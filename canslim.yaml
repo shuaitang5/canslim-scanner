@@ -86,8 +86,13 @@ weights:
   m: 0.5
 
 scanner:
-  default_universe: sp500              # sp500 | us_all | custom
+  default_universe: us_all             # sp500 | us_all | custom — full-market by default
   # universe_file: tickers.txt         # required when default_universe=custom
   out_dir: out
   max_workers: 16
   generate_pdf: false
+  # Fraction of SCANNED tickers allowed to abstain on a transient data-quality
+  # hiccup before the run is treated as degraded. Below this it's benign — the
+  # scan still publishes. Full-market runs touch thousands of tickers; a handful
+  # of transient yfinance abstains must not abort the whole run.
+  max_abstain_fraction: 0.05
