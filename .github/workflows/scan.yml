@@ -84,12 +84,37 @@ jobs:
 
       - name: Scan
         run: |
-          canslim scan \
-            --config canslim.yaml \
-            --universe "${{ steps.params.outputs.universe }}" \
-            ${{ steps.params.outputs.force_flag }}
+          set -o pipefail
+          # The GitHub runner shares a datacenter IP, so yfinance can throttle
+          # (401 "Invalid Crumb") hard on a cold cache — collapsing the scanned
+          # set and pushing the abstain fraction over the degraded threshold.
+          # A second pass re-crumbs the session AND reuses caches the first pass
+          # warmed (successful price/info/institutional fetches persist on disk;
+          # the price negative-cache skips known-dead tickers), so it concentrates
+          # effort on the previously-throttled fetches and usually clears the bar.
+          #
+          # This is NOT a blanket `|| true`: if BOTH attempts come back degraded,
+          # the scan exit code stays non-zero AND the manifest carries
+          # `_data_quality_warnings`, so the Publish step's guard still refuses to
+          # push a throttled/empty page. We only swallow the FIRST attempt's exit.
+          run_scan() {
+            canslim scan \
+              --config canslim.yaml \
+              --universe "${{ steps.params.outputs.universe }}" \
+              ${{ steps.params.outputs.force_flag }}
+          }
+          if run_scan; then
+            echo "Scan succeeded on attempt 1."
+          else
+            echo "::warning::Scan attempt 1 came back degraded — retrying once with warm caches + fresh crumbs."
+            sleep 30
+            run_scan  # second (final) attempt — its exit code is authoritative
+          fi
 
       - name: Publish to docs/
+        # The degraded-report guard inside `publish` is the real safety net: it
+        # refuses to publish a run whose manifest carries data-quality warnings
+        # (empty/throttled), so even a non-zero scan can't push a garbage page.
         run: canslim publish --out out --docs docs
 
       - name: Commit regenerated docs/
