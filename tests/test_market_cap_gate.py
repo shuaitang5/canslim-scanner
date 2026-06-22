@@ -51,11 +51,15 @@ class _FakeYF:
     name = "yfinance"
 
     def __init__(self, market_cap: dict[str, float],
-                 shares_outstanding: dict[str, float] | None = None) -> None:
+                 shares_outstanding: dict[str, float] | None = None,
+                 float_shares: dict[str, float | None] | None = None) -> None:
         self._market_cap = market_cap
         # When set for a ticker, emulates the crumbless fast_info shares count
         # the scanner uses to RECONSTRUCT cap when the direct fetch returns None.
         self._shares_outstanding = shares_outstanding or {}
+        # Per-ticker yfinance float override; default 500M (passes the S cap).
+        # Set to None for a ticker to emulate a throttled float fetch.
+        self._float_shares = float_shares or {}
 
     async def get_market_cap(self, ticker: str):
         return self._market_cap.get(ticker)
@@ -64,7 +68,7 @@ class _FakeYF:
         return self._shares_outstanding.get(ticker)
 
     async def get_shares_float(self, ticker: str):
-        return 500_000_000.0  # passes the S float cap, irrelevant to this test
+        return self._float_shares.get(ticker, 500_000_000.0)
 
     async def get_fundamentals(self, ticker: str) -> EarningsBundle:
         # Strong, ACCELERATING, multi-year-growth earnings so a >=floor name is a
@@ -87,7 +91,8 @@ class _FakeYF:
 
 
 def _scanner(min_cap: float, market_cap: dict[str, float],
-             shares_outstanding: dict[str, float] | None = None) -> Scanner:
+             shares_outstanding: dict[str, float] | None = None,
+             float_shares: dict[str, float | None] | None = None) -> Scanner:
     settings = Settings(
         providers={
             "yfinance": ProviderConfig(enabled=True),
@@ -97,7 +102,7 @@ def _scanner(min_cap: float, market_cap: dict[str, float],
         criteria=CriteriaThresholds(prefilter_min_market_cap_usd=min_cap),
     )
     scanner = Scanner(settings)
-    scanner.yf = _FakeYF(market_cap, shares_outstanding)  # type: ignore[assignment]
+    scanner.yf = _FakeYF(market_cap, shares_outstanding, float_shares)  # type: ignore[assignment]
     scanner.sec = None
     scanner.fmp = None
     return scanner
@@ -168,6 +173,38 @@ class _FakeSEC:
 
     async def get_shares_outstanding(self, ticker: str):
         return self._shares.get(ticker)
+
+
+def test_sec_shares_back_float_when_yfinance_float_throttled():
+    # yfinance float fetch throttled (None) -> S gate would abstain. With SEC
+    # shares available, the scanner substitutes them as a conservative float
+    # proxy so the S gate EVALUATES (data_available=True) instead of abstaining.
+    # 30M shares < the 1B-share float cap, so S's supply test passes.
+    scanner = _scanner(
+        min_cap=1_000_000_000.0,
+        market_cap={"SFIX": 5_000_000_000.0},   # cap known, clears the floor
+        shares_outstanding={"SFIX": 30_000_000.0},
+        float_shares={"SFIX": None},            # yfinance float throttled
+    )
+    scanner.sec = _FakeSEC({"SFIX": 30_000_000.0})  # type: ignore[assignment]
+    res = _evaluate(scanner, "SFIX")
+    assert res.status == "scanned"
+    assert res.criteria["S"].data_available is True, "S must evaluate, not abstain"
+    assert res.criteria["S"].evidence["float_shares"] == 30_000_000.0
+
+
+def test_s_gate_still_abstains_when_no_float_source_at_all():
+    # No yfinance float AND no SEC shares -> S genuinely abstains (honest).
+    scanner = _scanner(
+        min_cap=1_000_000_000.0,
+        market_cap={"NOFLT": 5_000_000_000.0},
+        shares_outstanding={},
+        float_shares={"NOFLT": None},
+    )
+    scanner.sec = None
+    res = _evaluate(scanner, "NOFLT")
+    assert res.status == "scanned"
+    assert res.criteria["S"].data_available is False, "no float source -> S abstains"
 
 
 def test_sec_shares_fallback_clears_gate_when_yfinance_throttled():

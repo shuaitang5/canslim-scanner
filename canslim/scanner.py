@@ -423,20 +423,34 @@ class Scanner:
         #     every yfinance crumbed call is being 401'd.
         # This never weakens the floor: the reconstructed cap is gated exactly
         # like a directly-fetched one (sub-$1B still rejects below).
-        if market_cap is None and pf is not None and pf.close > 0:
-            shares_out: Optional[float] = None
+        # Resolve a crumbless shares-outstanding figure (SEC dei first, yfinance
+        # fast_info second) ONCE — it backs BOTH the computed-cap fallback below
+        # and the S-gate float fallback when building the context. Fetched lazily
+        # only when something actually needs it.
+        _shares_out_cache: list = []  # 1-element memo; [] = not yet fetched
+
+        async def _resolve_shares_out() -> Optional[float]:
+            if _shares_out_cache:
+                return _shares_out_cache[0]
+            so: Optional[float] = None
             if self.sec is not None:
                 try:
-                    shares_out = await self.sec.get_shares_outstanding(ticker)
+                    so = await self.sec.get_shares_outstanding(ticker)
                 except Exception:
-                    shares_out = None
-            if not shares_out:
+                    so = None
+            if not so:
                 try:
-                    shares_out = await self.yf.get_shares_outstanding(ticker)
+                    so = await self.yf.get_shares_outstanding(ticker)
                 except Exception:
-                    shares_out = None
-            if shares_out and shares_out > 0:
-                market_cap = float(pf.close) * float(shares_out)
+                    so = None
+            so = float(so) if so and so > 0 else None
+            _shares_out_cache.append(so)
+            return so
+
+        if market_cap is None and pf is not None and pf.close > 0:
+            shares_out = await _resolve_shares_out()
+            if shares_out:
+                market_cap = float(pf.close) * shares_out
                 log.debug(
                     "%s: computed cap %.3fB from close*shares (direct fetch missing)",
                     ticker, market_cap / 1e9,
@@ -485,13 +499,29 @@ class Scanner:
         patterns, pattern_errors = self._detect_patterns(ticker)
         per_ticker_errors: list[FetchError] = list(pattern_errors)
 
+        float_shares = fshares if isinstance(fshares, float) else (float(fshares) if fshares else None)
+        # S-gate float fallback. The yfinance float fetch rides the same crumbed
+        # get_info path that throttles on the runner, so float_shares is None for
+        # a large fraction of names -> the S gate abstains en masse and tanks the
+        # run's abstain rate. Substitute SEC shares-outstanding (crumbless,
+        # unthrottled) as a CONSERVATIVE float proxy: shares_outstanding >= float
+        # always, so the only S supply test (float <= max_float_shares) stays an
+        # honest UPPER bound — if shares_out passes, true float passes too; we
+        # never wave through a genuinely oversupplied name. This lets the S gate
+        # evaluate (instead of abstain) for the full universe under throttling.
+        if float_shares is None and pf is not None and pf.close > 0:
+            so = await _resolve_shares_out()
+            if so:
+                float_shares = so
+                log.debug("%s: using SEC shares %.0f as float proxy (yfinance float missing)", ticker, so)
+
         ctx = CriterionContext(
             ticker=ticker,
             thresholds=self.settings.criteria,
             price_features=pf,
             earnings=eb if isinstance(eb, EarningsBundle) else None,
             institutional=inst if inst is not None and not isinstance(inst, Exception) else None,
-            float_shares=fshares if isinstance(fshares, float) else (float(fshares) if fshares else None),
+            float_shares=float_shares,
             market_cap=market_cap,
             rs_percentile=rs_pct,
             patterns=patterns,
