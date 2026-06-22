@@ -11,8 +11,10 @@ name: scan-and-publish
 on:
   schedule:
     # 22:00 UTC = ~6pm ET / 3pm PT, after the US cash session closes (21:00 UTC).
-    # Mon–Fri only — markets are shut on weekends. GitHub cron is always UTC.
-    - cron: "0 22 * * 1-5"
+    # Every day (incl. weekends) per chairman — a fresh report daily. On Sat/Sun
+    # the market data is just the prior Friday close, so weekend runs republish
+    # the latest available daily data. GitHub cron is always UTC.
+    - cron: "0 22 * * *"
   workflow_dispatch:
     inputs:
       universe:
