@@ -101,11 +101,21 @@ class CompositeWeights(BaseModel):
 
 
 class ScannerConfig(BaseModel):
-    default_universe: str = "sp500"
+    default_universe: str = "us_all"
     universe_file: Optional[str] = None  # for custom universe
     out_dir: str = "out"
     max_workers: int = 16
     top_n_near_matches: int = 20  # rows to show in report's "Top by composite score" section
+    # Fraction of SCANNED tickers allowed to abstain (gate couldn't evaluate due
+    # to a transient data-quality hiccup — e.g. a yfinance "401 Invalid Crumb"
+    # on the institutional/float fetch) before the run is treated as DEGRADED.
+    # Below this fraction the abstains are BENIGN: the scan completed against the
+    # vast majority of tickers, so it exits 0 and publishes. At/above it the run
+    # is flagged degraded (manifest warning + non-zero exit) and `publish`
+    # refuses without --allow-degraded. A full-market (us_all) run touches
+    # thousands of tickers; a handful of transient abstains is normal operation,
+    # not a quality failure — this floor stops them from aborting the whole run.
+    max_abstain_fraction: float = 0.05
     embed_charts_base64: bool = True  # embed chart PNGs as data-URIs so report.md is self-contained
     market_index: str = "SPY"  # M-gate benchmark. Use ^HSI for Hong Kong, ^GSPTSE for Canada, etc.
     # Auto-generate a PDF of the report alongside the markdown. Requires Chrome /
