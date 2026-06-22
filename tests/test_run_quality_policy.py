@@ -16,9 +16,48 @@ import json
 
 from typer.testing import CliRunner
 
-from canslim.cli import _assess_run_quality, app
+from canslim.cli import _assess_run_quality, _count_abstains, app
+from canslim.models import CriterionResult, ScanResult
+from datetime import date as _date
 
 runner = CliRunner()
+
+
+def _result(letters_abstaining, status="scanned"):
+    """Build a ScanResult whose listed gate letters abstained (data_available=False)."""
+    crit = {}
+    for L in ["C", "A", "S", "L", "I"]:
+        crit[L] = CriterionResult(
+            letter=L, passed=True, is_gate=True, score=1.0,
+            data_available=(L not in letters_abstaining),
+        )
+    return ScanResult(
+        ticker="T", as_of=_date.today(), passed=False, composite_score=0.0,
+        criteria=crit, status=status,
+    )
+
+
+def test_count_abstains_excludes_institutional_from_gated():
+    # I-only abstain -> NOT counted in gated (it's a free-stack reality), but IS
+    # surfaced in the institutional count.
+    results = [_result({"I"}) for _ in range(10)]
+    gated, inst = _count_abstains(results)
+    assert gated == 0
+    assert inst == 10
+
+
+def test_count_abstains_counts_fundamental_gates():
+    # A C/A/S/L abstain DOES count toward the gated (degraded) figure.
+    results = [_result({"C"}), _result({"S"}), _result({"I"})]
+    gated, inst = _count_abstains(results)
+    assert gated == 2          # C and S abstains
+    assert inst == 1           # the I-abstain ticker
+
+
+def test_count_abstains_ignores_non_scanned():
+    results = [_result({"C"}, status="unknown_market_cap"), _result({"A"}, status="scanned")]
+    gated, inst = _count_abstains(results)
+    assert gated == 1          # only the scanned one
 
 _MINIMAL_HTML = "<html><body>universe: us_all (4800 tickers)</body></html>"
 

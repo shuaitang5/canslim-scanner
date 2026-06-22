@@ -41,6 +41,38 @@ def _load(config: Optional[Path]) -> Settings:
         raise typer.Exit(code=2)
 
 
+def _count_abstains(results) -> tuple[int, int]:
+    """Count scanned tickers with a gate abstain, split by gating relevance.
+
+    Returns ``(gated_abstains, inst_abstains)``:
+      - ``gated_abstains`` counts a scanned ticker if ANY gate OTHER THAN
+        institutional (I) abstained (data_available False). This is the figure
+        the degraded threshold uses — it reflects genuine fundamental/float data
+        gaps that should gate publishing.
+      - ``inst_abstains`` counts tickers whose I-gate abstained, surfaced for
+        transparency only. The I-signal comes from yfinance's crumbed get_info,
+        which is heavily throttled on a shared datacenter IP, so I-abstains are a
+        normal free-data-stack reality — a ticker that abstains on I still gets
+        scanned and just can't be a *full* match. Gating on I-abstains would
+        block a perfectly valid full-market page, so they are excluded above.
+    """
+    gated = 0
+    inst = 0
+    for r in results:
+        if getattr(r, "status", None) != "scanned":
+            continue
+        crit = r.criteria
+        if any(
+            cr.is_gate and not cr.data_available and L != "I"
+            for L, cr in crit.items()
+        ):
+            gated += 1
+        i = crit.get("I")
+        if i is not None and i.is_gate and not i.data_available:
+            inst += 1
+    return gated, inst
+
+
 def _assess_run_quality(
     *,
     scanned: int,
@@ -209,12 +241,20 @@ def scan(
 
     # Loud data-quality summary so silent fetch failures don't slip past.
     # The benign/degraded/fatal decision is made by `_assess_run_quality` below.
-    abstained_scans = sum(
-        1 for r in results
-        if r.status == "scanned" and any(
-            cr.is_gate and not cr.data_available for cr in r.criteria.values()
-        )
-    )
+    #
+    # The abstain rate measures genuine data-quality gaps that should gate
+    # publishing — but it deliberately EXCLUDES the institutional (I) gate. The
+    # I-signal comes from yfinance's crumbed `get_info` (heldPercentInstitutions),
+    # which is heavily throttled on a shared datacenter IP, so a large fraction
+    # of I-abstains is the normal reality of the free-data stack, NOT a broken
+    # page: a ticker whose I-gate abstained still gets scanned, and it simply
+    # can't become a *full* match (gate_pass_all stays False) — it falls into the
+    # report's incomplete-data bucket. The matches that DO surface always have
+    # full data. Counting I-abstains toward the degraded threshold would block a
+    # perfectly valid full-market page just because institutional sponsorship
+    # couldn't be confirmed for some names. Abstains on C/A/S/L (fundamentals/
+    # float) DO count — those signal real fundamental-data problems.
+    abstained_scans, inst_abstains = _count_abstains(results)
     abstained_pct = abstained_scans / max(manifest.scanned or 1, 1)
 
     # Distinguish "yfinance failed to fetch during this run" from "this ticker has
@@ -254,7 +294,8 @@ def scan(
         f"[{summary_color}]done[/{summary_color}] — matches={manifest.matches} scanned={manifest.scanned} "
         f"pending={manifest.pending_budget} errors={manifest.errored} "
         f"fetch_errors={n_errors} skipped_missing={n_skipped_data} "
-        f"rejected_mcap={n_rejected_mcap} unknown_mcap={n_unknown_mcap} abstained={abstained_scans}"
+        f"rejected_mcap={n_rejected_mcap} unknown_mcap={n_unknown_mcap} "
+        f"abstained={abstained_scans} inst_abstained={inst_abstains}"
     )
     for w in health_warn:
         console.print(f"[yellow]⚠ data quality:[/yellow] {w}")
