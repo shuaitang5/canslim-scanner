@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -328,6 +330,80 @@ def report_pdf(
     console.print(f"[green]PDF written:[/green] {pdf_path}")
 
 
+_DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
+def _index_fields_from_meta(meta: Optional[dict]) -> dict:
+    """Pure helper: derive the index-row fields from a parsed meta.json dict.
+
+    Returns a dict with keys ``as_of``, ``universe``, ``matches``, ``scanned``.
+    Each value is the recovered value, or ``"—"`` when the meta is absent or the
+    field is missing/null. Filesystem-free so it can be unit-tested directly.
+
+    ``as_of`` is the data/market date (``market_regime.as_of``), which is
+    deliberately distinct from the run-id timestamp — never substitute one for
+    the other here.
+    """
+    dash = "—"
+    if not meta:
+        return {"as_of": dash, "universe": dash, "matches": dash, "scanned": dash}
+
+    def _val(key: str):
+        v = meta.get(key)
+        return dash if v is None else v
+
+    return {
+        "as_of": _val("as_of"),
+        "universe": _val("universe"),
+        "matches": _val("matches"),
+        "scanned": _val("scanned"),
+    }
+
+
+def _meta_from_manifest(manifest: dict, run_id: str) -> dict:
+    """Build the committed meta.json payload from a run's manifest dict."""
+    regime = manifest.get("market_regime") or {}
+    return {
+        "as_of": regime.get("as_of"),
+        "universe": manifest.get("universe_name"),
+        "matches": manifest.get("matches"),
+        "scanned": manifest.get("scanned"),
+        "run_id": run_id,
+    }
+
+
+def _meta_from_html(html: str, run_id: str) -> dict:
+    """Recover a meta.json payload from a committed run's index.html (backfill).
+
+    ``as_of`` = the MAX ``YYYY-MM-DD`` date string embedded anywhere in the file
+    (charts end on the as-of bar — verified to match the scan/commit date).
+    ``universe`` / ``scanned`` / ``matches`` are read from the header stat block
+    when cheaply parseable; any field that can't be recovered is left ``None``.
+    """
+    dates = _DATE_RE.findall(html)
+    as_of = max(dates) if dates else None
+
+    uni_m = re.search(r"universe:\s*([\w-]+)", html)
+    scanned_m = re.search(r'scanned\s*<span class="v">\s*([\d,]+)', html)
+    matches_m = re.search(r'full matches\s*<span class="v">\s*([\d,]+)', html)
+
+    def _to_int(m):
+        if not m:
+            return None
+        try:
+            return int(m.group(1).replace(",", ""))
+        except ValueError:
+            return None
+
+    return {
+        "as_of": as_of,
+        "universe": uni_m.group(1) if uni_m else None,
+        "matches": _to_int(matches_m),
+        "scanned": _to_int(scanned_m),
+        "run_id": run_id,
+    }
+
+
 @app.command("publish")
 def publish(
     run: Optional[Path] = typer.Argument(
@@ -340,6 +416,12 @@ def publish(
         False, "--allow-degraded",
         help="Publish even if the source scan was flagged with data-quality warnings",
     ),
+    backfill: bool = typer.Option(
+        False, "--backfill",
+        help="Write missing docs/runs/<id>/meta.json for already-archived runs "
+             "by parsing their committed index.html, then regenerate the landing page. "
+             "Does not publish a new run.",
+    ),
 ) -> None:
     """Publish a scan report to ./docs/runs/<run-id>/ for GitHub Pages.
 
@@ -350,8 +432,37 @@ def publish(
 
     Run with no argument to publish the most recent scan.
     """
-    import json as _json
     import shutil
+
+    archive_dir = docs_dir / "runs"
+
+    # --backfill: write missing meta.json for already-archived runs by parsing
+    # their committed index.html, then regenerate the landing page. No new run.
+    if backfill:
+        if not archive_dir.exists():
+            console.print(f"[red]No archived runs dir found:[/red] {archive_dir}")
+            raise typer.Exit(code=2)
+        archived_runs = sorted(
+            [p for p in archive_dir.iterdir() if (p / "index.html").exists()],
+            key=lambda p: p.name,
+            reverse=True,
+        )
+        written = skipped = 0
+        for p in archived_runs:
+            meta_p = p / "meta.json"
+            if meta_p.exists():
+                skipped += 1
+                continue
+            meta = _meta_from_html((p / "index.html").read_text(), p.name)
+            meta_p.write_text(json.dumps(meta, indent=2))
+            written += 1
+            console.print(f"[green]Backfilled:[/green] {meta_p} (as_of={meta.get('as_of')})")
+        console.print(
+            f"[green]Backfill complete:[/green] {written} written, {skipped} already present "
+            f"({len(archived_runs)} archived run(s))"
+        )
+        _regenerate_landing_page(docs_dir, archive_dir)
+        return
 
     runs_dir = out_dir / "runs"
     if run is None:
@@ -378,10 +489,11 @@ def publish(
 
     # Refuse to publish degraded scans unless explicitly allowed.
     manifest_p = run / "run_manifest.json"
+    manifest_data: Optional[dict] = None
     if manifest_p.exists():
         try:
-            import json as _json
-            m = _json.loads(manifest_p.read_text())
+            manifest_data = json.loads(manifest_p.read_text())
+            m = manifest_data
             warnings = m.get("_data_quality_warnings") or []
             if warnings and not allow_degraded:
                 console.print(f"[red]Refusing to publish {run.name} — data quality is degraded:[/red]")
@@ -401,8 +513,30 @@ def publish(
     shutil.copy2(src_html, dest / "index.html")
     console.print(f"[green]Archived:[/green] {dest / 'index.html'}")
 
-    # Regenerate docs/index.html as a landing page listing every archived run
-    archive_dir = docs_dir / "runs"
+    # Write a COMMITTED meta.json next to the archived HTML so the index can read
+    # the true data date (and headline counts) without the gitignored out/ dir.
+    # Source from the run's manifest if present; fall back to parsing the HTML.
+    if manifest_data is not None:
+        meta = _meta_from_manifest(manifest_data, run_id)
+    else:
+        meta = _meta_from_html(src_html.read_text(), run_id)
+    (dest / "meta.json").write_text(json.dumps(meta, indent=2))
+    console.print(f"[green]Wrote meta:[/green] {dest / 'meta.json'} (as_of={meta.get('as_of')})")
+
+    n = _regenerate_landing_page(docs_dir, archive_dir)
+    console.print(f"[green]Landing page:[/green] {docs_dir / 'index.html'} ({n} run(s) listed)")
+    console.print()
+    console.print("[dim]To publish to your live site:[/dim]")
+    console.print(f"[dim]  git add {docs_dir}/ && git commit -m 'publish {run_id}' && git push[/dim]")
+
+
+def _regenerate_landing_page(docs_dir: Path, archive_dir: Path) -> int:
+    """Rebuild docs/index.html from committed docs/runs/<id>/meta.json files.
+
+    Reads each archived run's committed meta.json (never the gitignored out/
+    manifest), derives index-row fields via the pure helper, and writes the
+    landing page + .nojekyll. Returns the number of runs listed.
+    """
     archived = sorted(
         [p for p in archive_dir.iterdir() if (p / "index.html").exists()],
         key=lambda p: p.name,
@@ -410,35 +544,27 @@ def publish(
     )
     rows: list[str] = []
     for p in archived:
-        manifest_p = out_dir / "runs" / p.name / "run_manifest.json"
-        as_of = matches = scanned = universe = "—"
-        if manifest_p.exists():
+        meta_p = p / "meta.json"
+        meta: Optional[dict] = None
+        if meta_p.exists():
             try:
-                m = _json.loads(manifest_p.read_text())
-                regime = m.get("market_regime") or {}
-                as_of = regime.get("as_of") or m.get("started_at", "—")[:10]
-                matches = m.get("matches", "—")
-                scanned = m.get("scanned", "—")
-                universe = m.get("universe_name", "—")
+                meta = json.loads(meta_p.read_text())
             except Exception:
-                pass
+                meta = None
+        f = _index_fields_from_meta(meta)
         rows.append(
             f'<tr>'
-            f'<td><a href="runs/{p.name}/">{as_of}</a></td>'
+            f'<td><a href="runs/{p.name}/">{f["as_of"]}</a></td>'
             f'<td class="mono">{p.name}</td>'
-            f'<td>{universe}</td>'
-            f'<td class="num">{matches}</td>'
-            f'<td class="num">{scanned}</td>'
+            f'<td>{f["universe"]}</td>'
+            f'<td class="num">{f["matches"]}</td>'
+            f'<td class="num">{f["scanned"]}</td>'
             f'</tr>'
         )
-
     landing_html = _build_landing_page(rows)
     (docs_dir / "index.html").write_text(landing_html)
     (docs_dir / ".nojekyll").touch()
-    console.print(f"[green]Landing page:[/green] {docs_dir / 'index.html'} ({len(archived)} run(s) listed)")
-    console.print()
-    console.print("[dim]To publish to your live site:[/dim]")
-    console.print(f"[dim]  git add {docs_dir}/ && git commit -m 'publish {run_id}' && git push[/dim]")
+    return len(archived)
 
 
 def _build_landing_page(rows: list[str]) -> str:
