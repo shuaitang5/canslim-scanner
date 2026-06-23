@@ -14,6 +14,7 @@ entry plan.
 <details class="candidate" id="c-{{ r.ticker }}" data-ticker="{{ r.ticker }}" data-passed="{{ 'true' if r.passed else 'false' }}">
   <summary>
     <span class="ticker">{{ r.ticker }}</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#{{ r.ticker }}" target="_blank" rel="noopener" title="Open {{ r.ticker }} in Ticker Quickview (financials + valuation)" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">{{ "%.2f"|format(r.composite_score) }}</span>
     <span class="gates">{{ helpers.gate_flags(r) }}</span>
     <span class="status status-{{ status_label }}">{{ status_label }}</span>
@@ -25,7 +26,7 @@ entry plan.
         fails: {{ helpers.failed_gates(r) or "—" }}
       {% endif %}
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
       {% if r.market_cap %}{{ r.market_cap|fmt_mktcap }}{% endif %}
       {% if r.ad_grade %} · AD: {{ r.ad_grade }}{% endif %}
     </span>

@@ -96,9 +96,59 @@
   .mc-sectors td.neg { color: var(--fail); }
   .stat { font-size: 11px; color: var(--text-muted); }
   .stat .v { display: block; color: var(--text); font-size: 18px; font-weight: 600; font-family: var(--mono); }
+  /* CANSLIM reference / cheat-sheet card (collapsible). */
+  details.ref-card {
+    border: 1px solid var(--border); border-radius: 4px; background: var(--bg-alt);
+    margin: 4px 0 14px 0; padding: 0;
+  }
+  details.ref-card > summary {
+    cursor: pointer; padding: 8px 12px; font-size: 12px; font-weight: 600;
+    color: var(--text); list-style: none;
+  }
+  details.ref-card > summary::-webkit-details-marker { display: none; }
+  details.ref-card > summary::before { content: "▸ "; color: var(--text-muted); }
+  details.ref-card[open] > summary::before { content: "▾ "; }
+  .ref-body {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+    padding: 4px 14px 8px 14px;
+  }
+  @media (max-width: 768px) { .ref-body { grid-template-columns: 1fr; } }
+  .ref-card h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--text-muted); margin: 10px 0 4px 0; }
+  .ref-list { margin: 0; padding-left: 16px; font-size: 12px; line-height: 1.55; }
+  .ref-list ul { padding-left: 14px; margin: 2px 0; }
+  .ref-list b { color: var(--text); }
+  .ref-note { font-size: 11px; color: var(--text-muted); margin: 8px 0 0 0; }
+  .ref-foot { font-size: 11px; color: var(--text-muted); margin: 4px 14px 10px 14px;
+    border-top: 1px solid var(--border); padding-top: 6px; }
+  /* Quickview link in each candidate summary. */
+  .qv-link { font-size: 10px; color: var(--accent); text-decoration: none;
+    font-family: var(--mono); margin-left: 8px; white-space: nowrap; }
+  .qv-link:hover { text-decoration: underline; }
+  /* Help tab document. */
+  .help-doc { max-width: 860px; font-size: 13px; line-height: 1.6; }
+  .help-doc h2 { font-size: 18px; margin: 4px 0 8px; }
+  .help-doc h3 { font-size: 14px; margin: 20px 0 6px; padding-bottom: 4px;
+    border-bottom: 1px solid var(--border); }
+  .help-doc .help-sub { font-weight: 600; margin: 12px 0 2px; color: var(--text); }
+  .help-lede { color: var(--text-muted); }
+  .help-table { border-collapse: collapse; width: 100%; margin: 4px 0; }
+  .help-table td { border-bottom: 1px solid var(--border); padding: 5px 8px;
+    vertical-align: top; }
+  .help-table td:first-child { white-space: nowrap; width: 1%; color: var(--text);
+    font-family: var(--mono); }
+  .help-ul { margin: 4px 0; padding-left: 18px; }
+  .help-ul ol { margin: 3px 0; padding-left: 18px; }
+  .help-ul li, .help-table { font-size: 13px; }
+  .help-note { font-size: 12px; color: var(--text-muted); margin: 6px 0; }
+  .help-foot { font-size: 11px; color: var(--text-muted); margin-top: 18px;
+    border-top: 1px solid var(--border); padding-top: 8px; }
+  .help-doc code { background: var(--bg-darker); padding: 0 4px; border-radius: 3px; }
 
   nav.tabs {
-    position: sticky; top: 67px; z-index: 40;
+    /* Pin directly below the (dynamic-height) header. --header-h is measured
+       live by JS; fallback 133px ≈ current header so it's right pre-JS too. */
+    position: sticky; top: var(--header-h, 133px); z-index: 40;
     background: var(--bg); border-bottom: 1px solid var(--border);
     padding: 0 16px; display: flex; gap: 0; overflow-x: auto;
   }
@@ -120,8 +170,9 @@
     gap: 0;
   }
   aside.toc {
-    position: sticky; top: 105px; align-self: start;
-    height: calc(100vh - 105px); overflow-y: auto;
+    /* Pin below header + tab nav (both dynamic). --chrome-h = header+nav, set by JS. */
+    position: sticky; top: var(--chrome-h, 174px); align-self: start;
+    height: calc(100vh - var(--chrome-h, 174px)); overflow-y: auto;
     border-right: 1px solid var(--border); padding: 10px 0;
     font-size: 12px;
   }
@@ -180,7 +231,10 @@
   details.candidate {
     border: 1px solid var(--border); border-radius: 4px;
     margin-bottom: 8px; background: var(--bg);
-    /* anchor-jump offset for sticky header+tabs (backfilled) */
+    /* No-JS fallback only. The primary mechanism is jumpToCard() in the script
+       below, which measures the real stuck-header bottom and scrolls precisely.
+       This static value just keeps a card top from hiding under the sticky
+       chrome if JS is disabled. */
     scroll-margin-top: 150px;
   }
   details.candidate[open] {
@@ -189,11 +243,13 @@
   }
   details.candidate > summary {
     list-style: none; cursor: pointer;
-    padding: 8px 12px; display: grid;
-    grid-template-columns: 80px 60px 100px 110px 1fr auto;
-    gap: 12px; align-items: baseline;
-    font-size: 12px;
+    padding: 8px 12px; display: flex; flex-wrap: wrap; align-items: baseline;
+    gap: 4px 14px; font-size: 12px;
   }
+  /* Fixed-ish widths keep the top row aligned across cards; metas wrap below. */
+  details.candidate .ticker { min-width: 64px; }
+  details.candidate .score { min-width: 36px; }
+  details.candidate .gates { min-width: 92px; }
   details.candidate > summary::-webkit-details-marker { display: none; }
   details.candidate > summary::before {
     content: "▶"; font-size: 9px; color: var(--text-muted);
@@ -211,9 +267,13 @@
   }
   .status-MATCH { background: var(--pass); color: white; }
   .status-near-miss { background: var(--bg-darker); color: var(--text-muted); }
+  /* Both meta spans wrap onto their own full-width row below the top line, so
+     a long entry-status string and the market-cap/AD string never collide.
+     (Earlier grid layout overlapped them once the quickview link + mktcap were
+     added; flexbox with flex-basis:100% gives each meta its own line.) */
   details.candidate .summary-meta {
-    color: var(--text-muted); font-family: var(--mono); font-size: 11px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    flex-basis: 100%; color: var(--text-muted); font-family: var(--mono);
+    font-size: 11px; line-height: 1.4; white-space: normal;
   }
   details.candidate .body {
     padding: 12px 14px 16px 14px; border-top: 1px solid var(--border);
@@ -238,6 +298,7 @@
   .canslim-brief .gate-tag { color: var(--text-muted); font-size: 10px; }
   .canslim-brief .res-pass { color: var(--pass); font-weight: 600; }
   .canslim-brief .res-fail { color: var(--fail); font-weight: 600; }
+  .canslim-brief .res-abstain { color: var(--text-muted); font-weight: 600; font-style: italic; }
   .canslim-brief .reason { color: var(--text-muted); font-size: 11px; }
 
   .ad-rating { font-size: 12px; margin: 4px 0 8px; }
@@ -308,8 +369,12 @@
 
     .market-context > details > summary { font-size: 11px; }
 
-    /* Tab nav: NOT sticky on mobile — let it scroll with the page */
-    nav.tabs { position: static; padding: 0 4px; }
+    /* Header is static on mobile (it can grow tall when market-context expands;
+       a sticky element taller than the viewport blocks scrolling). The TAB NAV
+       stays sticky at the very top so tabs are always reachable while scrolling.
+       JS sets --chrome-h to just the nav height here (header excluded), so the
+       anchor-jump offset stays correct. */
+    nav.tabs { position: sticky; top: 0; padding: 0 4px; }
     nav.tabs button { padding: 7px 10px; font-size: 11px; flex-shrink: 0; }
     nav.tabs button .count { font-size: 9px; padding: 0 4px; }
 
@@ -1308,6 +1373,7 @@
   <button data-bucket="basing">Basing<span class="count">12</span></button>
   <button data-bucket="overrides">Override Watchlist<span class="count">253</span></button>
   <button data-bucket="patterns">Patterns<span class="count">20</span></button>
+<button data-bucket="help" title="CANSLIM, patterns, entry &amp; exit rules">Help</button>
 </nav>
 
 <div class="layout">
@@ -1483,7 +1549,53 @@
   <main>
 
 
-    <section class="bucket bucket-all" data-bucket="all">
+    
+<details class="ref-card">
+      <summary>CANSLIM cheat-sheet — gates, entry &amp; exit rules</summary>
+      <div class="ref-body">
+        <div class="ref-col">
+          <h4>The 7 gates</h4>
+          <ul class="ref-list">
+            <li><b>C</b> — Current quarterly EPS up ≥25% YoY, accelerating.</li>
+            <li><b>A</b> — Annual EPS up ≥25%/yr for 3 yrs; ROE ≥17%.</li>
+            <li><b>N</b> — New: new high / new product, breaking out of a base.</li>
+            <li><b>S</b> — Supply &amp; demand: volume surge on the breakout; reasonable float.</li>
+            <li><b>L</b> — Leader, not laggard: relative strength in the top ~20–30%.</li>
+            <li><b>I</b> — Institutional sponsorship rising (funds accumulating).</li>
+            <li><b>M</b> — Market direction: only buy when the general market is in a confirmed uptrend.</li>
+          </ul>
+          <p class="ref-note">Flags: <code>UPPER</code>=pass · <code>lower</code>=fail · <code>?</code>=no data · <code>·</code>=not run.</p>
+        </div>
+        <div class="ref-col">
+          <h4>Entry (O'Neil)</h4>
+          <ul class="ref-list">
+            <li><b>Buy point (pivot):</b> as price clears the base's pivot, on volume ≥40–50% above average (here: ≥1.4×).</li>
+            <li><b>Buy zone:</b> pivot up to <b>+5%</b>. Past +5% = extended, don't chase.</li>
+            <li><b>Only buy when M = uptrend.</b></li>
+          </ul>
+          <h4>Exit — cut losses</h4>
+          <ul class="ref-list">
+            <li><b>Hard stop −7% to −8%</b> below buy point. Always. No exceptions. (This scanner uses −7.5%.)</li>
+            <li>Sell on a break of the 50-day line on heavy volume, or climax top.</li>
+          </ul>
+          <h4>Exit — take profits &amp; move stops</h4>
+          <ul class="ref-list">
+            <li><b>Take most gains at +20–25%.</b></li>
+            <li><b>Fast-runner exception:</b> if up +20% within <b>3 weeks</b>, hold ≥8 weeks — likely a big winner.</li>
+            <li><b>Moving the stop (where, exactly):</b>
+              <ul>
+                <li>At entry: stop is <b>−7–8% below buy point</b>.</li>
+                <li>Once up ~<b>15–20%</b>: raise stop to <b>break-even</b> (your buy price) — now a free trade.</li>
+                <li>As it rises further: <b>trail under the rising 50-day MA</b> (sell if it closes below on volume), or trail roughly <b>10% below the recent high</b> for fast runners.</li>
+                <li>O'Neil does <b>not</b> use a fixed trailing %; the discipline is "never let a decent gain turn into a loss" — so break-even first, then ratchet up under support.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <p class="ref-foot">Per-ticker pivot · buy zone · stop are computed in each candidate card below. A scan match is a screen result, not a recommendation.</p>
+    </details>
+<section class="bucket bucket-all" data-bucket="all">
 
       <h2>Top 20 by composite score (near-matches)</h2>
       <table class="compact sortable">
@@ -1685,13 +1797,14 @@
 <details class="candidate" id="c-STRL" data-ticker="STRL" data-passed="true">
   <summary>
     <span class="ticker">STRL</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#STRL" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.98</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         fails: —
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -2222,13 +2335,14 @@ AD: A    </span>
 <details class="candidate" id="c-INOD" data-ticker="INOD" data-passed="true">
   <summary>
     <span class="ticker">INOD</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#INOD" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.96</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         fails: —
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -2760,13 +2874,14 @@ AD: A    </span>
 <details class="candidate" id="c-HWM" data-ticker="HWM" data-passed="true">
   <summary>
     <span class="ticker">HWM</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#HWM" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.95</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         fails: —
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: B    </span>
   </summary>
 
@@ -3297,13 +3412,14 @@ AD: B    </span>
 <details class="candidate" id="c-XOMA" data-ticker="XOMA" data-passed="true">
   <summary>
     <span class="ticker">XOMA</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#XOMA" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.94</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         Approaching pivot
  · dist +3.3% from pivot $42.91    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -3859,13 +3975,14 @@ AD: A    </span>
 <details class="candidate" id="c-CLS" data-ticker="CLS" data-passed="true">
   <summary>
     <span class="ticker">CLS</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#CLS" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.94</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         fails: —
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: B    </span>
   </summary>
 
@@ -4396,13 +4513,14 @@ AD: B    </span>
 <details class="candidate" id="c-APLS" data-ticker="APLS" data-passed="true">
   <summary>
     <span class="ticker">APLS</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#APLS" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.92</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         Approaching pivot
  · dist +0.3% from pivot $41.13    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -4960,13 +5078,14 @@ AD: A    </span>
 <details class="candidate" id="c-CBL" data-ticker="CBL" data-passed="true">
   <summary>
     <span class="ticker">CBL</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#CBL" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.91</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         Extended
  · dist -18.8% from pivot $39.07    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -5518,13 +5637,14 @@ AD: A    </span>
 <details class="candidate" id="c-GCT" data-ticker="GCT" data-passed="true">
   <summary>
     <span class="ticker">GCT</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#GCT" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.88</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         fails: —
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: C    </span>
   </summary>
 
@@ -6055,13 +6175,14 @@ AD: C    </span>
 <details class="candidate" id="c-ALAB" data-ticker="ALAB" data-passed="true">
   <summary>
     <span class="ticker">ALAB</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ALAB" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.87</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         Setup forming
  · dist +10.6% from pivot $231.83    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -6615,13 +6736,14 @@ AD: A    </span>
 <details class="candidate" id="c-ZVRA" data-ticker="ZVRA" data-passed="true">
   <summary>
     <span class="ticker">ZVRA</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ZVRA" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.83</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         fails: —
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -7152,13 +7274,14 @@ AD: A    </span>
 <details class="candidate" id="c-OUT" data-ticker="OUT" data-passed="true">
   <summary>
     <span class="ticker">OUT</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#OUT" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.80</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         fails: —
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: B    </span>
   </summary>
 
@@ -7690,13 +7813,14 @@ AD: B    </span>
 <details class="candidate" id="c-PARR" data-ticker="PARR" data-passed="true">
   <summary>
     <span class="ticker">PARR</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#PARR" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.79</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
     <span class="summary-meta">
         Setup forming
  · dist +8.5% from pivot $70.49    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: B    </span>
   </summary>
 
@@ -8259,13 +8383,14 @@ AD: B    </span>
 <details class="candidate" id="c-VICR" data-ticker="VICR" data-passed="false">
   <summary>
     <span class="ticker">VICR</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#VICR" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">1.00</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         Approaching pivot
  · dist +0.2% from pivot $313.62    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -8818,13 +8943,14 @@ AD: A    </span>
 <details class="candidate" id="c-MTZ" data-ticker="MTZ" data-passed="false">
   <summary>
     <span class="ticker">MTZ</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#MTZ" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.96</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         Approaching pivot
  · dist +0.0% from pivot $421.47    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -9376,13 +9502,14 @@ AD: A    </span>
 <details class="candidate" id="c-EME" data-ticker="EME" data-passed="false">
   <summary>
     <span class="ticker">EME</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#EME" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.96</span>
     <span class="gates">cANSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         Approaching pivot
  · dist +2.2% from pivot $952.06    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -9934,13 +10061,14 @@ AD: A    </span>
 <details class="candidate" id="c-PSTL" data-ticker="PSTL" data-passed="false">
   <summary>
     <span class="ticker">PSTL</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#PSTL" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.96</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         Approaching pivot
  · dist +1.8% from pivot $23.77    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: B    </span>
   </summary>
 
@@ -10492,13 +10620,14 @@ AD: B    </span>
 <details class="candidate" id="c-CARE" data-ticker="CARE" data-passed="false">
   <summary>
     <span class="ticker">CARE</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#CARE" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.95</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         Approaching pivot
  · dist +2.8% from pivot $27.34    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -11060,13 +11189,14 @@ AD: A    </span>
 <details class="candidate" id="c-AMD" data-ticker="AMD" data-passed="false">
   <summary>
     <span class="ticker">AMD</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#AMD" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.99</span>
     <span class="gates">caNsLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         Extended
  · dist -107.2% from pivot $221.43    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -11618,13 +11748,14 @@ AD: A    </span>
 <details class="candidate" id="c-UFCS" data-ticker="UFCS" data-passed="false">
   <summary>
     <span class="ticker">UFCS</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#UFCS" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.96</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         Extended
  · dist -27.8% from pivot $38.01    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -12177,13 +12308,14 @@ AD: A    </span>
 <details class="candidate" id="c-CBOE" data-ticker="CBOE" data-passed="false">
   <summary>
     <span class="ticker">CBOE</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#CBOE" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.95</span>
     <span class="gates">cANSlIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         Extended
  · dist -25.4% from pivot $279.43    </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: B    </span>
   </summary>
 
@@ -12740,13 +12872,14 @@ AD: B    </span>
 <details class="candidate" id="c-VIAV" data-ticker="VIAV" data-passed="false">
   <summary>
     <span class="ticker">VIAV</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#VIAV" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.99</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: A
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -13277,13 +13410,14 @@ AD: A    </span>
 <details class="candidate" id="c-TTMI" data-ticker="TTMI" data-passed="false">
   <summary>
     <span class="ticker">TTMI</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#TTMI" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.99</span>
     <span class="gates">caNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: CA
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -13814,13 +13948,14 @@ AD: A    </span>
 <details class="candidate" id="c-SANM" data-ticker="SANM" data-passed="false">
   <summary>
     <span class="ticker">SANM</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#SANM" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.98</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: A
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -14351,13 +14486,14 @@ AD: A    </span>
 <details class="candidate" id="c-GNRC" data-ticker="GNRC" data-passed="false">
   <summary>
     <span class="ticker">GNRC</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#GNRC" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.98</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: A
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -14888,13 +15024,14 @@ AD: A    </span>
 <details class="candidate" id="c-AAMI" data-ticker="AAMI" data-passed="false">
   <summary>
     <span class="ticker">AAMI</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#AAMI" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.98</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: A
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -15426,13 +15563,14 @@ AD: A    </span>
 <details class="candidate" id="c-PWR" data-ticker="PWR" data-passed="false">
   <summary>
     <span class="ticker">PWR</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#PWR" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.98</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: A
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -15963,13 +16101,14 @@ AD: A    </span>
 <details class="candidate" id="c-GTX" data-ticker="GTX" data-passed="false">
   <summary>
     <span class="ticker">GTX</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#GTX" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.97</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: A
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -16500,13 +16639,14 @@ AD: A    </span>
 <details class="candidate" id="c-COCO" data-ticker="COCO" data-passed="false">
   <summary>
     <span class="ticker">COCO</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#COCO" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.97</span>
     <span class="gates">cANSLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: C
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -17037,13 +17177,14 @@ AD: A    </span>
 <details class="candidate" id="c-FIX" data-ticker="FIX" data-passed="false">
   <summary>
     <span class="ticker">FIX</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#FIX" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.97</span>
     <span class="gates">cANsLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: CS
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: B    </span>
   </summary>
 
@@ -17574,13 +17715,14 @@ AD: B    </span>
 <details class="candidate" id="c-GOOG" data-ticker="GOOG" data-passed="false">
   <summary>
     <span class="ticker">GOOG</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#GOOG" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.96</span>
     <span class="gates">CANsLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: S
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -18111,13 +18253,14 @@ AD: A    </span>
 <details class="candidate" id="c-GOOGL" data-ticker="GOOGL" data-passed="false">
   <summary>
     <span class="ticker">GOOGL</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#GOOGL" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.96</span>
     <span class="gates">CANsLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: S
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -18648,13 +18791,14 @@ AD: A    </span>
 <details class="candidate" id="c-KALU" data-ticker="KALU" data-passed="false">
   <summary>
     <span class="ticker">KALU</span>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#KALU" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
     <span class="score mono">0.96</span>
     <span class="gates">CaNsLIM</span>
     <span class="status status-near-miss">near-miss</span>
     <span class="summary-meta">
         fails: AS
     </span>
-    <span class="summary-meta">
+    <span class="summary-meta summary-meta-cap">
 AD: A    </span>
   </summary>
 
@@ -21829,7 +21973,77 @@ AD: A    </span>
       </table>
     </section>
 
-    <footer>
+    <section class="bucket bucket-help hidden" data-bucket="help">
+      <div class="help-doc">
+        <h2>How to read this report</h2>
+        <p class="help-lede">CANSLIM is William O'Neil's growth-stock method (<em>How to Make Money in Stocks</em>). It buys fundamentally strong leaders <b>breaking out to new highs</b> in an uptrending market — and is equally strict about <b>when to sell</b>. A scan match is a screen result that fits the template, <b>not</b> a recommendation.</p>
+
+        <h3>The 7 CANSLIM gates</h3>
+        <table class="help-table">
+          <tr><td><b>C</b></td><td>Current quarterly earnings — EPS up ≥25% YoY and accelerating.</td></tr>
+          <tr><td><b>A</b></td><td>Annual earnings — EPS up ≥25%/yr over 3 years; ROE ≥17%.</td></tr>
+          <tr><td><b>N</b></td><td>New — new high, new product/management; emerging from a base.</td></tr>
+          <tr><td><b>S</b></td><td>Supply &amp; demand — breakout on volume ≥40–50% above average; reasonable float.</td></tr>
+          <tr><td><b>L</b></td><td>Leader, not laggard — relative strength in the top ~20–30% of the market.</td></tr>
+          <tr><td><b>I</b></td><td>Institutional sponsorship — funds own it and are adding.</td></tr>
+          <tr><td><b>M</b></td><td>Market direction — only buy when the general market is in a confirmed uptrend.</td></tr>
+        </table>
+        <p class="help-note">Gate flags: <code>UPPER</code> = pass · <code>lower</code> = fail · <code>?</code> = data unavailable · <code>·</code> = not run. So <code>CaNSLIM</code> = everything passed except <b>A</b>.</p>
+
+        <h3>Buckets (tabs)</h3>
+        <table class="help-table">
+          <tr><td><b>Full Matches</b></td><td>Pass <b>all 7</b> gates. The qualified list — start here.</td></tr>
+          <tr><td><b>Buyable Now</b></td><td>Near-misses (do <b>not</b> pass all gates) that have a chart pattern with price within −5% to +5% of the pivot — actionable <em>today</em>.</td></tr>
+          <tr><td><b>Watchlist</b></td><td>Has a pattern but price is extended past the pivot, or below it awaiting volume.</td></tr>
+          <tr><td><b>Basing</b></td><td>Passes several gates, no clean pivot yet — re-check in 2–4 weeks.</td></tr>
+          <tr><td><b>Override Watchlist</b></td><td>A gate failed the strict test but passed a relaxation path (turnaround + top-decile RS + pattern). Treat with extra skepticism.</td></tr>
+        </table>
+
+        <h3>Base patterns detected</h3>
+        <p class="help-note">Each candidate's chart marks the <b>pivot</b> (breakout trigger) from its top-confidence pattern. Patterns 1–6 are O'Neil bases; 7–8 are general TA continuation patterns.</p>
+        <table class="help-table">
+          <tr><td><b>Cup-with-Handle</b></td><td>O'Neil's signature base. Rounded cup 12–33% deep, ≥7 weeks; right side recovers near the left peak; then a 1–2 week handle (5–15% pullback, light volume, upper half of cup). Pivot = handle high + $0.10.</td></tr>
+          <tr><td><b>High-Tight-Flag</b></td><td>Rare, explosive. Rally of 100–120%+ in 4–8 weeks (flagpole), then a tight 3–5 week consolidation giving back only 10–25%. Pivot = flag high + $0.10.</td></tr>
+          <tr><td><b>Double-Bottom (W)</b></td><td>Two lows ~7+ weeks apart, middle peak +5–15%, second low at/below the first (undercut ideal). Pivot = middle-peak high + $0.10.</td></tr>
+          <tr><td><b>Saucer</b></td><td>Rounding bottom — a cup without a handle. Gentler and longer (8+ weeks), 8–30% deep, rounded. Valid but less common.</td></tr>
+          <tr><td><b>Ascending Triangle</b></td><td>(General TA) Flat resistance + rising support converging to an upside breakout. Pivot = flat top + $0.10.</td></tr>
+          <tr><td><b>Flat Base</b></td><td>Sideways ≥5 weeks within &lt;15% range, usually after a prior run. Tight, high-probability.</td></tr>
+          <tr><td><b>Consolidation (box)</b></td><td>(General TA) Rectangle with flat ceiling and floor (each ≤3% variation), 5–15% range, 15–40 sessions.</td></tr>
+          <tr><td><b>Three-Weeks-Tight</b></td><td>O'Neil add-on entry: 3 consecutive weekly closes within ≤1.5% of each other after an advance. Pivot = highest weekly close + $0.10.</td></tr>
+        </table>
+        <p class="help-note"><b>Confidence (0–1)</b> = how textbook the geometry is — <em>not</em> a probability of profit.</p>
+
+        <h3>Entry rules (O'Neil)</h3>
+        <ul class="help-ul">
+          <li><b>Buy point (pivot):</b> as price clears the base pivot, on volume ≥40–50% above average (this scanner: ≥1.4× the 50-day average).</li>
+          <li><b>Buy zone:</b> pivot up to <b>+5%</b>. Beyond +5% the stock is extended — don't chase.</li>
+          <li><b>Market gate:</b> only buy when <b>M</b> = confirmed uptrend.</li>
+        </ul>
+
+        <h3>Exit rules (O'Neil)</h3>
+        <p class="help-sub">Cut losses — the non-negotiable rule</p>
+        <ul class="help-ul">
+          <li><b>Hard stop at −7% to −8%</b> below your buy point. Always, no exceptions. (This scanner's plan uses −7.5%.)</li>
+          <li>Also sell on a break of the 50-day line on heavy volume, or a climax top.</li>
+        </ul>
+        <p class="help-sub">Take profits &amp; move stops — where, exactly</p>
+        <ul class="help-ul">
+          <li><b>Take most gains at +20–25%.</b></li>
+          <li><b>Fast-runner exception:</b> if up +20% within <b>3 weeks</b>, hold at least <b>8 weeks</b> — these are often the biggest winners.</li>
+          <li><b>Stop progression:</b>
+            <ol>
+              <li>At entry → stop <b>−7–8% below the buy point</b>.</li>
+              <li>Once up ~<b>15–20%</b> → raise stop to <b>break-even</b> (your buy price). The trade is now risk-free.</li>
+              <li>As it keeps rising → trail under the <b>rising 50-day moving average</b> (exit on a heavy-volume close below it); for fast runners, trail roughly <b>10% below the recent high</b>.</li>
+            </ol>
+          </li>
+          <li>O'Neil uses <b>no fixed trailing %</b> — the rule is "never let a solid gain become a loss": break-even first, then ratchet the stop up under support as the stock advances.</li>
+        </ul>
+        <p class="help-foot">Per-ticker pivot · buy zone · stop are computed in each candidate card. Sources: O'Neil, <em>How to Make Money in Stocks</em>; pattern/threshold encodings per this scanner's detectors.</p>
+      </div>
+    </section>
+
+<footer>
       <p>Config hash: <code>e2e9079ff9a1</code> · Generated by canslim scanner.</p>
     </footer>
   </main>
@@ -21839,17 +22053,17 @@ AD: A    </span>
   // === Tab navigation ===
   const tabs = document.querySelectorAll("nav.tabs button");
   const buckets = document.querySelectorAll("section.bucket");
-  tabs.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const target = btn.dataset.bucket;
-      tabs.forEach(b => b.classList.toggle("active", b === btn));
-      if (target === "all") {
-        buckets.forEach(s => s.classList.remove("hidden"));
-      } else {
-        buckets.forEach(s => s.classList.toggle("hidden", s.dataset.bucket !== target));
-      }
-    });
-  });
+  function activateTab(target) {
+    tabs.forEach(b => b.classList.toggle("active", b.dataset.bucket === target));
+    if (target === "all") {
+      // Show all result buckets, but NOT the Help reference (it's documentation,
+      // not scan results — only visible on its own tab).
+      buckets.forEach(s => s.classList.toggle("hidden", s.dataset.bucket === "help"));
+    } else {
+      buckets.forEach(s => s.classList.toggle("hidden", s.dataset.bucket !== target));
+    }
+  }
+  tabs.forEach(btn => btn.addEventListener("click", () => activateTab(btn.dataset.bucket)));
 
   // === Ticker search (filters TOC + main candidates) ===
   const search = document.getElementById("toc-search");
@@ -21865,39 +22079,39 @@ AD: A    </span>
     });
   });
 
-  // === Sticky-header offset for anchor jumps ===
-  // The sticky header (title + stat numbers + collapsible market-context) plus
-  // the sticky tab nav have a DYNAMIC, wrap-dependent height, so a fixed CSS
-  // scroll-margin-top can't be right (it was cutting off card tops). Measure the
-  // real occluding height live and publish it as the CSS var --anchor-offset,
-  // which `details.candidate { scroll-margin-top }` consumes. scrollIntoView()
-  // then honors it declaratively — no manual scroll math, no timing races.
-  const stickyEls = [
-    document.querySelector("header.app"),
-    document.querySelector("nav.tabs"),
-  ].filter(Boolean);
+  // === Sticky-chrome sizing + anchor-jump offset ===
+  // The header (title + stats + collapsible market-context) and the tab nav are
+  // BOTH sticky and STACKED: nav pins directly below the header. Both have a
+  // DYNAMIC, wrap-dependent height, so their offsets can't be hardcoded in CSS.
+  // We measure them live and publish two CSS vars:
+  //   --header-h : header height        -> nav.tabs { top: var(--header-h) }
+  //   --chrome-h : header + nav height  -> aside.toc top + anchor scroll-margin
+  // ResizeObserver keeps them current as the header wraps / market-context opens.
+  const headerEl = document.querySelector("header.app");
+  const tabsEl = document.querySelector("nav.tabs");
+  function measureChrome() {
+    const root = document.documentElement.style;
+    const headerSticky = headerEl && getComputedStyle(headerEl).position === "sticky";
+    const tabsSticky = tabsEl && getComputedStyle(tabsEl).position === "sticky";
+    const hh = headerSticky ? headerEl.offsetHeight : 0;   // 0 on mobile (static)
+    const nh = tabsSticky ? tabsEl.offsetHeight : 0;
+    root.setProperty("--header-h", hh + "px");
+    root.setProperty("--chrome-h", (hh + nh) + "px");
+  }
+  measureChrome();
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(measureChrome);
+    if (headerEl) ro.observe(headerEl);
+    if (tabsEl) ro.observe(tabsEl);
+  }
+  window.addEventListener("resize", measureChrome);
 
-  // True occluding height = the LOWEST bottom edge among currently-stuck sticky
-  // elements, measured in viewport coords. We take the MAX of their bottoms (NOT
-  // the sum of their heights — the tab nav overlaps the header's footprint, so
-  // summing double-counts and overshoots). Only valid once the page is scrolled
-  // enough that these elements are actually stuck at top, so jumpToCard measures
-  // AFTER a preliminary scroll.
-  // Occluding height of the sticky chrome when it is STUCK at the top. Computed
-  // from each sticky element's CSS `top` + its own height — this is position-
-  // independent (doesn't depend on the page being scrolled / settled yet), so it
-  // avoids the timing trap where getBoundingClientRect().bottom reads a transient
-  // mid-settle value. We take the MAX (header & tabs overlap; summing would
-  // double-count and overshoot).
+  // Occluding height of the stuck sticky chrome = header + nav (now stacked, not
+  // overlapping). Read from the live CSS var so it tracks header wraps.
   function stickyBottom() {
-    let b = 0;
-    stickyEls.forEach(e => {
-      const cs = getComputedStyle(e);
-      if (cs.position !== "sticky") return;             // static on mobile -> 0
-      const top = parseFloat(cs.top) || 0;              // its stuck offset
-      b = Math.max(b, top + e.offsetHeight);            // bottom edge when stuck
-    });
-    return b;
+    measureChrome();
+    const v = getComputedStyle(document.documentElement).getPropertyValue("--chrome-h");
+    return parseFloat(v) || 0;
   }
 
   function jumpToCard(el) {
