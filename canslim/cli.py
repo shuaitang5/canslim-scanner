@@ -862,7 +862,8 @@ def _build_landing_page(rows: list[str]) -> str:
   (with leadership-override paths for turnaround setups). Click any data date below
   to view the full report — full matches, near-misses, override watchlist, market
   context (VIX/breadth/sectors), and per-ticker entry plans.
-  Source: <a href="https://github.com/zhoutongchar/canslim-scanner">github.com/zhoutongchar/canslim-scanner</a>
+  Source: <a href="https://github.com/shuaitang5/canslim-scanner">github.com/shuaitang5/canslim-scanner</a>
+  (forked from <a href="https://github.com/zhoutongchar/canslim-scanner">zhoutongchar/canslim-scanner</a>)
 </p>
 <table>
   <thead>
@@ -880,7 +881,7 @@ def _build_landing_page(rows: list[str]) -> str:
 </table>
 <p class="footer">
   Most recent at top. Each report is self-contained HTML with inline SVG charts.
-  See <a href="https://github.com/zhoutongchar/canslim-scanner">README</a> for methodology.
+  See <a href="https://github.com/shuaitang5/canslim-scanner">README</a> for methodology.
 </p>
 </body>
 </html>"""
