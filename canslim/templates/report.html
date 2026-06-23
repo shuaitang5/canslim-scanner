@@ -192,6 +192,10 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
   details.candidate {
     border: 1px solid var(--border); border-radius: 4px;
     margin-bottom: 8px; background: var(--bg);
+    /* Offset anchor jumps (#c-TICKER) so the card top clears the sticky
+       header (~67px) + tab nav (~38px). Without this the expanded card is
+       scrolled under the sticky chrome and its top is cut off. */
+    scroll-margin-top: 115px;
   }
   details.candidate[open] {
     background: var(--bg);
@@ -321,6 +325,9 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
 
     /* Tab nav: NOT sticky on mobile — let it scroll with the page */
     nav.tabs { position: static; padding: 0 4px; }
+    /* Header + tab nav aren't sticky on mobile, so anchor jumps only need a
+       small breathing-room offset, not the desktop 115px. */
+    details.candidate { scroll-margin-top: 12px; }
     nav.tabs button { padding: 7px 10px; font-size: 11px; flex-shrink: 0; }
     nav.tabs button .count { font-size: 9px; padding: 0 4px; }
 

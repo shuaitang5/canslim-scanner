@@ -180,6 +180,8 @@
   details.candidate {
     border: 1px solid var(--border); border-radius: 4px;
     margin-bottom: 8px; background: var(--bg);
+    /* anchor-jump offset for sticky header+tabs (backfilled) */
+    scroll-margin-top: 115px;
   }
   details.candidate[open] {
     background: var(--bg);
@@ -308,6 +310,7 @@
 
     /* Tab nav: NOT sticky on mobile — let it scroll with the page */
     nav.tabs { position: static; padding: 0 4px; }
+    details.candidate { scroll-margin-top: 12px; }
     nav.tabs button { padding: 7px 10px; font-size: 11px; flex-shrink: 0; }
     nav.tabs button .count { font-size: 9px; padding: 0 4px; }
 
