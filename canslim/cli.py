@@ -563,6 +563,78 @@ def _meta_from_html(html: str, run_id: str) -> dict:
     }
 
 
+def _run_as_of(run_dir: Path) -> Optional[str]:
+    """Read a committed run's data date (``as_of``) from its meta.json.
+
+    Returns the ``as_of`` string, or ``None`` when the run has no meta.json or
+    the file is unreadable / missing the field. ``None`` means "as_of unknown"
+    — callers MUST treat such a run as non-prunable (never delete a dir whose
+    data date we can't establish).
+    """
+    meta_p = run_dir / "meta.json"
+    if not meta_p.exists():
+        return None
+    try:
+        meta = json.loads(meta_p.read_text())
+    except Exception:
+        return None
+    as_of = meta.get("as_of")
+    return as_of if isinstance(as_of, str) and as_of else None
+
+
+def _plan_superseded_runs(archive_dir: Path) -> dict[str, list[Path]]:
+    """Group archived run dirs by data date and pick which older dupes to prune.
+
+    "One report per date" is keyed on the DATA DATE (``as_of`` from meta.json),
+    NOT the run-id timestamp. For every ``as_of`` shared by more than one run,
+    the run with the LATEST run-id (lexicographic max of the dir name, which is
+    a sortable ``YYYY-MM-DD_HHMMSS`` stamp) is kept; the rest are returned for
+    deletion.
+
+    Runs whose ``as_of`` can't be determined (no/unreadable meta.json) are NEVER
+    grouped or pruned — each is left strictly alone. Returns a mapping
+    ``{as_of: [run_dirs_to_delete]}`` containing only dates that actually had a
+    prunable dupe (kept run excluded). Pure planning — performs no deletion.
+    """
+    from collections import defaultdict
+
+    by_as_of: dict[str, list[Path]] = defaultdict(list)
+    for p in archive_dir.iterdir():
+        if not p.is_dir():
+            continue
+        as_of = _run_as_of(p)
+        if as_of is None:
+            continue  # unknown data date -> untouchable
+        by_as_of[as_of].append(p)
+
+    plan: dict[str, list[Path]] = {}
+    for as_of, runs in by_as_of.items():
+        if len(runs) < 2:
+            continue
+        keep = max(runs, key=lambda p: p.name)
+        plan[as_of] = sorted((p for p in runs if p != keep), key=lambda p: p.name)
+    return plan
+
+
+def _prune_superseded_runs(archive_dir: Path) -> dict[str, list[str]]:
+    """Delete older same-``as_of`` run dirs, keeping only the latest per date.
+
+    Wraps :func:`_plan_superseded_runs` and removes the planned directories. Only
+    runs that share a data date with a newer run are deleted — runs of distinct
+    dates, and runs whose ``as_of`` is unknown, are never touched. Returns
+    ``{as_of: [deleted_run_ids]}`` for logging.
+    """
+    import shutil
+
+    plan = _plan_superseded_runs(archive_dir)
+    deleted: dict[str, list[str]] = {}
+    for as_of, dirs in plan.items():
+        for d in dirs:
+            shutil.rmtree(d)
+        deleted[as_of] = [d.name for d in dirs]
+    return deleted
+
+
 @app.command("publish")
 def publish(
     run: Optional[Path] = typer.Argument(
@@ -620,6 +692,14 @@ def publish(
             f"[green]Backfill complete:[/green] {written} written, {skipped} already present "
             f"({len(archived_runs)} archived run(s))"
         )
+        # Now that every backfilled run has a meta.json (its as_of), collapse any
+        # same-data-date dupes down to the newest run-id per date.
+        pruned = _prune_superseded_runs(archive_dir)
+        for as_of, run_ids in pruned.items():
+            console.print(
+                f"[yellow]Pruned {len(run_ids)} superseded run(s) for {as_of}:[/yellow] "
+                + ", ".join(run_ids)
+            )
         _regenerate_landing_page(docs_dir, archive_dir)
         return
 
@@ -681,6 +761,18 @@ def publish(
         meta = _meta_from_html(src_html.read_text(), run_id)
     (dest / "meta.json").write_text(json.dumps(meta, indent=2))
     console.print(f"[green]Wrote meta:[/green] {dest / 'meta.json'} (as_of={meta.get('as_of')})")
+
+    # One report per DATA DATE: prune any OLDER run dirs that share this run's
+    # as_of (keep only the newest run-id per data date). A daily cron plus ad-hoc
+    # manual dispatches must not repile multiple reports for the same trading
+    # day. Only same-as_of older runs are removed; other dates are never touched,
+    # and a run whose as_of can't be determined is left alone.
+    pruned = _prune_superseded_runs(archive_dir)
+    for as_of, run_ids in pruned.items():
+        console.print(
+            f"[yellow]Pruned {len(run_ids)} superseded run(s) for {as_of}:[/yellow] "
+            + ", ".join(run_ids)
+        )
 
     n = _regenerate_landing_page(docs_dir, archive_dir)
     console.print(f"[green]Landing page:[/green] {docs_dir / 'index.html'} ({n} run(s) listed)")

@@ -257,4 +257,42 @@ def test_publish_allows_clean_run(tmp_path):
     assert metas
     meta = json.loads(metas[0].read_text())
     assert meta["universe"] == "us_all"
+
+
+def _seed_archived(docs_dir, run_id, as_of):
+    """Pre-seed a committed docs/runs/<id>/ (index.html + meta.json) directly."""
+    d = docs_dir / "runs" / run_id
+    d.mkdir(parents=True)
+    (d / "index.html").write_text(_MINIMAL_HTML)
+    (d / "meta.json").write_text(
+        json.dumps({"as_of": as_of, "universe": "us_all", "run_id": run_id})
+    )
+    return d
+
+
+def test_publish_auto_prunes_same_as_of_keeps_other_dates(tmp_path):
+    # End-to-end: publishing a NEW run for an as_of that already has an older run
+    # must prune the older one, while a run of a DIFFERENT data date is untouched.
+    docs = tmp_path / "docs"
+    # An OLDER run for the same data date the new run will carry (2026-06-20),
+    # plus a distinct-date run that must survive.
+    _seed_archived(docs, "2026-06-21_080000", "2026-06-20")   # older, same as_of
+    _seed_archived(docs, "2026-06-19_120000", "2026-06-18")   # distinct date
+
+    # The NEW run (run_id later than the seeded one) carries as_of 2026-06-20.
+    _make_run(tmp_path, run_id="2026-06-21_235959")  # default as_of=2026-06-20
+
+    result = runner.invoke(
+        app,
+        ["publish", "--out", str(tmp_path / "out"), "--docs", str(docs)],
+    )
+    assert result.exit_code == 0, result.stdout
+
+    survivors = sorted(p.name for p in (docs / "runs").iterdir())
+    # 06-20: only the newest run-id survives; 06-18 distinct date untouched.
+    assert survivors == ["2026-06-19_120000", "2026-06-21_235959"]
+    assert "Pruned" in result.stdout
+    # Landing page lists exactly one row per data date (2 dates -> 2 rows).
+    index_html = (docs / "index.html").read_text()
+    assert index_html.count('<tr><td><a href=') == 2
     assert (tmp_path / "docs" / "index.html").exists()
