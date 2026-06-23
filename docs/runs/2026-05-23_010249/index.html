@@ -23003,20 +23003,22 @@ AD: B    </span>
   function jumpToCard(el) {
     if (!el || el.tagName !== "DETAILS") return;
     el.open = true;                                   // expand FIRST
-    // Two-step so we measure the header in its STUCK state, then let the browser
-    // do the actual scroll declaratively via scroll-margin-top (no manual scroll
-    // math = no stale-rect / clamping bugs near the top or bottom of the page).
-    // Step 1: rough scroll so header.app + nav.tabs settle into stuck position.
-    const approxTop = el.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: Math.max(0, approxTop - 300) });
-    requestAnimationFrame(() => {
-      // Step 2: measure the real occluding bottom (max of stuck sticky bottoms,
-      // NOT a sum of heights — header+tabs overlap), set it as the card's
-      // scroll-margin-top, then scrollIntoView honors it exactly.
-      const occ = stickyBottom();
-      el.style.scrollMarginTop = (occ + 8) + "px";
-      el.scrollIntoView({ block: "start" });
+    // Set the offset from the DETERMINISTIC stuck-header height (CSS top+height),
+    // then let the browser scroll declaratively via scroll-margin-top.
+    el.style.scrollMarginTop = (stickyBottom() + 12) + "px";
+
+    // The card body contains charts/images that can change height AFTER the
+    // first scroll, shifting the target. So scroll once, then RE-scroll after
+    // (a) two frames, (b) any contained image finishing load, and (c) a short
+    // timeout — each re-aligns to the now-settled layout. scrollIntoView is
+    // idempotent, so repeating it is harmless once layout is stable.
+    const align = () => el.scrollIntoView({ block: "start" });
+    align();
+    requestAnimationFrame(() => requestAnimationFrame(align));
+    el.querySelectorAll("img").forEach(img => {
+      if (!img.complete) img.addEventListener("load", align, { once: true });
     });
+    setTimeout(align, 250);
   }
 
   // === TOC click: expand + scroll the candidate clear of the header ===
