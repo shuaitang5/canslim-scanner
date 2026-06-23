@@ -192,10 +192,11 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
   details.candidate {
     border: 1px solid var(--border); border-radius: 4px;
     margin-bottom: 8px; background: var(--bg);
-    /* Anchor-jump offset = live-measured sticky-header height (set by JS as
-       --anchor-offset). Fallback 200px covers the no-JS / pre-measure case so a
-       card top is never hidden under the sticky chrome. */
-    scroll-margin-top: var(--anchor-offset, 200px);
+    /* No-JS fallback only. The primary mechanism is jumpToCard() in the script
+       below, which measures the real stuck-header bottom and scrolls precisely.
+       This static value just keeps a card top from hiding under the sticky
+       chrome if JS is disabled. */
+    scroll-margin-top: 150px;
   }
   details.candidate[open] {
     background: var(--bg);
@@ -741,31 +742,51 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
   // real occluding height live and publish it as the CSS var --anchor-offset,
   // which `details.candidate { scroll-margin-top }` consumes. scrollIntoView()
   // then honors it declaratively — no manual scroll math, no timing races.
-  const headerEl = document.querySelector("header.app");
-  const tabsEl = document.querySelector("nav.tabs");
-  function updateAnchorOffset() {
-    // When sticky and stuck, an element's offsetHeight is its occluding height.
-    // Sum header + tabs only when they're actually sticky (mobile makes them static).
-    let offset = 0;
-    [headerEl, tabsEl].forEach(e => {
-      if (!e) return;
-      if (getComputedStyle(e).position === "sticky") offset += e.offsetHeight;
+  const stickyEls = [
+    document.querySelector("header.app"),
+    document.querySelector("nav.tabs"),
+  ].filter(Boolean);
+
+  // True occluding height = the LOWEST bottom edge among currently-stuck sticky
+  // elements, measured in viewport coords. We take the MAX of their bottoms (NOT
+  // the sum of their heights — the tab nav overlaps the header's footprint, so
+  // summing double-counts and overshoots). Only valid once the page is scrolled
+  // enough that these elements are actually stuck at top, so jumpToCard measures
+  // AFTER a preliminary scroll.
+  // Occluding height of the sticky chrome when it is STUCK at the top. Computed
+  // from each sticky element's CSS `top` + its own height — this is position-
+  // independent (doesn't depend on the page being scrolled / settled yet), so it
+  // avoids the timing trap where getBoundingClientRect().bottom reads a transient
+  // mid-settle value. We take the MAX (header & tabs overlap; summing would
+  // double-count and overshoot).
+  function stickyBottom() {
+    let b = 0;
+    stickyEls.forEach(e => {
+      const cs = getComputedStyle(e);
+      if (cs.position !== "sticky") return;             // static on mobile -> 0
+      const top = parseFloat(cs.top) || 0;              // its stuck offset
+      b = Math.max(b, top + e.offsetHeight);            // bottom edge when stuck
     });
-    document.documentElement.style.setProperty("--anchor-offset", (offset + 12) + "px");
+    return b;
   }
-  updateAnchorOffset();
-  if (window.ResizeObserver) {
-    const ro = new ResizeObserver(updateAnchorOffset);
-    if (headerEl) ro.observe(headerEl);
-    if (tabsEl) ro.observe(tabsEl);
-  }
-  window.addEventListener("resize", updateAnchorOffset);
 
   function jumpToCard(el) {
     if (!el || el.tagName !== "DETAILS") return;
-    el.open = true;                 // expand FIRST so layout is settled
-    updateAnchorOffset();           // header may have just changed height
-    requestAnimationFrame(() => el.scrollIntoView({ block: "start" }));
+    el.open = true;                                   // expand FIRST
+    // Two-step so we measure the header in its STUCK state, then let the browser
+    // do the actual scroll declaratively via scroll-margin-top (no manual scroll
+    // math = no stale-rect / clamping bugs near the top or bottom of the page).
+    // Step 1: rough scroll so header.app + nav.tabs settle into stuck position.
+    const approxTop = el.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: Math.max(0, approxTop - 300) });
+    requestAnimationFrame(() => {
+      // Step 2: measure the real occluding bottom (max of stuck sticky bottoms,
+      // NOT a sum of heights — header+tabs overlap), set it as the card's
+      // scroll-margin-top, then scrollIntoView honors it exactly.
+      const occ = stickyBottom();
+      el.style.scrollMarginTop = (occ + 8) + "px";
+      el.scrollIntoView({ block: "start" });
+    });
   }
 
   // === TOC click: expand + scroll the candidate clear of the header ===
