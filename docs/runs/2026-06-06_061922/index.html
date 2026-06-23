@@ -181,7 +181,7 @@
     border: 1px solid var(--border); border-radius: 4px;
     margin-bottom: 8px; background: var(--bg);
     /* anchor-jump offset for sticky header+tabs (backfilled) */
-    scroll-margin-top: 115px;
+    scroll-margin-top: var(--anchor-offset, 200px);
   }
   details.candidate[open] {
     background: var(--bg);
@@ -311,7 +311,6 @@
 
     /* Tab nav: NOT sticky on mobile — let it scroll with the page */
     nav.tabs { position: static; padding: 0 4px; }
-    details.candidate { scroll-margin-top: 12px; }
     nav.tabs button { padding: 7px 10px; font-size: 11px; flex-shrink: 0; }
     nav.tabs button .count { font-size: 9px; padding: 0 4px; }
 
@@ -22602,12 +22601,48 @@ AD: A    </span>
     });
   });
 
-  // === TOC click: expand the candidate ===
+  // === Sticky-header offset for anchor jumps ===
+  // The sticky header (title + stat numbers + collapsible market-context) plus
+  // the sticky tab nav have a DYNAMIC, wrap-dependent height, so a fixed CSS
+  // scroll-margin-top can't be right (it was cutting off card tops). Measure the
+  // real occluding height live and publish it as the CSS var --anchor-offset,
+  // which `details.candidate { scroll-margin-top }` consumes. scrollIntoView()
+  // then honors it declaratively — no manual scroll math, no timing races.
+  const headerEl = document.querySelector("header.app");
+  const tabsEl = document.querySelector("nav.tabs");
+  function updateAnchorOffset() {
+    // When sticky and stuck, an element's offsetHeight is its occluding height.
+    // Sum header + tabs only when they're actually sticky (mobile makes them static).
+    let offset = 0;
+    [headerEl, tabsEl].forEach(e => {
+      if (!e) return;
+      if (getComputedStyle(e).position === "sticky") offset += e.offsetHeight;
+    });
+    document.documentElement.style.setProperty("--anchor-offset", (offset + 12) + "px");
+  }
+  updateAnchorOffset();
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(updateAnchorOffset);
+    if (headerEl) ro.observe(headerEl);
+    if (tabsEl) ro.observe(tabsEl);
+  }
+  window.addEventListener("resize", updateAnchorOffset);
+
+  function jumpToCard(el) {
+    if (!el || el.tagName !== "DETAILS") return;
+    el.open = true;                 // expand FIRST so layout is settled
+    updateAnchorOffset();           // header may have just changed height
+    requestAnimationFrame(() => el.scrollIntoView({ block: "start" }));
+  }
+
+  // === TOC click: expand + scroll the candidate clear of the header ===
   document.querySelectorAll("aside.toc a").forEach(a => {
-    a.addEventListener("click", () => {
+    a.addEventListener("click", (ev) => {
       const target = document.querySelector(a.getAttribute("href"));
       if (target && target.tagName === "DETAILS") {
-        target.open = true;
+        ev.preventDefault();            // take over from the native anchor jump
+        history.replaceState(null, "", a.getAttribute("href"));
+        jumpToCard(target);
       }
     });
   });
@@ -22637,15 +22672,23 @@ AD: A    </span>
     });
   });
 
-  // === Auto-expand on hash navigation ===
+  // === Auto-expand + correctly-offset scroll on hash navigation ===
+  // Fires both on landing with a hash (e.g. arriving from the diff dashboard at
+  // #c-ATI) and on hashchange. Uses jumpToCard so the card clears the sticky header.
   function expandHashTarget() {
-    if (location.hash) {
-      const t = document.querySelector(location.hash);
-      if (t && t.tagName === "DETAILS") t.open = true;
-    }
+    if (!location.hash) return;
+    let t;
+    try { t = document.querySelector(location.hash); } catch (e) { return; }
+    jumpToCard(t);
   }
   window.addEventListener("hashchange", expandHashTarget);
-  expandHashTarget();
+  // On initial load the layout (images/charts) may still be settling; run after
+  // load so the measured positions are final, not just on DOMContentLoaded.
+  if (location.hash) {
+    window.addEventListener("load", () => requestAnimationFrame(expandHashTarget));
+    // also try immediately for the common cached-load case
+    requestAnimationFrame(expandHashTarget);
+  }
 </script>
 </body>
 </html>
