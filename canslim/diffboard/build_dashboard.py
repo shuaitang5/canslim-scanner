@@ -26,6 +26,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 COMPANIES_FILE = HERE / "companies.json"
+SEARCH_TEMPLATE_FILE = HERE / "search_template.html"
 
 
 def _load_summaries(runs_dir: Path) -> list[dict]:
@@ -428,15 +429,46 @@ def build(docs_dir: Path, out_dir: Path) -> dict:
     return data
 
 
+def build_search_page(docs_dir: Path, out_dir: Path, companies: dict) -> None:
+    """Emit the static ticker-history search page (history.json inlined).
+
+    Pure client-side: history.json + companies enrichment are inlined into the
+    page so it works on plain GitHub Pages with no fetch / backend.
+    """
+    from canslim.diffboard.build_history import build_history
+
+    history = build_history(docs_dir)
+    template = SEARCH_TEMPLATE_FILE.read_text()
+    page = (
+        template
+        .replace("__HISTORY_JSON__", json.dumps(history))
+        .replace("__COMPANIES_JSON__", json.dumps(companies))
+    )
+    (out_dir / "search.html").write_text(page)
+    print(
+        f"[write] {out_dir / 'search.html'} — {len(history['tickers'])} ticker(s) indexed",
+        file=sys.stderr,
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(description="Build the CANSLIM diff dashboard from summary.json files.")
+    ap = argparse.ArgumentParser(
+        description="Build the CANSLIM diff dashboard + ticker-history search from summary.json files."
+    )
     ap.add_argument("--docs", type=Path, default=Path("docs"),
                     help="docs/ dir holding runs/<id>/summary.json (default: docs)")
     ap.add_argument("--out", type=Path, default=None,
                     help="output dir for the dashboard (default: <docs>/dashboard)")
     args = ap.parse_args(argv)
     out_dir = args.out or (args.docs / "dashboard")
-    build(args.docs, out_dir)
+
+    # 1) diff dashboard (also returns the merged data incl. companies)
+    data = build(args.docs, out_dir)
+    # 2) ticker-history inverted index at docs/history.json
+    from canslim.diffboard.build_history import build as build_history_file
+    build_history_file(args.docs, args.docs / "history.json")
+    # 3) static search page (inlines history.json + companies)
+    build_search_page(args.docs, out_dir, data.get("companies", {}))
     return 0
 
 
