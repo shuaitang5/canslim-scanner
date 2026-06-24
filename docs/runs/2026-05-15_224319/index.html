@@ -46,12 +46,12 @@
     padding: 10px 16px;
   }
   .app-title { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
-  .app-title h1 { margin: 0; font-size: 14px; font-weight: 600; }
   /* Cross-page nav, pushed to the top-right (same links/place on every page). */
   .app-title .nav-links { margin-left: auto; display: flex; gap: 14px; font-size: 13px; }
   .app-title .nav-links a { color: var(--accent); text-decoration: none; }
   .app-title .nav-links a:hover { text-decoration: underline; }
   .app-title .nav-links a.active { color: var(--text); font-weight: 600; cursor: default; }
+  .app-title h1 { margin: 0; font-size: 14px; font-weight: 600; }
   .app-title h1 a.home-link { color: var(--text); text-decoration: none; }
   .app-title h1 a.home-link:hover { color: var(--accent); }
   .app-title .meta { color: var(--text-muted); font-size: 12px; font-family: var(--mono); }
@@ -228,6 +228,11 @@
   table.compact th:hover { background: var(--bg-darker); }
   table.compact tbody tr:hover { background: var(--bg-alt); }
   table.compact td.num { font-family: var(--mono); text-align: right; }
+  /* Left-align variant: header text and numeric cells both flush-left so the
+     column header lines up vertically over its values. */
+  table.compact.align-left th,
+  table.compact.align-left td,
+  table.compact.align-left td.num { text-align: left; }
   table.compact .ticker-cell {
     font-family: var(--mono); font-weight: 600; color: var(--accent);
   }
@@ -463,8 +468,8 @@
       <span class="regime-badge regime-uptrend">UPTREND</span>
       <span class="meta">SPY $739.17 · 50d $690.04 · 200d $676.07</span>
     <span class="nav-links">
-      <a href="../../">Reports</a>
-      <a href="../../dashboard/">Dashboard</a>
+      <a href="../../">All Reports</a>
+      <a href="../../dashboard/">Daily Ranking Change</a>
     </span>
   </div>
   <div class="summary-row">
@@ -1617,7 +1622,7 @@
 <section class="bucket bucket-all" data-bucket="all">
 
       <h2>Top 20 by composite score (near-matches)</h2>
-      <table class="compact sortable">
+      <table class="compact sortable align-left">
         <thead><tr>
           <th>#</th><th>Ticker</th><th class="num">Score</th>
           <th class="mono">CANSLIM</th><th>Fails</th>

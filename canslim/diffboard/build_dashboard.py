@@ -220,8 +220,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   <label class="compare-note">Date <select id="dateSelect"></select></label>
   <span class="compare-note" id="compareNote"></span>
   <span class="nav-links">
-    <a href="../">Reports</a>
-    <a class="active" href="index.html">Dashboard</a>
+    <a href="../">All Reports</a>
+    <a class="active" href="index.html">Daily Ranking Change</a>
   </span>
 </header>
 

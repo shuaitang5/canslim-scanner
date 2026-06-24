@@ -1101,8 +1101,8 @@ _LANDING_TEMPLATE = r"""<!DOCTYPE html><html lang="en">
 <div class="page-head">
   <h1>CANSLIM Scan Reports</h1>
   <span class="nav-links">
-    <a class="active" href=".">Reports</a>
-    <a href="dashboard/">Dashboard</a>
+    <a class="active" href=".">All Reports</a>
+    <a href="dashboard/">Daily Ranking Change</a>
   </span>
 </div>
 <p class="lede">
