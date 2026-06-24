@@ -1048,6 +1048,13 @@ _LANDING_TEMPLATE = r"""<!DOCTYPE html><html lang="en">
                    background: var(--bg); border-radius: 6px; cursor: pointer; color: var(--muted); }
   .ranges button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
+  .pager { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+  .pager button { font: inherit; font-size: 12px; padding: 7px 11px; border: 1px solid var(--border);
+                  background: var(--bg); border-radius: 6px; cursor: pointer; color: var(--muted); }
+  .pager button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .pager button:disabled { opacity: 0.4; cursor: default; }
+  .pager .page-label { font-size: 12px; color: var(--muted); }
+
   #result { margin-top: 16px; }
   .result-head .sym { font: 700 22px var(--mono); }
   .result-head .co { color: var(--muted); margin-left: 10px; font-size: 14px; }
@@ -1132,10 +1139,11 @@ _LANDING_TEMPLATE = r"""<!DOCTYPE html><html lang="en">
       <th class="num">Scanned</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="reports-tbody">
 __RUNS_TBODY__
   </tbody>
 </table>
+<div id="reports-pager" class="pager" hidden></div>
 <p class="footer">
   Most recent at top. Each report is self-contained HTML with inline SVG charts.
   See <a href="https://github.com/shuaitang5/canslim-scanner">README</a> for methodology.
@@ -1150,6 +1158,27 @@ __RUNS_TBODY__
   const TICKERS = Object.keys(HISTORY.tickers || {}).sort();
   const ALL_DATES = HISTORY.dates || [];
   const NUM_REPORTS = ALL_DATES.length;
+  const PAGE_SIZE = 20;
+
+  // Render a prev/next + "page N of M" pager into `el` for `totalItems` rows.
+  // `onGo(page)` is called (1-based) when the user clicks prev/next. The pager
+  // hides itself when there's a single page. Accessible: real <button>s with
+  // aria-labels, disabled at the ends, plus an aria-live page label.
+  function renderPager(el, totalItems, page, onGo) {
+    const pages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+    if (pages <= 1) { el.hidden = true; el.innerHTML = ""; return; }
+    el.hidden = false;
+    el.innerHTML =
+      '<button type="button" class="pg-prev" aria-label="Previous page"' +
+        (page <= 1 ? ' disabled' : '') + '>&larr; Prev</button>' +
+      '<span class="page-label" aria-live="polite">Page ' + page + ' of ' + pages + '</span>' +
+      '<button type="button" class="pg-next" aria-label="Next page"' +
+        (page >= pages ? ' disabled' : '') + '>Next &rarr;</button>';
+    const prev = el.querySelector(".pg-prev");
+    const next = el.querySelector(".pg-next");
+    if (prev) prev.addEventListener("click", () => { if (page > 1) onGo(page - 1); });
+    if (next) next.addEventListener("click", () => { if (page < pages) onGo(page + 1); });
+  }
 
   const BUCKET_LABEL = {
     full_match: "Full Match", buyable: "Buyable",
@@ -1209,6 +1238,18 @@ __RUNS_TBODY__
   }
 
   qEl.addEventListener("input", () => { updateAc(); });
+
+  // Select-all on focus so typing a new ticker replaces the old one (no
+  // backspacing). A plain click fires focus (which selects) then a mouseup
+  // that collapses the selection to the caret; swallow that one mouseup so a
+  // click keeps the full text selected.
+  let justFocused = false;
+  qEl.addEventListener("focus", () => { justFocused = true; qEl.select(); });
+  qEl.addEventListener("mouseup", (e) => {
+    if (justFocused) { e.preventDefault(); justFocused = false; }
+  });
+  qEl.addEventListener("blur", () => { justFocused = false; });
+
   qEl.addEventListener("keydown", (e) => {
     const items = Array.from(acEl.querySelectorAll(".ac-item"));
     if (e.key === "ArrowDown") { e.preventDefault(); acIndex = Math.min(acIndex + 1, items.length - 1); }
@@ -1238,16 +1279,20 @@ __RUNS_TBODY__
     if (!btn) return;
     rangeMonths = btn.dataset.range;
     rangesEl.querySelectorAll("button").forEach(b => b.classList.toggle("active", b === btn));
+    resultPage = 1;          // range change reshapes the result set → page 1
     if (currentTicker) render(currentTicker);
   });
 
   // ---- result render ----
   let currentTicker = null;
+  let resultPage = 1;        // current page of the per-ticker timeline
+  let resultRows = [];       // range-filtered appearances backing the timeline
 
   function selectTicker(t) {
     t = t.toUpperCase();
     qEl.value = t;
     acEl.classList.remove("open");
+    resultPage = 1;          // reset to page 1 on every new search
     render(t);
   }
 
@@ -1295,7 +1340,15 @@ __RUNS_TBODY__
       ' &nbsp;·&nbsp; first <span class="stat">' + first + '</span>, last <span class="stat">' + last + '</span>' +
       (countParts.length ? ' &nbsp;·&nbsp; ' + countParts.join(", ") : "");
 
-    const trs = rows.map(r => {
+    // Paginate the timeline 20/page. Clamp the page in case the result set
+    // shrank (e.g. range change); summary still reflects the full count.
+    resultRows = rows;
+    const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+    resultPage = Math.min(Math.max(1, resultPage), pages);
+    const start = (resultPage - 1) * PAGE_SIZE;
+    const pageRows = rows.slice(start, start + PAGE_SIZE);
+
+    const trs = pageRows.map(r => {
       const label = BUCKET_LABEL[r.bucket] || r.bucket || "—";
       return '<tr>' +
         '<td class="date"><a href="runs/' + r.run_id + '/#c-' + ticker + '">' + r.date + '</a></td>' +
@@ -1310,8 +1363,34 @@ __RUNS_TBODY__
       '<div class="result-head"><span class="sym">' + escapeHtml(ticker) + '</span>' + coName + '</div>' +
       '<div class="summary-line">' + summary + '</div>' +
       '<table><thead><tr><th>Date</th><th>Bucket</th><th class="tl-num">Score</th><th>Gates</th><th>AD</th></tr></thead>' +
-      '<tbody>' + trs + '</tbody></table>';
+      '<tbody>' + trs + '</tbody></table>' +
+      '<div id="result-pager" class="pager" hidden></div>';
+
+    renderPager(document.getElementById("result-pager"), rows.length, resultPage, (p) => {
+      resultPage = p;
+      render(currentTicker);
+    });
   }
+
+  // ---- reports-table pagination ----
+  // Rows are server-rendered into #reports-tbody; paginate by showing/hiding
+  // 20-row ranges. No pager (and all rows visible) when <=20 reports.
+  const reportsBody = document.getElementById("reports-tbody");
+  const reportsPager = document.getElementById("reports-pager");
+  const reportRows = reportsBody
+    ? Array.from(reportsBody.querySelectorAll("tr")).filter(tr => !tr.querySelector("td[colspan]"))
+    : [];
+  let reportsPage = 1;
+
+  function showReportsPage(page) {
+    const pages = Math.max(1, Math.ceil(reportRows.length / PAGE_SIZE));
+    reportsPage = Math.min(Math.max(1, page), pages);
+    const start = (reportsPage - 1) * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+    reportRows.forEach((tr, i) => { tr.hidden = (i < start || i >= end); });
+    renderPager(reportsPager, reportRows.length, reportsPage, showReportsPage);
+  }
+  if (reportRows.length) showReportsPage(1);
 
   // Deep-link support: index.html?t=ATI
   const params = new URLSearchParams(location.search);
