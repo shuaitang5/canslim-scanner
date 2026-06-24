@@ -249,6 +249,38 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
     font-family: var(--mono); font-weight: 600; color: var(--accent);
   }
 
+  /* === Actionable master table ============================= */
+  .actionable-filters {
+    display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: center;
+    margin: 4px 0 10px;
+  }
+  .actionable-filters label {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--text-muted); font-weight: 600;
+  }
+  .actionable-filters select {
+    font: inherit; font-size: 12px; text-transform: none; letter-spacing: 0;
+    color: var(--text); padding: 3px 6px; border: 1px solid var(--border);
+    border-radius: 3px; background: var(--bg);
+  }
+  .actionable-filters .shown { margin-left: auto; color: var(--text-muted);
+    font-family: var(--mono); font-size: 11px; }
+  /* Status chip — reuses the bucket dot palette. */
+  .status-chip {
+    display: inline-block; padding: 1px 7px; border-radius: 3px;
+    font-size: 10px; font-weight: 600; white-space: nowrap;
+  }
+  .chip-full_match { background: var(--pass); color: #fff; }
+  .chip-buyable { background: var(--info); color: #fff; }
+  .chip-watchlist { background: var(--warn); color: #fff; }
+  /* Entry-status text tint matches the entry-plan card colors. */
+  .entry-buyzone { color: var(--pass); font-weight: 600; }
+  .entry-approaching { color: var(--warn); }
+  .entry-extended { color: var(--fail); }
+  .entry-forming, .entry-unknown { color: var(--text-muted); }
+  tr.row-hidden { display: none; }
+
   /* === Candidate blocks ==================================== */
   details.candidate {
     border: 1px solid var(--border); border-radius: 4px;
@@ -687,31 +719,89 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
 
     <section class="bucket bucket-all" data-bucket="all">
 
-      {% if near_matches %}
-      <h2>Top {{ near_matches|length }} by composite score (near-matches)</h2>
-      <table class="compact sortable align-left">
+      {# === Actionable master table — PRIMARY view ============================
+         One row per ticker, unioning Full Match + Buyable + Watchlist. Status +
+         Pattern <select>s filter client-side; column headers sort (reuses the
+         shared table.sortable JS). Answers "Full Match or Buyable, Cup-with-
+         Handle" in one place without opening any ticker card. #}
+      {% if actionable %}
+      <h2>Actionable <span class="meta">— full matches + buyable + watchlist</span></h2>
+      <div class="actionable-filters">
+        <label>Status
+          <select id="f-status">
+            <option value="">All</option>
+            <option value="full_match,buyable">Full Match + Buyable</option>
+            <option value="full_match">Full Match</option>
+            <option value="buyable">Buyable</option>
+            <option value="watchlist">Watchlist</option>
+          </select>
+        </label>
+        <label>Pattern
+          <select id="f-pattern">
+            <option value="">All</option>
+            {% for name, label in actionable_patterns %}
+            <option value="{{ name }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <span class="shown" id="actionable-shown"></span>
+      </div>
+      <table class="compact sortable align-left" id="actionable-table">
         <thead><tr>
-          <th>#</th><th>Ticker</th><th class="num">Score</th>
-          <th class="num">Mkt Cap</th>
-          <th class="mono">CANSLIM</th><th>Fails</th>
-          <th class="num">RS%ile</th><th>Patterns</th>
+          <th>Ticker</th><th>Status</th><th class="num">Score</th>
+          <th class="mono">CANSLIM</th><th>Pattern</th>
+          <th class="num">Pivot</th><th>Entry</th>
+          <th class="num">Mkt Cap</th><th class="num">RS%ile</th>
         </tr></thead>
         <tbody>
-        {% for r in near_matches %}
-          {% set l = r.criteria.get("L") %}
-          <tr>
-            <td class="num">{{ loop.index }}</td>
-            <td class="ticker-cell"><a href="#c-{{ r.ticker }}">{{ r.ticker }}</a></td>
-            <td class="num">{{ "%.2f"|format(r.composite_score) }}</td>
-            <td class="num">{{ r.market_cap|fmt_mktcap }}</td>
-            <td class="mono">{{ helpers.gate_flags(r) }}</td>
-            <td class="mono">{{ helpers.failed_gates(r) or "—" }}</td>
-            <td class="num">{{ "%.2f"|format(helpers.num(l.value if l else None)) }}</td>
-            <td>{{ helpers.patterns_label(r.patterns) or "—" }}</td>
+        {% for row in actionable %}
+          <tr data-status="{{ row.status }}" data-pattern="{{ row.pattern_name }}">
+            <td class="ticker-cell"><a href="#c-{{ row.ticker }}">{{ row.ticker }}</a></td>
+            <td><span class="status-chip chip-{{ row.status }}">{{ row.status_label }}</span></td>
+            <td class="num">{{ "%.2f"|format(row.score) }}</td>
+            <td class="mono">{{ row.gates }}</td>
+            <td>{{ row.pattern_label or "—" }}</td>
+            <td class="num">{% if row.pivot is not none %}${{ "%.2f"|format(row.pivot) }}{% else %}—{% endif %}</td>
+            <td class="entry-{{ row.entry_class or 'unknown' }}">{{ row.entry_label or "—" }}{% if row.dist is number %} {{ "%+.1f"|format(row.dist * 100) }}%{% endif %}</td>
+            <td class="num">{{ row.market_cap|fmt_mktcap }}</td>
+            <td class="num">{% if row.rs_pct is number %}{{ "%.2f"|format(row.rs_pct) }}{% else %}—{% endif %}</td>
           </tr>
         {% endfor %}
         </tbody>
       </table>
+      {% endif %}
+
+      {# === Near misses (DEMOTED diagnostic) ================================
+         Scanned-but-FAILED runners-up, ranked by score. NOT actionable (no gate
+         pass); kept below the master table for diagnostic value only, honestly
+         labeled so it isn't mistaken for buy candidates. #}
+      {% if near_matches %}
+      <details class="ref-card" style="margin-top:18px">
+        <summary>Near misses ({{ near_matches|length }}) — failed gates, ranked by score · diagnostic</summary>
+        <table class="compact sortable align-left" style="margin:4px 12px 10px">
+          <thead><tr>
+            <th>#</th><th>Ticker</th><th class="num">Score</th>
+            <th class="num">Mkt Cap</th>
+            <th class="mono">CANSLIM</th><th>Fails</th>
+            <th class="num">RS%ile</th><th>Patterns</th>
+          </tr></thead>
+          <tbody>
+          {% for r in near_matches %}
+            {% set l = r.criteria.get("L") %}
+            <tr>
+              <td class="num">{{ loop.index }}</td>
+              <td class="ticker-cell"><a href="#c-{{ r.ticker }}">{{ r.ticker }}</a></td>
+              <td class="num">{{ "%.2f"|format(r.composite_score) }}</td>
+              <td class="num">{{ r.market_cap|fmt_mktcap }}</td>
+              <td class="mono">{{ helpers.gate_flags(r) }}</td>
+              <td class="mono">{{ helpers.failed_gates(r) or "—" }}</td>
+              <td class="num">{{ "%.2f"|format(helpers.num(l.value if l else None)) }}</td>
+              <td>{{ helpers.patterns_label(r.patterns) or "—" }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </details>
       {% endif %}
 
     </section>
@@ -1024,6 +1114,35 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
       });
     });
   });
+
+  // === Actionable master table: Status + Pattern filters ===
+  // Pure client-side toggle over the rendered rows via .row-hidden. Independent
+  // of sorting — sort reorders <tr> but preserves the class, so a filter set
+  // before/after a sort still holds. Combining the two <select>s answers the
+  // chairman's query (Status∈{Full Match,Buyable} AND Pattern=Cup-with-Handle).
+  const fStatus = document.getElementById("f-status");
+  const fPattern = document.getElementById("f-pattern");
+  const actTable = document.getElementById("actionable-table");
+  if (fStatus && fPattern && actTable) {
+    const shown = document.getElementById("actionable-shown");
+    const applyActionableFilter = () => {
+      // Status value may be a comma set ("full_match,buyable") so one selection
+      // answers the chairman's "Full Match OR Buyable" in a single pick.
+      const statuses = fStatus.value ? fStatus.value.split(",") : [];
+      const p = fPattern.value;
+      let n = 0;
+      actTable.querySelectorAll("tbody tr").forEach(tr => {
+        const ok = (!statuses.length || statuses.includes(tr.dataset.status))
+                   && (!p || tr.dataset.pattern === p);
+        tr.classList.toggle("row-hidden", !ok);
+        if (ok) n++;
+      });
+      if (shown) shown.textContent = n + " shown";
+    };
+    fStatus.addEventListener("change", applyActionableFilter);
+    fPattern.addEventListener("change", applyActionableFilter);
+    applyActionableFilter();
+  }
 
   // === Auto-expand + correctly-offset scroll on hash navigation ===
   // Fires both on landing with a hash (e.g. arriving from the diff dashboard at

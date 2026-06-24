@@ -27,6 +27,20 @@ from canslim.report import _fmt_mktcap
 
 LETTERS = ["C", "A", "N", "S", "L", "I", "M"]
 
+# Canonical pattern name -> chairman-facing label. Keyed on PatternMatch.name
+# (the detector's `name` attribute). Used for the Actionable table's Pattern
+# column + filter so he sees "Cup-with-Handle", not "cup_with_handle".
+PATTERN_DISPLAY = {
+    "cup_with_handle": "Cup-with-Handle",
+    "double_bottom": "Double Bottom",
+    "flat_base": "Flat Base",
+    "saucer": "Saucer",
+    "high_tight_flag": "High Tight Flag",
+    "three_weeks_tight": "Three Weeks Tight",
+    "ascending_triangle": "Ascending Triangle",
+    "consolidation": "Consolidation",
+}
+
 
 # ---------- Public API ----------
 
@@ -73,6 +87,18 @@ def render_html(
         key=lambda r: -max((p.confidence for p in r.patterns), default=0.0),
     )[:top_n_near_matches]
 
+    # Actionable master table: Full Match + Buyable + Watchlist unioned into one
+    # filter/sortable view (the report's primary actionable read).
+    actionable = _actionable_rows(matches, buyable, watchlist)
+    # Distinct patterns present in the actionable rows, for the Pattern filter —
+    # ordered by the canonical PATTERN_DISPLAY sequence so the dropdown is stable.
+    present = {row["pattern_name"] for row in actionable if row["pattern_name"]}
+    actionable_patterns = [
+        (name, PATTERN_DISPLAY.get(name, name))
+        for name in PATTERN_DISPLAY
+        if name in present
+    ]
+
     # Render context
     ctx = {
         "manifest": manifest,
@@ -80,6 +106,8 @@ def render_html(
         "regime_index_label": _regime_index_label(manifest),
         "matches": matches,
         "near_matches": near_matches,
+        "actionable": actionable,
+        "actionable_patterns": actionable_patterns,
         "buyable": buyable,
         "watchlist": watchlist,
         "basing": basing,
@@ -421,6 +449,55 @@ def _bucket_candidates(
         else:
             watchlist.append(r)
     return buyable, watchlist, basing
+
+
+def _actionable_rows(
+    matches: list[ScanResult],
+    buyable: list[ScanResult],
+    watchlist: list[ScanResult],
+) -> list[dict]:
+    """Union Full Match + Buyable + Watchlist into one actionable row list.
+
+    Basing is excluded (no pivot yet = not actionable) and failed near-match
+    runners-up are excluded (they aren't in any of these three buckets). One row
+    per ticker; each carries the source bucket as ``status`` plus the
+    presentation fields the master table renders. Sorted by composite score
+    desc so the strongest signal sits on top before the user sorts/filters.
+    """
+    rows: list[dict] = []
+    for status, bucket in (
+        ("full_match", matches),
+        ("buyable", buyable),
+        ("watchlist", watchlist),
+    ):
+        for r in bucket:
+            es = _entry_status(r)
+            p = _primary_pattern(r)
+            pattern_name = p.name if p is not None else ""
+            rows.append(
+                {
+                    "result": r,
+                    "status": status,
+                    "status_label": {
+                        "full_match": "Full Match",
+                        "buyable": "Buyable",
+                        "watchlist": "Watchlist",
+                    }[status],
+                    "ticker": r.ticker,
+                    "score": r.composite_score,
+                    "gates": _gate_flags(r),
+                    "pattern_name": pattern_name,
+                    "pattern_label": PATTERN_DISPLAY.get(pattern_name, pattern_name),
+                    "pivot": es.get("pivot"),
+                    "entry_label": es.get("status_label", ""),
+                    "entry_class": es.get("status_class", ""),
+                    "dist": es.get("dist"),
+                    "market_cap": r.market_cap,
+                    "rs_pct": _num(r.criteria["L"].value) if r.criteria.get("L") else None,
+                }
+            )
+    rows.sort(key=lambda row: -row["score"])
+    return rows
 
 
 def _regime_index_label(manifest: RunManifest) -> str:
