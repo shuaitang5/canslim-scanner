@@ -91,26 +91,53 @@ def main(argv: list[str] | None = None) -> int:
         cache = json.loads(CACHE_FILE.read_text())
         print(f"[cache] {len(cache)} cached entries", file=sys.stderr)
 
-    todo = [t for t in tickers if t not in cache]
-    print(f"[todo] fetching {len(todo)} ticker(s)", file=sys.stderr)
+    # A cache entry is "incomplete" if it has no real name (name==ticker) or no
+    # sector — i.e. a prior fetch failed (yfinance throttle) and left a blank
+    # stub. RECURRING-BUG FIX: previously a failed fetch wrote a permanent blank
+    # stub AND `todo` only fetched tickers ABSENT from cache, so a blank was
+    # never retried — it stayed blank forever. Now we retry incomplete entries
+    # every run until they fill, and we NEVER overwrite a good entry with a blank.
+    def _incomplete(v: dict | None) -> bool:
+        if not v:
+            return True
+        return (not v.get("sector")) or (not v.get("name")) or v.get("name") == v.get("ticker")
+
+    todo = [t for t in tickers if t not in cache or _incomplete(cache.get(t))]
+    print(f"[todo] fetching {len(todo)} ticker(s) "
+          f"({sum(1 for t in tickers if t in cache and _incomplete(cache[t]))} retried blanks)",
+          file=sys.stderr)
 
     for t in todo:
-        try:
-            cache[t] = fetch_one(t)
-            print(f"  [ok] {t} — {cache[t]['name']}", file=sys.stderr)
-        except Exception as e:
-            print(f"  [err] {t}: {e}", file=sys.stderr)
-            cache[t] = {
-                "ticker": t, "name": t, "industry": "", "sector": "", "blurb": "",
-            }
+        got = None
+        # Bounded retry to ride through transient yfinance throttling within a run.
+        for attempt in range(3):
+            try:
+                cand = fetch_one(t)
+                if not _incomplete(cand):  # got real data
+                    got = cand
+                    break
+                # fetch "succeeded" but came back empty (throttled .info) — retry
+            except Exception as e:
+                if attempt == 2:
+                    print(f"  [err] {t}: {e}", file=sys.stderr)
+            time.sleep(0.4 * (attempt + 1))
+        if got is not None:
+            cache[t] = got
+            print(f"  [ok] {t} — {got['name']}", file=sys.stderr)
+        else:
+            # DO NOT write a permanent blank. Keep any existing (possibly partial)
+            # entry; if none exists, write a stub but it stays in `todo` next run
+            # (because _incomplete) so it WILL be retried until it fills.
+            cache.setdefault(t, {"ticker": t, "name": t, "industry": "", "sector": "", "blurb": ""})
+            print(f"  [retry-next-run] {t}: still unenriched (will retry)", file=sys.stderr)
         time.sleep(0.2)  # be nice to Yahoo
 
     CACHE_FILE.write_text(json.dumps(cache, indent=2))
     print(f"[write] {CACHE_FILE}", file=sys.stderr)
 
-    blanks = [t for t, v in cache.items() if not v.get("blurb")]
+    blanks = [t for t in tickers if _incomplete(cache.get(t))]
     if blanks:
-        print(f"[warn] no blurb for: {blanks} (will render with name only)",
+        print(f"[warn] {len(blanks)} still unenriched (will retry next run): {blanks[:20]}",
               file=sys.stderr)
     return 0
 
