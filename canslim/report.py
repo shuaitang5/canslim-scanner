@@ -3,6 +3,7 @@ from __future__ import annotations
 import base64
 import json
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -40,6 +41,12 @@ def write_run(
 
     # parquet for downstream consumers
     _write_results_parquet(run_dir / "results.parquet", results)
+
+    # Structured per-run summary of the NAMED-bucket tickers (full_match /
+    # buyable / watchlist / basing). This is the clean JSON the dashboard +
+    # ticker-history search consume — NO HTML scraping. Sourced straight from
+    # the in-memory results, so it can never drift from the report.
+    _write_summary_json(run_dir / "summary.json", results, manifest, top_n_near_matches)
 
     # per-ticker charts for matches + top near-matches
     charts_dir = run_dir / "charts"
@@ -149,6 +156,96 @@ def _write_results_parquet(path: Path, results: list[ScanResult]) -> None:
         rows.append(row)
     df = pd.DataFrame(rows)
     df.to_parquet(path, index=False)
+
+
+NAMED_BUCKETS = ("full_match", "buyable", "watchlist", "basing")
+
+
+def build_run_summary(
+    results: list[ScanResult],
+    manifest: RunManifest,
+    top_n_near_matches: int = 20,
+) -> dict:
+    """Build the structured per-run summary of NAMED-bucket tickers.
+
+    Returns ``{run_id, as_of, universe, generated, tickers: [entry, ...]}`` where
+    each entry is ``{ticker, bucket, score, gates, ad, pivot, dist, market_cap,
+    as_of}``. Only tickers in a NAMED bucket (full_match / buyable / watchlist /
+    basing) are included — NOT the full ~1500 scanned set.
+
+    Bucket assignment mirrors EXACTLY what the published HTML report shows: full
+    matches are ``r.passed``; the remaining buckets come from the same
+    candidate-pool + ``_bucket_candidates`` logic the HTML renderer uses, so the
+    summary can never drift from the page. (``html_report._bucket_candidates`` is
+    the canonical published split; we reuse it rather than re-deriving here.)
+    """
+    # Import lazily to avoid a hard import cycle at module load (html_report
+    # imports report._fmt_mktcap). The selection logic below is identical to
+    # html_report.render_html's so summary.json == the rendered buckets.
+    from canslim.html_report import (
+        _bucket_candidates as _html_bucket_candidates,
+        _gate_flags as _html_gate_flags,
+        _primary_pattern as _html_primary_pattern,
+    )
+
+    matches = sorted([r for r in results if r.passed], key=lambda r: -r.composite_score)
+    scanned = sorted(
+        [r for r in results if r.status == "scanned"], key=lambda r: -r.composite_score
+    )
+    match_set = {r.ticker for r in matches}
+    candidate_pool = [r for r in scanned if r.ticker not in match_set][:top_n_near_matches]
+    buyable, watchlist, basing = _html_bucket_candidates(candidate_pool)
+
+    def _entry(r: ScanResult, bucket: str) -> dict:
+        p = _html_primary_pattern(r)
+        pivot = float(p.pivot) if (p is not None and p.pivot is not None) else None
+        dist = None
+        if p is not None and isinstance(p.evidence, dict):
+            d = p.evidence.get("dist_to_pivot_pct")
+            dist = float(d) if isinstance(d, (int, float)) else None
+        return {
+            "ticker": r.ticker,
+            "bucket": bucket,
+            "score": round(float(r.composite_score), 4),
+            "gates": _html_gate_flags(r),
+            "ad": r.ad_grade,
+            "pivot": round(pivot, 4) if pivot is not None else None,
+            "dist": round(dist, 6) if dist is not None else None,
+            "market_cap": r.market_cap,
+            "as_of": r.as_of.isoformat(),
+        }
+
+    tickers: list[dict] = []
+    for r in matches:
+        tickers.append(_entry(r, "full_match"))
+    for r in buyable:
+        tickers.append(_entry(r, "buyable"))
+    for r in watchlist:
+        tickers.append(_entry(r, "watchlist"))
+    for r in basing:
+        tickers.append(_entry(r, "basing"))
+
+    regime = manifest.market_regime
+    as_of = regime.as_of.isoformat() if regime else (
+        results[0].as_of.isoformat() if results else None
+    )
+    return {
+        "run_id": manifest.run_id,
+        "as_of": as_of,
+        "universe": manifest.universe_name,
+        "generated": datetime.now(timezone.utc).isoformat(),
+        "tickers": tickers,
+    }
+
+
+def _write_summary_json(
+    path: Path,
+    results: list[ScanResult],
+    manifest: RunManifest,
+    top_n_near_matches: int,
+) -> None:
+    summary = build_run_summary(results, manifest, top_n_near_matches)
+    path.write_text(json.dumps(summary, indent=2, default=str))
 
 
 def _render_markdown(
