@@ -572,13 +572,12 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
 </header>
 
 <nav class="tabs" id="tabs">
+  {# Tabs shown in UI: All / Full Matches / Buyable Now / Help only (chairman —
+     cleaner). watchlist/basing/overrides/patterns sections + their JS logic are
+     retained; their tab buttons are just not rendered. #}
   <button data-bucket="all" class="active">All<span class="count">{{ matches|length + buyable|length + watchlist|length + basing|length }}</span></button>
   <button data-bucket="matches">Full Matches<span class="count">{{ matches|length }}</span></button>
   <button data-bucket="buyable">Buyable Now<span class="count">{{ buyable|length }}</span></button>
-  <button data-bucket="watchlist">Watchlist<span class="count">{{ watchlist|length }}</span></button>
-  <button data-bucket="basing">Basing<span class="count">{{ basing|length }}</span></button>
-  <button data-bucket="overrides">Override Watchlist<span class="count">{{ overrides|length }}</span></button>
-  <button data-bucket="patterns">Patterns<span class="count">{{ pattern_hits|length }}</span></button>
   <button data-bucket="help" title="CANSLIM, patterns, entry &amp; exit rules">Help</button>
 </nav>
 
