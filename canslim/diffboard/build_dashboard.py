@@ -26,7 +26,6 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 COMPANIES_FILE = HERE / "companies.json"
-SEARCH_TEMPLATE_FILE = HERE / "search_template.html"
 
 
 def _load_summaries(runs_dir: Path) -> list[dict]:
@@ -136,7 +135,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   header a { color: var(--accent); text-decoration: none; font-family: var(--mono); font-size: 12px; }
   header a:hover { text-decoration: underline; }
   .compare-note { color: var(--muted); font-size: 12px; }
-  .nav-links { margin-left: auto; display: flex; gap: 14px; }
+  .nav-links { margin-left: auto; display: flex; gap: 14px; font-size: 13px; }
+  .nav-links a.active { color: var(--text); font-weight: 600; text-decoration: none; cursor: default; }
 
   main { display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
          padding: 20px; max-width: 1700px; margin: 0 auto; }
@@ -220,9 +220,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   <label class="compare-note">Date <select id="dateSelect"></select></label>
   <span class="compare-note" id="compareNote"></span>
   <span class="nav-links">
-    <a id="sourceLink" href="#" target="_blank" rel="noopener">report ↗</a>
-    <a href="search.html">ticker search ↗</a>
-    <a href="../">all reports ↗</a>
+    <a href="../">Reports</a>
+    <a class="active" href="index.html">Dashboard</a>
   </span>
 </header>
 
@@ -319,10 +318,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       tr.innerHTML =
         '<td class="rank">' + it.rank + '</td>' +
         '<td class="ticker">' +
-          '<span class="sym"><a href="https://ticker-quickview.onrender.com/#' + it.ticker + '" target="_blank" rel="noopener">' + it.ticker + '</a></span>' +
+          '<span class="sym"><a href="https://ticker-quickview.onrender.com/#' + it.ticker + '">' + it.ticker + '</a></span>' +
           nameHtml + indHtml +
         '</td>' +
-        '<td class="num"><a href="' + options.sourceUrl + '#c-' + it.ticker + '" target="_blank" rel="noopener">' + (it.score != null ? it.score.toFixed(2) : '—') + '</a></td>' +
+        '<td class="num"><a href="' + options.sourceUrl + '#c-' + it.ticker + '">' + (it.score != null ? it.score.toFixed(2) : '—') + '</a></td>' +
         '<td class="ad">' + (it.ad || '—') + '</td>' +
         '<td class="delta"><span class="badge ' + d.cls + '">' +
           '<span class="badge-long">' + d.text + '</span>' +
@@ -350,7 +349,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     regimeEl.textContent = primary.regime || "UNKNOWN";
     regimeEl.className = "regime regime-" + (primary.regime || "UNKNOWN");
 
-    document.getElementById("sourceLink").href = primary.source_url;
     document.getElementById("compareNote").textContent =
       prior ? "comparing " + primaryDate + "  vs  " + priorDate
             : "no prior report available for comparison";
@@ -429,31 +427,9 @@ def build(docs_dir: Path, out_dir: Path) -> dict:
     return data
 
 
-def build_search_page(docs_dir: Path, out_dir: Path, companies: dict) -> None:
-    """Emit the static ticker-history search page (history.json inlined).
-
-    Pure client-side: history.json + companies enrichment are inlined into the
-    page so it works on plain GitHub Pages with no fetch / backend.
-    """
-    from canslim.diffboard.build_history import build_history
-
-    history = build_history(docs_dir)
-    template = SEARCH_TEMPLATE_FILE.read_text()
-    page = (
-        template
-        .replace("__HISTORY_JSON__", json.dumps(history))
-        .replace("__COMPANIES_JSON__", json.dumps(companies))
-    )
-    (out_dir / "search.html").write_text(page)
-    print(
-        f"[write] {out_dir / 'search.html'} — {len(history['tickers'])} ticker(s) indexed",
-        file=sys.stderr,
-    )
-
-
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
-        description="Build the CANSLIM diff dashboard + ticker-history search from summary.json files."
+        description="Build the CANSLIM diff dashboard + ticker-history index from summary.json files."
     )
     ap.add_argument("--docs", type=Path, default=Path("docs"),
                     help="docs/ dir holding runs/<id>/summary.json (default: docs)")
@@ -463,12 +439,12 @@ def main(argv: list[str] | None = None) -> int:
     out_dir = args.out or (args.docs / "dashboard")
 
     # 1) diff dashboard (also returns the merged data incl. companies)
-    data = build(args.docs, out_dir)
-    # 2) ticker-history inverted index at docs/history.json
+    build(args.docs, out_dir)
+    # 2) ticker-history inverted index at docs/history.json — the search panel
+    #    on the landing page (Reports) inlines this at publish time. No more
+    #    standalone search.html page.
     from canslim.diffboard.build_history import build as build_history_file
     build_history_file(args.docs, args.docs / "history.json")
-    # 3) static search page (inlines history.json + companies)
-    build_search_page(args.docs, out_dir, data.get("companies", {}))
     return 0
 
 

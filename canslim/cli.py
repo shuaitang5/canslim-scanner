@@ -924,7 +924,10 @@ def _regenerate_landing_page(docs_dir: Path, archive_dir: Path) -> int:
 
     Reads each archived run's committed meta.json (never the gitignored out/
     manifest), derives index-row fields via the pure helper, and writes the
-    landing page + .nojekyll. Returns the number of runs listed.
+    landing page + .nojekyll. The ticker-history search panel's data
+    (history index + company names) is inlined into the page so it works on
+    plain static hosting with no fetch / backend. Returns the number of runs
+    listed.
     """
     archived = sorted(
         [p for p in archive_dir.iterdir() if (p / "index.html").exists()],
@@ -950,63 +953,175 @@ def _regenerate_landing_page(docs_dir: Path, archive_dir: Path) -> int:
             f'<td class="num">{f["scanned"]}</td>'
             f'</tr>'
         )
-    landing_html = _build_landing_page(rows)
+
+    # Inline the search panel's data: the ticker-history inverted index (built
+    # fresh from the committed summary.json files) plus the company-name cache.
+    from canslim.diffboard.build_history import build_history
+
+    try:
+        history = build_history(docs_dir)
+    except Exception:
+        history = {"generated": "", "dates": [], "tickers": {}}
+    companies: dict = {}
+    companies_file = Path(__file__).resolve().parent / "diffboard" / "companies.json"
+    if companies_file.exists():
+        try:
+            companies = json.loads(companies_file.read_text())
+        except Exception:
+            companies = {}
+
+    landing_html = _build_landing_page(rows, history, companies)
     (docs_dir / "index.html").write_text(landing_html)
     (docs_dir / ".nojekyll").touch()
     return len(archived)
 
 
-def _build_landing_page(rows: list[str]) -> str:
-    """Static landing page listing all archived scan runs."""
+def _build_landing_page(
+    rows: list[str],
+    history: Optional[dict] = None,
+    companies: Optional[dict] = None,
+) -> str:
+    """Static landing page: ticker-history search panel + the archived-runs table.
+
+    The search panel (autocomplete, range filter, per-ticker timeline) is the
+    ticker-history feature that used to live on a dedicated search.html page;
+    it now lives here on Reports. ``history`` (the inverted index) and
+    ``companies`` (name cache) are inlined as <script type="application/json">
+    blocks so the page is fully client-side on plain static hosting.
+    """
     body = "\n".join(rows) if rows else '<tr><td colspan="5">No runs archived yet.</td></tr>'
-    return f"""<!DOCTYPE html><html lang="en">
+    history_json = json.dumps(history or {"dates": [], "tickers": {}})
+    companies_json = json.dumps(companies or {})
+    return (
+        _LANDING_TEMPLATE
+        .replace("__RUNS_TBODY__", body)
+        .replace("__HISTORY_JSON__", history_json)
+        .replace("__COMPANIES_JSON__", companies_json)
+    )
+
+
+# Static landing-page template. Search panel (rehomed from the former
+# search.html) sits above the archived-runs table; unified top-right nav
+# (Reports active · Dashboard) matches the report + dashboard pages. Timeline
+# rows link to runs/<id>/#c-TICKER at LANDING depth (no ../) in the SAME tab.
+_LANDING_TEMPLATE = r"""<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CANSLIM Scan Reports</title>
 <style>
-  :root {{ --text:#1a1f2b; --muted:#5b6473; --border:#d8dde3; --accent:#1a4480; --bg-alt:#f7f8f9; }}
-  * {{ box-sizing: border-box; }}
-  body {{ font: 14px/1.5 -apple-system, "Inter", system-ui, sans-serif;
-          color: var(--text); margin: 0 auto; padding: 24px; max-width: 900px; }}
-  h1 {{ font-size: 20px; margin: 0 0 4px 0; }}
-  .lede {{ color: var(--muted); font-size: 13px; margin-bottom: 20px; }}
-  .lede a {{ color: var(--accent); text-decoration: none; }}
-  .lede a:hover {{ text-decoration: underline; }}
-  table {{ border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 13px; }}
-  th, td {{ text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }}
-  th {{ background: var(--bg-alt); font-size: 11px; text-transform: uppercase;
-        letter-spacing: 0.05em; color: var(--muted); }}
-  td.num {{ text-align: right; font-family: ui-monospace, "SF Mono", Menlo, monospace; }}
-  td.mono {{ font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; color: var(--muted); }}
-  td a {{ color: var(--accent); text-decoration: none; font-weight: 600; }}
-  td a:hover {{ text-decoration: underline; }}
-  tbody tr:hover {{ background: var(--bg-alt); }}
-  .footer {{ color: var(--muted); font-size: 11px; margin-top: 24px; padding-top: 12px;
-             border-top: 1px solid var(--border); }}
-  .footer a {{ color: var(--accent); }}
-  @media (max-width: 600px) {{
-    body {{ padding: 14px; }}
-    table {{ font-size: 12px; }}
-    th, td {{ padding: 6px 6px; }}
-    td.mono {{ font-size: 10px; }}
-  }}
+  :root { --text:#1a1f2b; --muted:#5b6473; --border:#d8dde3; --accent:#1a4480; --bg:#fff; --bg-alt:#f7f8f9;
+          --pass:#2e7d32; --info:#0277bd; --warn:#e9740b;
+          --mono: ui-monospace,"SF Mono",Menlo,monospace; }
+  * { box-sizing: border-box; }
+  body { font: 14px/1.5 -apple-system, "Inter", system-ui, sans-serif;
+          color: var(--text); margin: 0 auto; padding: 24px; max-width: 900px; }
+  .page-head { display: flex; align-items: baseline; justify-content: space-between;
+               gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 20px; margin: 0 0 4px 0; }
+  .nav-links { margin-left: auto; display: flex; gap: 14px; font-size: 13px; }
+  .nav-links a { color: var(--accent); text-decoration: none; }
+  .nav-links a:hover { text-decoration: underline; }
+  .nav-links a.active { color: var(--text); font-weight: 600; text-decoration: none; cursor: default; }
+  .lede { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  .lede a { color: var(--accent); text-decoration: none; }
+  .lede a:hover { text-decoration: underline; }
+
+  .search { margin: 4px 0 24px; padding: 16px; border: 1px solid var(--border);
+            border-radius: 8px; background: var(--bg-alt); }
+  .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search-wrap { position: relative; flex: 1; min-width: 200px; }
+  #q { width: 100%; font: 15px var(--mono); padding: 9px 12px; border: 1px solid var(--border);
+       border-radius: 6px; text-transform: uppercase; background: var(--bg); }
+  #q:focus { outline: none; border-color: var(--accent); }
+  .ac { position: absolute; left: 0; right: 0; top: calc(100% + 2px); background: var(--bg);
+        border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 4px 14px rgba(0,0,0,.08);
+        max-height: 260px; overflow-y: auto; z-index: 20; display: none; }
+  .ac.open { display: block; }
+  .ac-item { padding: 7px 12px; font-family: var(--mono); cursor: pointer; display: flex;
+             justify-content: space-between; gap: 10px; }
+  .ac-item .co { font-family: -apple-system, "Inter", system-ui, sans-serif; color: var(--muted);
+                 font-size: 12px; font-weight: 400; }
+  .ac-item.active, .ac-item:hover { background: var(--bg-alt); }
+  .ranges { display: flex; gap: 4px; }
+  .ranges button { font: inherit; font-size: 12px; padding: 7px 11px; border: 1px solid var(--border);
+                   background: var(--bg); border-radius: 6px; cursor: pointer; color: var(--muted); }
+  .ranges button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  #result { margin-top: 16px; }
+  .result-head .sym { font: 700 22px var(--mono); }
+  .result-head .co { color: var(--muted); margin-left: 10px; font-size: 14px; }
+  .summary-line { color: var(--muted); font-size: 13px; margin: 6px 0 12px; }
+  .summary-line .stat { color: var(--text); font-weight: 600; }
+  #result table { margin-top: 0; }
+  td.date a { font-family: var(--mono); }
+  td.tl-num { font-family: var(--mono); text-align: right; }
+  td.gates { font-family: var(--mono); }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 7px;
+         vertical-align: middle; }
+  .b-full_match .dot { background: var(--pass); }
+  .b-buyable   .dot { background: var(--info); }
+  .b-watchlist .dot { background: var(--warn); }
+  .b-basing    .dot { background: var(--muted); }
+  .bucket-label { text-transform: capitalize; }
+  .empty { color: var(--muted); padding: 24px 0; text-align: center; font-style: italic; }
+  .hint { color: var(--muted); font-size: 13px; padding: 18px 0; text-align: center; }
+
+  table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg-alt); font-size: 11px; text-transform: uppercase;
+        letter-spacing: 0.05em; color: var(--muted); }
+  td.num { text-align: right; font-family: var(--mono); }
+  td.mono { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  td a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  td a:hover { text-decoration: underline; }
+  #result td a { font-weight: 400; }
+  tbody tr:hover { background: var(--bg-alt); }
+  .footer { color: var(--muted); font-size: 11px; margin-top: 24px; padding-top: 12px;
+             border-top: 1px solid var(--border); }
+  .footer a { color: var(--accent); }
+  @media (max-width: 600px) {
+    body { padding: 14px; }
+    table { font-size: 12px; }
+    th, td { padding: 6px 6px; }
+    td.mono { font-size: 10px; }
+    .nav-links { gap: 10px; }
+    .search { padding: 12px; }
+  }
 </style>
 </head>
 <body>
-<h1>CANSLIM Scan Reports</h1>
+<div class="page-head">
+  <h1>CANSLIM Scan Reports</h1>
+  <span class="nav-links">
+    <a class="active" href=".">Reports</a>
+    <a href="dashboard/">Dashboard</a>
+  </span>
+</div>
 <p class="lede">
   Daily scans of the US equity universe against William O'Neil's CANSLIM framework
   (with leadership-override paths for turnaround setups). Click any data date below
   to view the full report — full matches, near-misses, override watchlist, market
   context (VIX/breadth/sectors), and per-ticker entry plans.
   Source: <a href="https://github.com/shuaitang5/canslim-scanner">github.com/shuaitang5/canslim-scanner</a>
-  (forked from <a href="https://github.com/zhoutongchar/canslim-scanner">zhoutongchar/canslim-scanner</a>)
 </p>
-<p class="lede">
-  <a href="dashboard/">Day-over-day full-match dashboard</a> &nbsp;·&nbsp;
-  <a href="dashboard/search.html">Ticker history search</a>
-</p>
+
+<section class="search">
+  <div class="controls">
+    <div class="search-wrap">
+      <input id="q" type="text" placeholder="Search ticker history (e.g. ATI)" autocomplete="off" spellcheck="false">
+      <div id="ac" class="ac"></div>
+    </div>
+    <div class="ranges" id="ranges">
+      <button data-range="3">3mo</button>
+      <button data-range="6">6mo</button>
+      <button data-range="12">1yr</button>
+      <button data-range="all" class="active">all</button>
+    </div>
+  </div>
+  <div id="result"></div>
+</section>
+
 <table>
   <thead>
     <tr>
@@ -1018,13 +1133,196 @@ def _build_landing_page(rows: list[str]) -> str:
     </tr>
   </thead>
   <tbody>
-{body}
+__RUNS_TBODY__
   </tbody>
 </table>
 <p class="footer">
   Most recent at top. Each report is self-contained HTML with inline SVG charts.
   See <a href="https://github.com/shuaitang5/canslim-scanner">README</a> for methodology.
 </p>
+
+<script id="data" type="application/json">__HISTORY_JSON__</script>
+<script id="companies" type="application/json">__COMPANIES_JSON__</script>
+<script>
+(function () {
+  const HISTORY = JSON.parse(document.getElementById("data").textContent);
+  const COMPANIES = JSON.parse(document.getElementById("companies").textContent);
+  const TICKERS = Object.keys(HISTORY.tickers || {}).sort();
+  const ALL_DATES = HISTORY.dates || [];
+  const NUM_REPORTS = ALL_DATES.length;
+
+  const BUCKET_LABEL = {
+    full_match: "Full Match", buyable: "Buyable",
+    watchlist: "Watchlist", basing: "Basing",
+  };
+
+  const qEl = document.getElementById("q");
+  const acEl = document.getElementById("ac");
+  const resultEl = document.getElementById("result");
+  const rangesEl = document.getElementById("ranges");
+
+  let rangeMonths = "all";
+  let acIndex = -1;
+  let acMatches = [];
+
+  function escapeHtml(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+
+  // Cutoff date string for the active range, relative to the newest report date
+  // (not "today" — keeps the filter meaningful on a static archive).
+  function cutoffDate() {
+    if (rangeMonths === "all" || !ALL_DATES.length) return null;
+    const newest = new Date(ALL_DATES[0] + "T00:00:00Z");
+    const c = new Date(newest);
+    c.setUTCMonth(c.getUTCMonth() - parseInt(rangeMonths, 10));
+    return c.toISOString().slice(0, 10);
+  }
+
+  function filterByRange(rows) {
+    const cut = cutoffDate();
+    if (!cut) return rows;
+    return rows.filter(r => r.date >= cut);
+  }
+
+  // ---- autocomplete ----
+  function renderAc(matches) {
+    acMatches = matches;
+    acIndex = -1;
+    if (!matches.length) { acEl.classList.remove("open"); acEl.innerHTML = ""; return; }
+    acEl.innerHTML = matches.slice(0, 30).map((t) => {
+      const co = COMPANIES[t];
+      const name = co && co.name && co.name !== t ? '<span class="co">' + escapeHtml(co.name) + '</span>' : '';
+      return '<div class="ac-item" data-t="' + t + '"><span>' + t + '</span>' + name + '</div>';
+    }).join("");
+    acEl.classList.add("open");
+  }
+
+  function updateAc() {
+    const v = qEl.value.trim().toUpperCase();
+    if (!v) { acEl.classList.remove("open"); return; }
+    const starts = TICKERS.filter(t => t.startsWith(v));
+    const contains = TICKERS.filter(t => !t.startsWith(v) && t.includes(v));
+    renderAc(starts.concat(contains));
+  }
+
+  qEl.addEventListener("input", () => { updateAc(); });
+  qEl.addEventListener("keydown", (e) => {
+    const items = Array.from(acEl.querySelectorAll(".ac-item"));
+    if (e.key === "ArrowDown") { e.preventDefault(); acIndex = Math.min(acIndex + 1, items.length - 1); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); acIndex = Math.max(acIndex - 1, 0); }
+    else if (e.key === "Enter") {
+      e.preventDefault();
+      const pick = (acIndex >= 0 && items[acIndex]) ? items[acIndex].dataset.t
+                 : (qEl.value.trim().toUpperCase() || null);
+      if (pick) selectTicker(pick);
+      return;
+    } else if (e.key === "Escape") { acEl.classList.remove("open"); return; }
+    else { return; }
+    items.forEach((el, i) => el.classList.toggle("active", i === acIndex));
+  });
+
+  acEl.addEventListener("click", (e) => {
+    const item = e.target.closest(".ac-item");
+    if (item) selectTicker(item.dataset.t);
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".search-wrap")) acEl.classList.remove("open");
+  });
+
+  rangesEl.addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    rangeMonths = btn.dataset.range;
+    rangesEl.querySelectorAll("button").forEach(b => b.classList.toggle("active", b === btn));
+    if (currentTicker) render(currentTicker);
+  });
+
+  // ---- result render ----
+  let currentTicker = null;
+
+  function selectTicker(t) {
+    t = t.toUpperCase();
+    qEl.value = t;
+    acEl.classList.remove("open");
+    render(t);
+  }
+
+  function bucketCounts(rows) {
+    const c = {};
+    rows.forEach(r => { c[r.bucket] = (c[r.bucket] || 0) + 1; });
+    return c;
+  }
+
+  function fmtScore(v) { return (typeof v === "number") ? v.toFixed(2) : "—"; }
+
+  function render(ticker) {
+    currentTicker = ticker;
+    const co = COMPANIES[ticker];
+    const allRows = (HISTORY.tickers || {})[ticker];
+
+    if (!allRows) {
+      resultEl.innerHTML =
+        '<div class="result-head"><span class="sym">' + escapeHtml(ticker) + '</span></div>' +
+        '<div class="empty">' + escapeHtml(ticker) +
+        ' never appeared in any report (' + NUM_REPORTS + ' reports scanned).</div>';
+      return;
+    }
+
+    const rows = filterByRange(allRows);
+    const coName = (co && co.name && co.name !== ticker)
+      ? '<span class="co">' + escapeHtml(co.name) + '</span>' : '';
+
+    if (!rows.length) {
+      resultEl.innerHTML =
+        '<div class="result-head"><span class="sym">' + escapeHtml(ticker) + '</span>' + coName + '</div>' +
+        '<div class="empty">No appearances in the selected date range (' +
+        allRows.length + ' total over all history).</div>';
+      return;
+    }
+
+    const counts = bucketCounts(rows);
+    const countParts = ["full_match","buyable","watchlist","basing"]
+      .filter(b => counts[b])
+      .map(b => BUCKET_LABEL[b] + " " + counts[b] + "x");
+    const first = rows[rows.length - 1].date;
+    const last = rows[0].date;
+    const summary =
+      'appeared in <span class="stat">' + rows.length + '</span> of ' + NUM_REPORTS + ' reports' +
+      ' &nbsp;·&nbsp; first <span class="stat">' + first + '</span>, last <span class="stat">' + last + '</span>' +
+      (countParts.length ? ' &nbsp;·&nbsp; ' + countParts.join(", ") : "");
+
+    const trs = rows.map(r => {
+      const label = BUCKET_LABEL[r.bucket] || r.bucket || "—";
+      return '<tr>' +
+        '<td class="date"><a href="runs/' + r.run_id + '/#c-' + ticker + '">' + r.date + '</a></td>' +
+        '<td class="b-' + r.bucket + '"><span class="dot"></span><span class="bucket-label">' + escapeHtml(label) + '</span></td>' +
+        '<td class="tl-num">' + fmtScore(r.score) + '</td>' +
+        '<td class="gates">' + escapeHtml(r.gates || "") + '</td>' +
+        '<td>' + (r.ad || "—") + '</td>' +
+      '</tr>';
+    }).join("");
+
+    resultEl.innerHTML =
+      '<div class="result-head"><span class="sym">' + escapeHtml(ticker) + '</span>' + coName + '</div>' +
+      '<div class="summary-line">' + summary + '</div>' +
+      '<table><thead><tr><th>Date</th><th>Bucket</th><th class="tl-num">Score</th><th>Gates</th><th>AD</th></tr></thead>' +
+      '<tbody>' + trs + '</tbody></table>';
+  }
+
+  // Deep-link support: index.html?t=ATI
+  const params = new URLSearchParams(location.search);
+  const initial = (params.get("t") || "").toUpperCase();
+  if (initial) { selectTicker(initial); }
+  else {
+    resultEl.innerHTML = '<div class="hint">Type a ticker to see every report it appeared in. ' +
+      TICKERS.length + ' tickers indexed across ' + NUM_REPORTS + ' reports.</div>';
+  }
+})();
+</script>
 </body>
 </html>"""
 
