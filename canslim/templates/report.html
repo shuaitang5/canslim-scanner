@@ -1002,6 +1002,12 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
     }
   }
   tabs.forEach(btn => btn.addEventListener("click", () => activateTab(btn.dataset.bucket)));
+  // Initialize the default "All" view on load. The overrides/patterns sections
+  // are authored with a hardcoded `hidden` class; without this call activateTab
+  // only runs on a click, so under the default All tab they stay hidden until
+  // the user clicks away and back. Run it once so the JS is the single source of
+  // truth for initial visibility (reveals overrides + patterns under All on first paint).
+  activateTab("all");
 
   // === Ticker search (filters TOC + main candidates) ===
   const search = document.getElementById("toc-search");

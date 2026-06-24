@@ -187,3 +187,29 @@ def test_old_near_matches_heading_replaced_and_demoted():
     assert "by composite score (near-matches)" not in html
     # Replaced by an honest, demoted diagnostic label.
     assert "Near misses" in html and "failed gates" in html
+
+
+def test_all_tab_initialized_on_load():
+    """The overrides/patterns sections are authored with a hardcoded `hidden`
+    class; activateTab('all') is what clears it for the default All view. That
+    init call only ran on a button click, so on a fresh load those sections
+    stayed hidden under All until the user clicked away and back. Pin that the
+    template now calls activateTab('all') once on load so the JS is the single
+    source of truth for initial visibility (real-browser proof is the Playwright
+    before/after; this guards against the init call being dropped)."""
+    results = _fixture()
+    html = render_html(results, _manifest(), top_n_near_matches=20)
+
+    # The fix: an init call to the All view exists outside the click handler.
+    assert 'activateTab("all");' in html or "activateTab('all');" in html
+
+    # The init call must come AFTER activateTab is defined and after the click
+    # wiring, so the function + elements exist when it runs.
+    def_idx = html.index("function activateTab(")
+    wire_idx = html.index('addEventListener("click", () => activateTab(')
+    init_idx = max(
+        html.rfind('activateTab("all");'),
+        html.rfind("activateTab('all');"),
+    )
+    assert def_idx < init_idx, "init call must come after activateTab is defined"
+    assert wire_idx < init_idx, "init call must come after the click wiring"
