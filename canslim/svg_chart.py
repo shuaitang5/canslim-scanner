@@ -28,7 +28,7 @@ from canslim.models import ScanResult
 SVG_W = 800
 SVG_H = 400
 MARGIN_LEFT = 50
-MARGIN_RIGHT = 60
+MARGIN_RIGHT = 96   # right gutter holds price labels e.g. "pivot $1234.56" (~14 chars @ font-size 10 monospace ≈ 84u, drawn from SVG_W-MARGIN_RIGHT+4)
 MARGIN_TOP = 16
 MARGIN_BOTTOM = 22
 VOLUME_BAND_H = 80     # height reserved for volume sub-panel
