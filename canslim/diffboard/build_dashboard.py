@@ -318,7 +318,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       tr.innerHTML =
         '<td class="rank">' + it.rank + '</td>' +
         '<td class="ticker">' +
-          '<span class="sym"><a href="https://ticker-quickview.onrender.com/#' + it.ticker + '">' + it.ticker + '</a></span>' +
+          '<span class="sym"><a href="https://ticker-quickview.onrender.com/#' + it.ticker + '" target="_blank" rel="noopener">' + it.ticker + '</a></span>' +
           nameHtml + indHtml +
         '</td>' +
         '<td class="num"><a href="' + options.sourceUrl + '#c-' + it.ticker + '">' + (it.score != null ? it.score.toFixed(2) : '—') + '</a></td>' +
