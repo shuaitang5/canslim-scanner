@@ -563,6 +563,108 @@ def _meta_from_html(html: str, run_id: str) -> dict:
     }
 
 
+# --- summary.json backfill from committed HTML (one-time bootstrap) --------
+#
+# Going forward summary.json is generated from the in-memory scan results
+# (canslim.report.build_run_summary). The ONLY sanctioned HTML parse is this
+# bootstrap, which recovers the named-bucket tickers for the ~20 runs that were
+# archived before summary.json existed. It keys off the stable report markup:
+# each candidate renders as a <details class="candidate" data-ticker=...> inside
+# its <section class="bucket bucket-<name>">, with score/gates/AD/dist in the
+# <summary>. _candidate.html / report.html are the source of truth for these.
+
+_BUCKET_SECTION_RE = re.compile(
+    r'<section class="bucket bucket-(matches|buyable|watchlist|basing)"[^>]*>(.*?)</section>',
+    re.DOTALL,
+)
+_CANDIDATE_RE = re.compile(
+    r'<details class="candidate"[^>]*data-ticker="([^"]+)"[^>]*>\s*<summary>(.*?)</summary>',
+    re.DOTALL,
+)
+_SUM_SCORE_RE = re.compile(r'<span class="score mono">\s*([0-9.]+)\s*</span>')
+_SUM_GATES_RE = re.compile(r'<span class="gates">\s*([^<]*?)\s*</span>')
+_SUM_AD_RE = re.compile(r'AD:\s*([A-E])')
+# Entry-plan meta carries "dist +1.2% from pivot $34.50" when a pattern exists.
+_SUM_DIST_PIVOT_RE = re.compile(
+    r'dist\s*([+\-]?[0-9.]+)%\s*from pivot\s*\$([0-9.,]+)'
+)
+# Sticky-header market regime badge: <span class="regime-badge regime-uptrend">UPTREND</span>
+_SUM_REGIME_RE = re.compile(
+    r'<span class="regime-badge[^"]*"[^>]*>\s*([A-Z]+)\s*</span>'
+)
+
+# section name in the HTML -> canonical bucket name used everywhere else
+_HTML_BUCKET_MAP = {
+    "matches": "full_match",
+    "buyable": "buyable",
+    "watchlist": "watchlist",
+    "basing": "basing",
+}
+
+
+def _summary_entry_from_summary_html(summary_html: str, ticker: str, bucket: str,
+                                     as_of: Optional[str]) -> dict:
+    """Parse one candidate <summary> block into a summary.json entry dict."""
+    score_m = _SUM_SCORE_RE.search(summary_html)
+    gates_m = _SUM_GATES_RE.search(summary_html)
+    ad_m = _SUM_AD_RE.search(summary_html)
+    dp_m = _SUM_DIST_PIVOT_RE.search(summary_html)
+
+    pivot = None
+    dist = None
+    if dp_m:
+        try:
+            dist = round(float(dp_m.group(1)) / 100.0, 6)
+        except ValueError:
+            dist = None
+        try:
+            pivot = round(float(dp_m.group(2).replace(",", "")), 4)
+        except ValueError:
+            pivot = None
+    return {
+        "ticker": ticker,
+        "bucket": bucket,
+        "score": float(score_m.group(1)) if score_m else None,
+        "gates": gates_m.group(1).strip() if gates_m else "",
+        "ad": ad_m.group(1) if ad_m else None,
+        "pivot": pivot,
+        "dist": dist,
+        "market_cap": None,  # not reliably recoverable from the summary text
+        "as_of": as_of,
+    }
+
+
+def _summary_from_html(html: str, run_id: str, as_of: Optional[str],
+                       universe: Optional[str]) -> dict:
+    """Recover a summary.json payload from a committed run's index.html.
+
+    Bootstrap-only (see module note above). Walks each named bucket section and
+    its candidate <details> blocks, in render order, so the recovered bucket
+    assignment matches exactly what the page shows. market_cap is left null
+    (the rendered summary text isn't a reliable numeric source for it).
+    """
+    tickers: list[dict] = []
+    for sec_m in _BUCKET_SECTION_RE.finditer(html):
+        html_bucket = sec_m.group(1)
+        bucket = _HTML_BUCKET_MAP[html_bucket]
+        body = sec_m.group(2)
+        for cand_m in _CANDIDATE_RE.finditer(body):
+            ticker = cand_m.group(1)
+            summary_html = cand_m.group(2)
+            tickers.append(
+                _summary_entry_from_summary_html(summary_html, ticker, bucket, as_of)
+            )
+    regime_m = _SUM_REGIME_RE.search(html)
+    return {
+        "run_id": run_id,
+        "as_of": as_of,
+        "universe": universe,
+        "regime": regime_m.group(1) if regime_m else None,
+        "generated": None,  # backfilled from HTML, not a live scan
+        "tickers": tickers,
+    }
+
+
 def _run_as_of(run_dir: Path) -> Optional[str]:
     """Read a committed run's data date (``as_of``) from its meta.json.
 
@@ -679,17 +781,40 @@ def publish(
             reverse=True,
         )
         written = skipped = 0
+        summary_written = summary_skipped = 0
         for p in archived_runs:
+            html = (p / "index.html").read_text()
             meta_p = p / "meta.json"
             if meta_p.exists():
                 skipped += 1
-                continue
-            meta = _meta_from_html((p / "index.html").read_text(), p.name)
-            meta_p.write_text(json.dumps(meta, indent=2))
-            written += 1
-            console.print(f"[green]Backfilled:[/green] {meta_p} (as_of={meta.get('as_of')})")
+                try:
+                    meta = json.loads(meta_p.read_text())
+                except Exception:
+                    meta = _meta_from_html(html, p.name)
+            else:
+                meta = _meta_from_html(html, p.name)
+                meta_p.write_text(json.dumps(meta, indent=2))
+                written += 1
+                console.print(f"[green]Backfilled meta:[/green] {meta_p} (as_of={meta.get('as_of')})")
+
+            # Bootstrap summary.json from the committed HTML (one-time). Going
+            # forward it's emitted from in-memory results by write_run.
+            summary_p = p / "summary.json"
+            if summary_p.exists():
+                summary_skipped += 1
+            else:
+                summary = _summary_from_html(
+                    html, p.name, meta.get("as_of"), meta.get("universe")
+                )
+                summary_p.write_text(json.dumps(summary, indent=2))
+                summary_written += 1
+                console.print(
+                    f"[green]Backfilled summary:[/green] {summary_p} "
+                    f"({len(summary['tickers'])} named-bucket ticker(s))"
+                )
         console.print(
-            f"[green]Backfill complete:[/green] {written} written, {skipped} already present "
+            f"[green]Backfill complete:[/green] meta {written} written / {skipped} present, "
+            f"summary {summary_written} written / {summary_skipped} present "
             f"({len(archived_runs)} archived run(s))"
         )
         # Now that every backfilled run has a meta.json (its as_of), collapse any
@@ -751,6 +876,19 @@ def publish(
     dest.mkdir(parents=True, exist_ok=True)
     shutil.copy2(src_html, dest / "index.html")
     console.print(f"[green]Archived:[/green] {dest / 'index.html'}")
+
+    # Carry the structured per-run summary.json alongside the HTML. write_run
+    # emits it into the source run dir (out/runs/<id>/); the dashboard + ticker
+    # history search read it from docs/runs/<id>/ — clean JSON, NO HTML scraping.
+    src_summary = run / "summary.json"
+    if src_summary.exists():
+        shutil.copy2(src_summary, dest / "summary.json")
+        console.print(f"[green]Archived:[/green] {dest / 'summary.json'}")
+    else:
+        console.print(
+            f"[yellow]No summary.json in {run.name} — dashboard/search will lack this run "
+            f"until it is backfilled or re-scanned.[/yellow]"
+        )
 
     # Write a COMMITTED meta.json next to the archived HTML so the index can read
     # the true data date (and headline counts) without the gitignored out/ dir.
@@ -864,6 +1002,10 @@ def _build_landing_page(rows: list[str]) -> str:
   context (VIX/breadth/sectors), and per-ticker entry plans.
   Source: <a href="https://github.com/shuaitang5/canslim-scanner">github.com/shuaitang5/canslim-scanner</a>
   (forked from <a href="https://github.com/zhoutongchar/canslim-scanner">zhoutongchar/canslim-scanner</a>)
+</p>
+<p class="lede">
+  <a href="dashboard/">Day-over-day full-match dashboard</a> &nbsp;·&nbsp;
+  <a href="dashboard/search.html">Ticker history search</a>
 </p>
 <table>
   <thead>

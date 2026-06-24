@@ -170,13 +170,32 @@ jobs:
         # The degraded-report guard inside `publish` is the real safety net: it
         # refuses to publish a run whose manifest carries data-quality warnings
         # (empty/throttled), so even a non-zero scan can't push a garbage page.
+        # `publish` also writes docs/runs/<id>/summary.json (the structured,
+        # scrape-free per-run feed) alongside index.html + meta.json.
         run: canslim publish --out out --docs docs
+
+      # CHAINED in the SAME job (no second cron): now that this run's
+      # summary.json is in docs/runs/<id>/, regenerate the derived pages from
+      # ALL summary.json files — clean JSON, zero HTML scraping:
+      #   1. enrich_companies.py — fetch name/sector/blurb for any NEW named-
+      #      bucket ticker (yfinance; cached in companies.json so it's near-free).
+      #   2. build_dashboard     — day-over-day diff page (docs/dashboard/),
+      #      the history.json inverted index (docs/history.json), and the
+      #      static ticker-history search page (docs/dashboard/search.html).
+      - name: Rebuild diff dashboard + ticker-history search
+        run: |
+          python -m canslim.diffboard.enrich_companies --docs docs || \
+            echo "::warning::enrich_companies failed (likely yfinance throttling) — names may be stale; continuing."
+          python -m canslim.diffboard.build_dashboard --docs docs
 
       - name: Commit regenerated docs/
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/
+          # docs/ holds the report + summary.json + dashboard + history.json +
+          # search page; companies.json (the enrichment cache) lives in the
+          # package source tree, so commit both so newly-named tickers persist.
+          git add docs/ canslim/diffboard/companies.json
           if git diff --staged --quiet; then
             echo "No docs changes to commit."
           else
