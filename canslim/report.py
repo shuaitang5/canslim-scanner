@@ -229,10 +229,14 @@ def build_run_summary(
     as_of = regime.as_of.isoformat() if regime else (
         results[0].as_of.isoformat() if results else None
     )
+    regime_label = None
+    if regime is not None:
+        regime_label = "UPTREND" if regime.uptrend else "CAUTION"
     return {
         "run_id": manifest.run_id,
         "as_of": as_of,
         "universe": manifest.universe_name,
+        "regime": regime_label,
         "generated": datetime.now(timezone.utc).isoformat(),
         "tickers": tickers,
     }

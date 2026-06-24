@@ -588,6 +588,10 @@ _SUM_AD_RE = re.compile(r'AD:\s*([A-E])')
 _SUM_DIST_PIVOT_RE = re.compile(
     r'dist\s*([+\-]?[0-9.]+)%\s*from pivot\s*\$([0-9.,]+)'
 )
+# Sticky-header market regime badge: <span class="regime-badge regime-uptrend">UPTREND</span>
+_SUM_REGIME_RE = re.compile(
+    r'<span class="regime-badge[^"]*"[^>]*>\s*([A-Z]+)\s*</span>'
+)
 
 # section name in the HTML -> canonical bucket name used everywhere else
 _HTML_BUCKET_MAP = {
@@ -650,10 +654,12 @@ def _summary_from_html(html: str, run_id: str, as_of: Optional[str],
             tickers.append(
                 _summary_entry_from_summary_html(summary_html, ticker, bucket, as_of)
             )
+    regime_m = _SUM_REGIME_RE.search(html)
     return {
         "run_id": run_id,
         "as_of": as_of,
         "universe": universe,
+        "regime": regime_m.group(1) if regime_m else None,
         "generated": None,  # backfilled from HTML, not a live scan
         "tickers": tickers,
     }
@@ -996,6 +1002,10 @@ def _build_landing_page(rows: list[str]) -> str:
   context (VIX/breadth/sectors), and per-ticker entry plans.
   Source: <a href="https://github.com/shuaitang5/canslim-scanner">github.com/shuaitang5/canslim-scanner</a>
   (forked from <a href="https://github.com/zhoutongchar/canslim-scanner">zhoutongchar/canslim-scanner</a>)
+</p>
+<p class="lede">
+  <a href="dashboard/">Day-over-day full-match dashboard</a> &nbsp;·&nbsp;
+  <a href="dashboard/search.html">Ticker history search</a>
 </p>
 <table>
   <thead>
