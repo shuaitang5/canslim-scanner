@@ -159,6 +159,15 @@ class CupWithHandle(ChartPattern):
         started_on = _as_date(index[left_idx])
         completed_on = _as_date(index[-1])
 
+        # Tier-3 overlay (quickview) needs the pivot DATES, not just the prices.
+        # The indices already exist above — map them through `index[...]` to ISO
+        # strings. handle_start == right_peak bar (the handle begins at the right
+        # peak). Kept in sync with the vendored copy in stock-quickview/patterns/.
+        left_peak_date = _as_iso(index[left_idx])
+        cup_bottom_date = _as_iso(index[bottom_idx])
+        right_peak_date = _as_iso(index[right_idx])
+        handle_start_date = right_peak_date
+
         return PatternMatch(
             name=self.name,
             detected=True,
@@ -174,10 +183,17 @@ class CupWithHandle(ChartPattern):
                 "cup_duration_sessions": int(right_idx - left_idx),
                 "handle_duration_sessions": int(handle_duration),
                 "handle_depth_pct": round(handle_depth, 4),
+                "handle_low": round(handle_low, 2),
+                "handle_high": round(handle_high, 2),
                 "handle_volume_over_cup": round(handle_vol / cup_advance_vol, 3) if cup_advance_vol else None,
                 "light_handle_volume": light_handle_volume,
                 "current_close": round(float(close[-1]), 2),
                 "dist_to_pivot_pct": round((pivot - float(close[-1])) / pivot, 4) if pivot else None,
+                # Pivot DATES (ISO) for Tier-3 overlay drawing.
+                "left_peak_date": left_peak_date,
+                "cup_bottom_date": cup_bottom_date,
+                "right_peak_date": right_peak_date,
+                "handle_start_date": handle_start_date,
             },
         )
 
@@ -187,3 +203,8 @@ def _as_date(idx_value) -> Optional[date]:
         return idx_value.date() if hasattr(idx_value, "date") else None
     except Exception:
         return None
+
+
+def _as_iso(idx_value) -> Optional[str]:
+    d = _as_date(idx_value)
+    return d.isoformat() if d is not None else None
