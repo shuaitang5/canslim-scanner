@@ -21720,14 +21720,19 @@ AD: A    </span>
       th.addEventListener("click", () => {
         const tbody = table.querySelector("tbody");
         const rows = Array.from(tbody.querySelectorAll("tr"));
-        const isNum = th.classList.contains("num");
         const asc = th.dataset.sortDir !== "asc";
+        const cellText = r => (r.children[idx]?.textContent || "").trim();
+        const numVal = t => parseFloat(t.replace(/[^-\d.]/g, ""));
+        // Numeric if the column is tagged .num OR every non-empty cell parses as
+        // a number (auto-detect). Fixes the rank "#" column sorting 1,10,11,2,20
+        // as text when it lacks the .num class.
+        const cells = rows.map(cellText).filter(t => t && t !== "—");
+        const autoNum = cells.length > 0 && cells.every(t => isFinite(numVal(t)));
+        const isNum = th.classList.contains("num") || autoNum;
         rows.sort((a, b) => {
-          const av = a.children[idx]?.textContent.trim();
-          const bv = b.children[idx]?.textContent.trim();
+          const av = cellText(a), bv = cellText(b);
           if (isNum) {
-            const an = parseFloat(av.replace(/[^-\d.]/g, "")) || 0;
-            const bn = parseFloat(bv.replace(/[^-\d.]/g, "")) || 0;
+            const an = numVal(av) || 0, bn = numVal(bv) || 0;
             return asc ? an - bn : bn - an;
           }
           return asc ? av.localeCompare(bv) : bv.localeCompare(av);
