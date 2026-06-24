@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CANSLIM full-match dashboard</title>
+<title>CANSLIM — daily ranking change (day-over-day diff)</title>
 <style>
   :root {
     --bg: #ffffff; --bg-alt: #f7f8f9; --bg-dark: #eceef0;
@@ -19,6 +19,7 @@
            display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
            position: sticky; top: 0; background: var(--bg); z-index: 10; }
   header h1 { margin: 0; font-size: 16px; font-weight: 600; }
+  header h1 .h1-sub { color: var(--muted); font-weight: 400; font-size: 13px; }
   .regime { display: inline-block; padding: 2px 10px; border-radius: 3px;
             font-size: 11px; font-weight: 700; letter-spacing: 0.05em; }
   .regime-UPTREND { background: var(--pass); color: white; }
@@ -109,13 +110,12 @@
 <body>
 
 <header>
-  <h1>CANSLIM full matches</h1>
+  <h1>Daily Ranking Change <span class="h1-sub">— full matches vs prior trading day</span></h1>
   <span id="regime" class="regime"></span>
   <label class="compare-note">Date <select id="dateSelect"></select></label>
   <span class="compare-note" id="compareNote"></span>
   <span class="nav-links">
     <a href="../">All Reports</a>
-    <a class="active" href="index.html">Daily Ranking Change</a>
   </span>
 </header>
 
@@ -259,13 +259,15 @@
       prior ? "comparing " + primaryDate + "  vs  " + priorDate
             : "no prior report available for comparison";
 
-    document.getElementById("leftTitle").textContent =
-      primaryDate + " — " + primary.full_matches_total + " full matches";
+    document.getElementById("leftTitle").innerHTML =
+      '<a href="' + primary.source_url + '">' + primaryDate + "</a> — "
+      + primary.full_matches_total + " full matches";
     document.getElementById("leftSub").textContent =
       "Full CANSLIM matches ranked by composite score.";
 
-    document.getElementById("rightTitle").textContent =
-      prior ? priorDate + " — " + prior.full_matches_total + " full matches"
+    document.getElementById("rightTitle").innerHTML =
+      prior ? '<a href="' + prior.source_url + '">' + priorDate + "</a> — "
+              + prior.full_matches_total + " full matches"
             : "No prior report";
     document.getElementById("rightSub").textContent =
       prior ? "Prior trading day — used as the comparison baseline." : "";
