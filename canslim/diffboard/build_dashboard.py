@@ -263,11 +263,23 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   }
 
   const sel = document.getElementById("dateSelect");
-  dates.forEach((d, i) => {
+  // Cap the dropdown at the 100 most-recent dates (dates is newest-first) so a
+  // large archive doesn't overload option rendering. The diff is day-over-day,
+  // so older dates aren't useful to select here; the underlying reports map is
+  // unaffected.
+  const DROPDOWN_LIMIT = 100;
+  const dropdownDates = dates.slice(0, DROPDOWN_LIMIT);
+  dropdownDates.forEach((d, i) => {
     const o = document.createElement("option");
     o.value = d; o.textContent = d + (i === 0 ? "  (latest)" : "");
     sel.appendChild(o);
   });
+  if (dates.length > DROPDOWN_LIMIT) {
+    const note = document.createElement("option");
+    note.disabled = true;
+    note.textContent = "… older " + (dates.length - DROPDOWN_LIMIT) + " date(s) hidden";
+    sel.appendChild(note);
+  }
   sel.value = dates[0];
   sel.addEventListener("change", render);
 
