@@ -29,7 +29,8 @@
   header a { color: var(--accent); text-decoration: none; font-family: var(--mono); font-size: 12px; }
   header a:hover { text-decoration: underline; }
   .compare-note { color: var(--muted); font-size: 12px; }
-  .nav-links { margin-left: auto; display: flex; gap: 14px; }
+  .nav-links { margin-left: auto; display: flex; gap: 14px; font-size: 13px; }
+  .nav-links a.active { color: var(--text); font-weight: 600; text-decoration: none; cursor: default; }
 
   main { display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
          padding: 20px; max-width: 1700px; margin: 0 auto; }
@@ -113,9 +114,8 @@
   <label class="compare-note">Date <select id="dateSelect"></select></label>
   <span class="compare-note" id="compareNote"></span>
   <span class="nav-links">
-    <a id="sourceLink" href="#" target="_blank" rel="noopener">report ↗</a>
-    <a href="search.html">ticker search ↗</a>
-    <a href="../">all reports ↗</a>
+    <a href="../">Reports</a>
+    <a class="active" href="index.html">Dashboard</a>
   </span>
 </header>
 
@@ -212,10 +212,10 @@
       tr.innerHTML =
         '<td class="rank">' + it.rank + '</td>' +
         '<td class="ticker">' +
-          '<span class="sym"><a href="https://ticker-quickview.onrender.com/#' + it.ticker + '" target="_blank" rel="noopener">' + it.ticker + '</a></span>' +
+          '<span class="sym"><a href="https://ticker-quickview.onrender.com/#' + it.ticker + '">' + it.ticker + '</a></span>' +
           nameHtml + indHtml +
         '</td>' +
-        '<td class="num"><a href="' + options.sourceUrl + '#c-' + it.ticker + '" target="_blank" rel="noopener">' + (it.score != null ? it.score.toFixed(2) : '—') + '</a></td>' +
+        '<td class="num"><a href="' + options.sourceUrl + '#c-' + it.ticker + '">' + (it.score != null ? it.score.toFixed(2) : '—') + '</a></td>' +
         '<td class="ad">' + (it.ad || '—') + '</td>' +
         '<td class="delta"><span class="badge ' + d.cls + '">' +
           '<span class="badge-long">' + d.text + '</span>' +
@@ -243,7 +243,6 @@
     regimeEl.textContent = primary.regime || "UNKNOWN";
     regimeEl.className = "regime regime-" + (primary.regime || "UNKNOWN");
 
-    document.getElementById("sourceLink").href = primary.source_url;
     document.getElementById("compareNote").textContent =
       prior ? "comparing " + primaryDate + "  vs  " + priorDate
             : "no prior report available for comparison";

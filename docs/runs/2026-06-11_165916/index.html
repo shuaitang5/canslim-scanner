@@ -47,6 +47,11 @@
   }
   .app-title { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
   .app-title h1 { margin: 0; font-size: 14px; font-weight: 600; }
+  /* Cross-page nav, pushed to the top-right (same links/place on every page). */
+  .app-title .nav-links { margin-left: auto; display: flex; gap: 14px; font-size: 13px; }
+  .app-title .nav-links a { color: var(--accent); text-decoration: none; }
+  .app-title .nav-links a:hover { text-decoration: underline; }
+  .app-title .nav-links a.active { color: var(--text); font-weight: 600; cursor: default; }
   .app-title h1 a.home-link { color: var(--text); text-decoration: none; }
   .app-title h1 a.home-link:hover { color: var(--accent); }
   .app-title .meta { color: var(--text-muted); font-size: 12px; font-family: var(--mono); }
@@ -457,6 +462,10 @@
     <span class="meta">universe: us_all (4839 tickers)</span>
       <span class="regime-badge regime-uptrend">UPTREND</span>
       <span class="meta">SPY $725.43 · 50d $719.32 · 200d $685.34</span>
+    <span class="nav-links">
+      <a href="../../">Reports</a>
+      <a href="../../dashboard/">Dashboard</a>
+    </span>
   </div>
   <div class="summary-row">
     <div class="stat">candidates after pre-filter <span class="v">1903</span></div>
@@ -1822,7 +1831,7 @@
 <details class="candidate" id="c-CRDO" data-ticker="CRDO" data-passed="true">
   <summary>
     <span class="ticker">CRDO</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#CRDO" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#CRDO" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.96</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -2384,7 +2393,7 @@ AD: A    </span>
 <details class="candidate" id="c-ATEN" data-ticker="ATEN" data-passed="true">
   <summary>
     <span class="ticker">ATEN</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ATEN" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ATEN" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.96</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -2922,7 +2931,7 @@ AD: A    </span>
 <details class="candidate" id="c-FTNT" data-ticker="FTNT" data-passed="true">
   <summary>
     <span class="ticker">FTNT</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#FTNT" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#FTNT" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.93</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -3460,7 +3469,7 @@ AD: A    </span>
 <details class="candidate" id="c-ALTO" data-ticker="ALTO" data-passed="true">
   <summary>
     <span class="ticker">ALTO</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ALTO" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ALTO" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.93</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -4021,7 +4030,7 @@ AD: B    </span>
 <details class="candidate" id="c-ZVRA" data-ticker="ZVRA" data-passed="true">
   <summary>
     <span class="ticker">ZVRA</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ZVRA" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ZVRA" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.92</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -4581,7 +4590,7 @@ AD: A    </span>
 <details class="candidate" id="c-ALAB" data-ticker="ALAB" data-passed="true">
   <summary>
     <span class="ticker">ALAB</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ALAB" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ALAB" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.91</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -5142,7 +5151,7 @@ AD: A    </span>
 <details class="candidate" id="c-STRL" data-ticker="STRL" data-passed="true">
   <summary>
     <span class="ticker">STRL</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#STRL" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#STRL" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.91</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -5701,7 +5710,7 @@ AD: A    </span>
 <details class="candidate" id="c-CLS" data-ticker="CLS" data-passed="true">
   <summary>
     <span class="ticker">CLS</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#CLS" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#CLS" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.90</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -6239,7 +6248,7 @@ AD: B    </span>
 <details class="candidate" id="c-AGX" data-ticker="AGX" data-passed="true">
   <summary>
     <span class="ticker">AGX</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#AGX" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#AGX" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.90</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -6798,7 +6807,7 @@ AD: C    </span>
 <details class="candidate" id="c-SIF" data-ticker="SIF" data-passed="true">
   <summary>
     <span class="ticker">SIF</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#SIF" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#SIF" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.89</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -7363,7 +7372,7 @@ AD: A    </span>
 <details class="candidate" id="c-TDC" data-ticker="TDC" data-passed="true">
   <summary>
     <span class="ticker">TDC</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#TDC" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#TDC" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.88</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -7901,7 +7910,7 @@ AD: A    </span>
 <details class="candidate" id="c-FTI" data-ticker="FTI" data-passed="true">
   <summary>
     <span class="ticker">FTI</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#FTI" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#FTI" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.88</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -8464,7 +8473,7 @@ AD: C    </span>
 <details class="candidate" id="c-INOD" data-ticker="INOD" data-passed="true">
   <summary>
     <span class="ticker">INOD</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#INOD" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#INOD" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.88</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -9002,7 +9011,7 @@ AD: A    </span>
 <details class="candidate" id="c-VIAV" data-ticker="VIAV" data-passed="true">
   <summary>
     <span class="ticker">VIAV</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#VIAV" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#VIAV" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.88</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -9563,7 +9572,7 @@ AD: A    </span>
 <details class="candidate" id="c-RILY" data-ticker="RILY" data-passed="true">
   <summary>
     <span class="ticker">RILY</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#RILY" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#RILY" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.87</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -10124,7 +10133,7 @@ AD: B    </span>
 <details class="candidate" id="c-YOU" data-ticker="YOU" data-passed="true">
   <summary>
     <span class="ticker">YOU</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#YOU" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#YOU" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.81</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -10685,7 +10694,7 @@ AD: C    </span>
 <details class="candidate" id="c-PARR" data-ticker="PARR" data-passed="true">
   <summary>
     <span class="ticker">PARR</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#PARR" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#PARR" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.73</span>
     <span class="gates">CAnSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -11250,7 +11259,7 @@ AD: D    </span>
 <details class="candidate" id="c-STX" data-ticker="STX" data-passed="true">
   <summary>
     <span class="ticker">STX</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#STX" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#STX" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.72</span>
     <span class="gates">CANSLIM</span>
     <span class="status status-MATCH">MATCH</span>
@@ -11816,7 +11825,7 @@ AD: A    </span>
 <details class="candidate" id="c-CNO" data-ticker="CNO" data-passed="false">
   <summary>
     <span class="ticker">CNO</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#CNO" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#CNO" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.93</span>
     <span class="gates">CaNSlIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -12375,7 +12384,7 @@ AD: A    </span>
 <details class="candidate" id="c-LLY" data-ticker="LLY" data-passed="false">
   <summary>
     <span class="ticker">LLY</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#LLY" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#LLY" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.93</span>
     <span class="gates">CANSlIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -12934,7 +12943,7 @@ AD: A    </span>
 <details class="candidate" id="c-AIZ" data-ticker="AIZ" data-passed="false">
   <summary>
     <span class="ticker">AIZ</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#AIZ" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#AIZ" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.92</span>
     <span class="gates">CaNSlIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -13505,7 +13514,7 @@ AD: A    </span>
 <details class="candidate" id="c-PLD" data-ticker="PLD" data-passed="false">
   <summary>
     <span class="ticker">PLD</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#PLD" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#PLD" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.91</span>
     <span class="gates">CaNSlIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -14072,7 +14081,7 @@ AD: A    </span>
 <details class="candidate" id="c-BSRR" data-ticker="BSRR" data-passed="false">
   <summary>
     <span class="ticker">BSRR</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#BSRR" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#BSRR" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.90</span>
     <span class="gates">caNSlIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -14641,7 +14650,7 @@ AD: A    </span>
 <details class="candidate" id="c-XOMA" data-ticker="XOMA" data-passed="false">
   <summary>
     <span class="ticker">XOMA</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#XOMA" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#XOMA" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.90</span>
     <span class="gates">cANSLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -15210,7 +15219,7 @@ AD: A    </span>
 <details class="candidate" id="c-ARMK" data-ticker="ARMK" data-passed="false">
   <summary>
     <span class="ticker">ARMK</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ARMK" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ARMK" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.90</span>
     <span class="gates">CaNSlIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -15780,7 +15789,7 @@ AD: A    </span>
 <details class="candidate" id="c-GTX" data-ticker="GTX" data-passed="false">
   <summary>
     <span class="ticker">GTX</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#GTX" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#GTX" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.95</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -16343,7 +16352,7 @@ AD: A    </span>
 <details class="candidate" id="c-ELMD" data-ticker="ELMD" data-passed="false">
   <summary>
     <span class="ticker">ELMD</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ELMD" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ELMD" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.94</span>
     <span class="gates">cANsLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -16906,7 +16915,7 @@ AD: A    </span>
 <details class="candidate" id="c-INCY" data-ticker="INCY" data-passed="false">
   <summary>
     <span class="ticker">INCY</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#INCY" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#INCY" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.93</span>
     <span class="gates">cANSlIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -17470,7 +17479,7 @@ AD: A    </span>
 <details class="candidate" id="c-ENS" data-ticker="ENS" data-passed="false">
   <summary>
     <span class="ticker">ENS</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ENS" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ENS" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.93</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -18033,7 +18042,7 @@ AD: A    </span>
 <details class="candidate" id="c-TTMI" data-ticker="TTMI" data-passed="false">
   <summary>
     <span class="ticker">TTMI</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#TTMI" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#TTMI" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.92</span>
     <span class="gates">caNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -18592,7 +18601,7 @@ AD: A    </span>
 <details class="candidate" id="c-FIX" data-ticker="FIX" data-passed="false">
   <summary>
     <span class="ticker">FIX</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#FIX" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#FIX" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.90</span>
     <span class="gates">cAnSLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -19151,7 +19160,7 @@ AD: B    </span>
 <details class="candidate" id="c-GOOGL" data-ticker="GOOGL" data-passed="false">
   <summary>
     <span class="ticker">GOOGL</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#GOOGL" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#GOOGL" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.90</span>
     <span class="gates">CANsLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -19719,7 +19728,7 @@ AD: A    </span>
 <details class="candidate" id="c-ODC" data-ticker="ODC" data-passed="false">
   <summary>
     <span class="ticker">ODC</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ODC" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#ODC" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.98</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -20258,7 +20267,7 @@ AD: A    </span>
 <details class="candidate" id="c-BFH" data-ticker="BFH" data-passed="false">
   <summary>
     <span class="ticker">BFH</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#BFH" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#BFH" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.97</span>
     <span class="gates">caNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -20797,7 +20806,7 @@ AD: A    </span>
 <details class="candidate" id="c-MPTI" data-ticker="MPTI" data-passed="false">
   <summary>
     <span class="ticker">MPTI</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#MPTI" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#MPTI" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.94</span>
     <span class="gates">caNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -21336,7 +21345,7 @@ AD: A    </span>
 <details class="candidate" id="c-MOV" data-ticker="MOV" data-passed="false">
   <summary>
     <span class="ticker">MOV</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#MOV" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#MOV" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.93</span>
     <span class="gates">CaNSLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -21874,7 +21883,7 @@ AD: A    </span>
 <details class="candidate" id="c-TGTX" data-ticker="TGTX" data-passed="false">
   <summary>
     <span class="ticker">TGTX</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#TGTX" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#TGTX" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.92</span>
     <span class="gates">CANsLIM</span>
     <span class="status status-near-miss">near-miss</span>
@@ -22413,7 +22422,7 @@ AD: A    </span>
 <details class="candidate" id="c-TKR" data-ticker="TKR" data-passed="false">
   <summary>
     <span class="ticker">TKR</span>
-    <a class="qv-link" href="https://ticker-quickview.onrender.com/#TKR" target="_blank" rel="noopener" onclick="event.stopPropagation()">quickview ↗</a>
+    <a class="qv-link" href="https://ticker-quickview.onrender.com/#TKR" onclick="event.stopPropagation()">quickview</a>
     <span class="score mono">0.90</span>
     <span class="gates">caNSLIM</span>
     <span class="status status-near-miss">near-miss</span>

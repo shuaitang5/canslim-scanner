@@ -179,22 +179,29 @@ jobs:
       # ALL summary.json files — clean JSON, zero HTML scraping:
       #   1. enrich_companies.py — fetch name/sector/blurb for any NEW named-
       #      bucket ticker (yfinance; cached in companies.json so it's near-free).
-      #   2. build_dashboard     — day-over-day diff page (docs/dashboard/),
-      #      the history.json inverted index (docs/history.json), and the
-      #      static ticker-history search page (docs/dashboard/search.html).
-      - name: Rebuild diff dashboard + ticker-history search
+      #   2. build_dashboard     — day-over-day diff page (docs/dashboard/) plus
+      #      the history.json inverted index (docs/history.json). No standalone
+      #      search page anymore — the ticker-history search is now a panel on
+      #      the landing page (docs/index.html).
+      #   3. publish --backfill  — regenerate docs/index.html so its inlined
+      #      search data (history index + company names) reflects the just-
+      #      enriched companies.json. No new run; backfill is a no-op for runs
+      #      that already have meta.json/summary.json.
+      - name: Rebuild diff dashboard + ticker-history index
         run: |
           python -m canslim.diffboard.enrich_companies --docs docs || \
             echo "::warning::enrich_companies failed (likely yfinance throttling) — names may be stale; continuing."
           python -m canslim.diffboard.build_dashboard --docs docs
+          canslim publish --backfill --docs docs
 
       - name: Commit regenerated docs/
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # docs/ holds the report + summary.json + dashboard + history.json +
-          # search page; companies.json (the enrichment cache) lives in the
-          # package source tree, so commit both so newly-named tickers persist.
+          # landing page (with inlined search); companies.json (the enrichment
+          # cache) lives in the package source tree, so commit both so newly-
+          # named tickers persist.
           git add docs/ canslim/diffboard/companies.json
           if git diff --staged --quiet; then
             echo "No docs changes to commit."

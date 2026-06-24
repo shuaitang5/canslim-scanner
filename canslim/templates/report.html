@@ -58,6 +58,11 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
     padding: 10px 16px;
   }
   .app-title { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  /* Cross-page nav, pushed to the top-right (same links/place on every page). */
+  .app-title .nav-links { margin-left: auto; display: flex; gap: 14px; font-size: 13px; }
+  .app-title .nav-links a { color: var(--accent); text-decoration: none; }
+  .app-title .nav-links a:hover { text-decoration: underline; }
+  .app-title .nav-links a.active { color: var(--text); font-weight: 600; cursor: default; }
   .app-title h1 { margin: 0; font-size: 14px; font-weight: 600; }
   .app-title h1 a.home-link { color: var(--text); text-decoration: none; }
   .app-title h1 a.home-link:hover { color: var(--accent); }
@@ -472,6 +477,10 @@ collapsibles. Styling system: monospace numerics, system-ui prose.
       <span class="regime-badge {{ rcls }}">{{ "UPTREND" if regime.uptrend else "CAUTION" }}</span>
       <span class="meta">{{ regime_index_label }} {{ regime.spy_close|fmt_money }} · 50d {{ regime.spy_sma50|fmt_money }} · 200d {{ regime.spy_sma200|fmt_money }}</span>
     {% endif %}
+    <span class="nav-links">
+      <a href="../../">Reports</a>
+      <a href="../../dashboard/">Dashboard</a>
+    </span>
   </div>
   <div class="summary-row">
     <div class="stat">candidates after pre-filter <span class="v">{{ manifest.candidates_after_prefilter }}</span></div>
