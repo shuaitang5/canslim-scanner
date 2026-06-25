@@ -296,66 +296,46 @@ def render_svg(
                     )
                 parts.append(_label(x_cb, y_cb + 12, "cup&amp;handle"))
 
-        # ---- Saucer: rounded arc (left peak -> bottom -> right peak), no handle ----
-        elif pname == "saucer":
-            lp_v, sb_v, rp_v = ev.get("left_peak"), ev.get("saucer_bottom"), ev.get("right_peak")
-            # span: started_on..completed_on; bottom at the midpoint x.
-            if None not in (lp_v, sb_v, rp_v) and si is not None:
-                x_lp, y_lp = x_of(si), y_price(float(lp_v))
-                x_rp, y_rp = x_of(ei), y_price(float(rp_v))
-                x_sb = (x_lp + x_rp) / 2.0
-                y_sb = y_price(float(sb_v))
-                cx1 = x_lp + (x_sb - x_lp) * 0.5
-                cx2 = x_sb + (x_rp - x_sb) * 0.5
-                parts.append(
-                    f'<path class="saucer-arc" d="M {x_lp:.1f} {y_lp:.1f} '
-                    f'Q {cx1:.1f} {y_sb:.1f} {x_sb:.1f} {y_sb:.1f} '
-                    f'Q {cx2:.1f} {y_sb:.1f} {x_rp:.1f} {y_rp:.1f}" fill="none" '
-                    f'stroke="{_OVERLAY}" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.85"/>'
-                )
-                for cx, cy in ((x_lp, y_lp), (x_sb, y_sb), (x_rp, y_rp)):
-                    parts.append(_dot(cx, cy))
-                parts.append(_label(x_sb, y_sb + 12, "saucer"))
+        # ---- Saucer: drawing intentionally NOT rendered. The midpoint-anchored arc
+        # looked off (the detector doesn't emit a true bottom DATE, so the curve
+        # can't be anchored to the real low). Saucer is still detected/scored and
+        # gets the pivot/buy-zone lines; we just don't draw the rounded-base shape.
 
-        # ---- Double bottom: W shape (first low -> middle peak -> second low) ----
+        # ---- Double bottom: full W (left top -> 1st low -> mid peak -> 2nd low -> right top) ----
         elif pname == "double_bottom":
+            fl_i = _idx_of_date(ev.get("first_low_date")); mp_i = _idx_of_date(ev.get("middle_peak_date"))
+            sl_i = _idx_of_date(ev.get("second_low_date")); lt_i = _idx_of_date(ev.get("left_top_date"))
+            rt_i = _idx_of_date(ev.get("right_top_date"))
             fl_v, mp_v, sl_v = ev.get("first_low"), ev.get("middle_peak"), ev.get("second_low")
-            # Place the W across the span: first low at start, second low near end,
-            # middle peak between them.
-            if None not in (fl_v, mp_v, sl_v) and si is not None:
-                x_fl = x_of(si)
-                x_sl = x_of(ei)
-                x_mp = (x_fl + x_sl) / 2.0
-                y_fl, y_mp, y_sl = y_price(float(fl_v)), y_price(float(mp_v)), y_price(float(sl_v))
+            lt_v, rt_v = ev.get("left_top"), ev.get("right_top")
+            # Need the three inner anchors at minimum; left/right tops complete the W.
+            if None not in (fl_i, mp_i, sl_i, fl_v, mp_v, sl_v):
+                pts = []
+                if lt_i is not None and lt_v is not None:
+                    pts.append((x_of(lt_i), y_price(float(lt_v))))   # left shoulder (top)
+                pts += [
+                    (x_of(fl_i), y_price(float(fl_v))),              # first low
+                    (x_of(mp_i), y_price(float(mp_v))),              # middle peak
+                    (x_of(sl_i), y_price(float(sl_v))),              # second low
+                ]
+                if rt_i is not None and rt_v is not None:
+                    pts.append((x_of(rt_i), y_price(float(rt_v))))   # right shoulder (top)
+                d = "M " + " L ".join(f"{px:.1f} {py:.1f}" for px, py in pts)
                 parts.append(
-                    f'<path class="double-bottom" d="M {x_fl:.1f} {y_fl:.1f} '
-                    f'L {x_mp:.1f} {y_mp:.1f} L {x_sl:.1f} {y_sl:.1f}" fill="none" '
+                    f'<path class="double-bottom" d="{d}" fill="none" '
                     f'stroke="{_OVERLAY}" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.85"/>'
                 )
-                for cx, cy in ((x_fl, y_fl), (x_mp, y_mp), (x_sl, y_sl)):
-                    parts.append(_dot(cx, cy))
-                parts.append(_label(x_mp, y_mp - 6, "double bottom"))
+                for px, py in pts:
+                    parts.append(_dot(px, py))
+                parts.append(_label(x_of(mp_i), y_price(float(mp_v)) - 6, "double bottom"))
 
-        # ---- Ascending triangle: flat top + rising lower support ----
-        elif pname == "ascending_triangle":
-            top_v = ev.get("top_max")
-            if top_v is not None and si is not None:
-                x0, x1 = x_of(si), x_of(ei)
-                y_top = y_price(float(top_v))
-                # Flat resistance across the top.
-                parts.append(
-                    f'<line class="tri-top" x1="{x0:.1f}" y1="{y_top:.1f}" '
-                    f'x2="{x1:.1f}" y2="{y_top:.1f}" stroke="{_OVERLAY}" '
-                    f'stroke-width="1.6" stroke-dasharray="4 3" opacity="0.85"/>'
-                )
-                # Rising support: from the low at the start up toward the top at the end.
-                y_lo_start = y_price(float(np.nanmin(low[si:ei + 1]))) if ei > si else y_top
-                parts.append(
-                    f'<line class="tri-support" x1="{x0:.1f}" y1="{y_lo_start:.1f}" '
-                    f'x2="{x1:.1f}" y2="{y_top:.1f}" stroke="{_OVERLAY}" '
-                    f'stroke-width="1.6" opacity="0.85"/>'
-                )
-                parts.append(_label((x0 + x1) / 2.0, y_top - 6, "asc triangle"))
+        # ---- Ascending triangle: flat resistance line + real rising support line ----
+        # ---- Ascending triangle: drawing intentionally NOT rendered. The detector's
+        # two support anchors (support_first/last) are rising swing lows but do NOT
+        # form a true lower boundary — intervening candles dip below the connecting
+        # line (13/28 on XYZ), so it cut through candles. The fix belongs in the
+        # detector's support-endpoint selection (quickview source of truth); until
+        # then we don't draw the triangle. It's still detected/scored with pivot lines.
 
         # ---- High-tight flag: flagpole rise + tight flag box ----
         elif pname == "high_tight_flag":
