@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-06-25",
     "2026-06-24",
     "2026-06-23",
     "2026-06-22",
@@ -2451,6 +2452,120 @@
         }
       ],
       "full_matches_total": 15
+    },
+    "2026-06-25": {
+      "date": "2026-06-25",
+      "run_id": "2026-06-25_230948",
+      "source_url": "../runs/2026-06-25_230948/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9753,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "ATEN",
+          "score": 0.9696,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "UAL",
+          "score": 0.969,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "ATI",
+          "score": 0.9633,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "ATRO",
+          "score": 0.9532,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "VIAV",
+          "score": 0.9416,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 7,
+          "ticker": "CBL",
+          "score": 0.9364,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "VIRT",
+          "score": 0.932,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "TGTX",
+          "score": 0.9276,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 10,
+          "ticker": "WLFC",
+          "score": 0.9135,
+          "gates": "CANSLIM",
+          "ad": "D"
+        },
+        {
+          "rank": 11,
+          "ticker": "GEV",
+          "score": 0.9038,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 12,
+          "ticker": "CRDO",
+          "score": 0.8997,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 13,
+          "ticker": "STRL",
+          "score": 0.898,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 14,
+          "ticker": "CLS",
+          "score": 0.8622,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 15,
+          "ticker": "NUTX",
+          "score": 0.8567,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 15
     }
   },
   "companies": {
@@ -3433,6 +3548,27 @@
       "industry": "Oil & Gas Refining & Marketing",
       "sector": "Energy",
       "blurb": "World Kinect Corporation, together with its subsidiaries, operates as an energy management company in the United States, rest of the Americas, Europe, the Middle East, Africa, and the Asia Pacific."
+    },
+    "ALGT": {
+      "ticker": "ALGT",
+      "name": "ALGT",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "MBIN": {
+      "ticker": "MBIN",
+      "name": "Merchants Bancorp",
+      "industry": "Banks - Regional",
+      "sector": "Financial Services",
+      "blurb": "Merchants Bancorp operates as the diversified bank holding company in the United States. It operates through three segments: Multi-family Mortgage Banking, Mortgage Warehousing, and Banking."
+    },
+    "WLFC": {
+      "ticker": "WLFC",
+      "name": "Willis Lease Finance Corporation",
+      "industry": "Rental & Leasing Services",
+      "sector": "Industrials",
+      "blurb": "Willis Lease Finance Corporation, together with its subsidiaries, operates as a lessor and servicer of commercial aircraft and aircraft engines worldwide. It operates in two segments, Leasing and Related Operations, and Spare Parts Sales."
     }
   }
 }
