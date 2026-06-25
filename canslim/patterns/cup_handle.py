@@ -1,5 +1,11 @@
 """Cup-with-Handle detector (O'Neil's canonical base pattern).
 
+Pivot anchors to the FIRST recovery into the left-rim zone (not the global max),
+so the buy point sits at the real base rim instead of drifting to whatever the
+latest high is. Evidence carries pivot DATES (left_peak_date, cup_bottom_date,
+right_peak_date, handle_start_date). numpy + pandas only. Kept in sync with the
+vendored copy in stock-quickview/patterns/cup_handle.py.
+
 Rules encoded from *How to Make Money in Stocks*:
 
   * Prior uptrend of ~30% before the cup forms (we relax to "price near 52w high").
@@ -22,8 +28,8 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
-from canslim.models import PatternMatch
 from canslim.patterns.base import ChartPattern
+from canslim.models import PatternMatch
 
 
 @dataclass
@@ -44,6 +50,20 @@ class CupHandleParams:
     min_handle_depth: float = 0.03
     max_handle_depth: float = 0.18
     handle_upper_half_only: bool = True
+    # O'Neil's "handle in the upper half of the cup" is a GUIDELINE, not a razor.
+    # We require the handle low to sit at/above this fraction of the cup height
+    # (bottom + frac*(left_peak - bottom)). 0.50 is the textbook midpoint; we
+    # relax to 0.45 so a handle that misses the midpoint by a hair (e.g. UAL,
+    # handle low $101.77 vs cup_mid $101.92 — a $0.15 miss) still passes, while a
+    # handle that sags into the genuine lower third (< 45% of cup height) is
+    # still rejected. Tunable so the gate can be tightened/loosened per use.
+    handle_min_cup_fraction: float = 0.45
+    # Opt-in: when True, an already-EXTENDED base (current price > pivot * 1.20)
+    # is RETURNED instead of rejected, tagged via evidence["extended"]=True so a
+    # consumer (e.g. the quickview overlay) can still draw the cup and flag that
+    # the entry is gone. DEFAULT False — the canslim SCANNER must keep rejecting
+    # extended cups (returns None), so this stays off for screening.
+    include_extended: bool = False
 
 
 class CupWithHandle(ChartPattern):
@@ -94,20 +114,47 @@ class CupWithHandle(ChartPattern):
         if cup_duration < p.min_cup_sessions // 2:
             return None
 
-        # Right side: find the highest point between the bottom and the last `max_handle_sessions`
-        right_region_end = len(window) - p.min_handle_sessions
-        right_region = high[bottom_idx:right_region_end]
-        if right_region.size < 3:
-            return None
-        right_rel = int(np.argmax(right_region))
-        right_idx = bottom_idx + right_rel
-        right_peak = float(high[right_idx])
+        # --- RIGHT RIM: first recovery into the left-rim zone (NOT the global max) ---
+        # The naive "argmax(high) on the right side" grabs whatever the highest bar
+        # is — for a base that has since broken out, that is the BREAKOUT bar, not
+        # the rim. Instead we locate the rim the way a human reads the chart:
+        #   1. Scan FORWARD from the cup bottom for the FIRST bar whose high enters
+        #      the left-rim zone: within `max_right_side_gap` below the left peak
+        #      (lower bound) and not more than `max_right_side_overshoot` above it.
+        #   2. From that entry, the rim is the FIRST recovery PEAK — walk forward
+        #      tracking the running max of the high; the rim locks once a genuine
+        #      handle-sized pullback follows it (a bar whose high sits
+        #      >= `min_handle_depth` below the running max), or once price runs away
+        #      above the overshoot ceiling. This gives the leftmost true rim, so the
+        #      handle that follows is the real pullback — not a later breakout leg.
+        rim_lo = left_peak * (1.0 - p.max_right_side_gap)
+        rim_hi = left_peak * (1.0 + p.max_right_side_overshoot)
 
-        # Right side must recover close to the left peak (lower bound) but may exceed it
-        # by up to `max_right_side_overshoot` — captures "earnings gap" pattern variants
-        # where the stock gapped past the prior peak before forming a tight handle.
-        # Beyond this overshoot the cup is too "extended" to qualify; skip and let the
-        # post-breakout detectors handle it.
+        entry_idx = None
+        for i in range(bottom_idx + 1, len(window)):
+            if rim_lo <= high[i] <= rim_hi:
+                entry_idx = i
+                break
+        # No recovery into the rim zone at all => stock never made it back => no cup.
+        if entry_idx is None:
+            return None
+
+        right_idx = entry_idx
+        right_peak = float(high[entry_idx])
+        for i in range(entry_idx + 1, len(window)):
+            if high[i] > rim_hi:
+                # Runaway breakout above the rim zone before any handle formed.
+                break
+            if high[i] >= right_peak:
+                right_peak = float(high[i])
+                right_idx = i  # rim advances with each fresh recovery high
+            elif (right_peak - high[i]) / right_peak >= p.min_handle_depth:
+                # A genuine pullback has begun => the rim is locked at right_idx.
+                break
+
+        # Right side must recover close to the left peak (lower bound) but may exceed
+        # it by up to `max_right_side_overshoot`. The zone scan above already enforces
+        # this, but recompute the canonical gap for the confidence/recovery score.
         recovery_gap = (left_peak - right_peak) / left_peak if left_peak > 0 else 1.0
         if recovery_gap > p.max_right_side_gap or recovery_gap < -p.max_right_side_overshoot:
             return None
@@ -116,9 +163,23 @@ class CupWithHandle(ChartPattern):
         if (right_idx - left_idx) < p.min_cup_sessions:
             return None
 
-        # Handle: from right_idx to the end
-        handle_region = window.iloc[right_idx : len(window)]
-        handle_duration = len(handle_region)
+        # --- HANDLE: the pullback that IMMEDIATELY FOLLOWS the right rim ---
+        # The handle window runs from the bar after the rim up to (but not into) the
+        # bar where price reclaims the rim high (the breakout), capped at
+        # `max_handle_sessions`. Existing handle validation (depth, upper-half,
+        # duration) applies to THIS window — not "everything to the series end".
+        reclaim_idx = len(window)
+        for i in range(right_idx + 1, len(window)):
+            if high[i] > right_peak:
+                reclaim_idx = i
+                break
+        handle_end_idx = min(reclaim_idx - 1, right_idx + p.max_handle_sessions)
+        if handle_end_idx <= right_idx:
+            return None
+
+        # Window spanning the rim through the end of the handle (inclusive).
+        handle_region = window.iloc[right_idx : handle_end_idx + 1]
+        handle_duration = handle_end_idx - right_idx
         if not (p.min_handle_sessions <= handle_duration <= p.max_handle_sessions):
             return None
 
@@ -127,25 +188,35 @@ class CupWithHandle(ChartPattern):
         if not (p.min_handle_depth <= handle_depth <= p.max_handle_depth):
             return None
 
-        # Handle should sit in the upper half of the cup (above the midpoint)
-        cup_mid = bottom + 0.5 * (left_peak - bottom)
-        if p.handle_upper_half_only and handle_low < cup_mid:
+        # Handle should sit in the upper portion of the cup. TOLERANCE band, not a
+        # razor: the threshold is bottom + handle_min_cup_fraction * cup_height
+        # (default 0.45 ~= "upper 55%"), so a handle that misses the strict 0.50
+        # midpoint by a hair still passes, but one that sags into the genuine
+        # lower third is still rejected.
+        cup_mid = bottom + 0.5 * (left_peak - bottom)  # retained for reference/scoring
+        handle_floor = bottom + p.handle_min_cup_fraction * (left_peak - bottom)
+        if p.handle_upper_half_only and handle_low < handle_floor:
             return None
 
         # Volume check: handle volume should be lighter than cup-advance volume
-        cup_advance_vol = float(np.mean(volume[bottom_idx:right_idx]) or 0.0)
+        cup_advance_vol = float(np.mean(volume[bottom_idx:right_idx]) or 0.0) if right_idx > bottom_idx else 0.0
         handle_vol = float(handle_region["volume"].mean() or 0.0)
         light_handle_volume = handle_vol <= cup_advance_vol * 1.1
 
-        # Pivot = handle's highest close + small buffer
+        # Pivot = handle's highest high + small buffer (now anchored to the CORRECT
+        # handle window, so it sits at the real rim, not a later breakout bar).
         handle_high = float(handle_region["high"].max() if "high" in handle_region else handle_region["close"].max())
         pivot = handle_high + 0.10
-        # Reject "stale" cup-with-handle: price already >20% past pivot — the
-        # base broke out and ran. (Note: max_right_side_overshoot above bounds
-        # the right peak vs left peak DURING base formation; this guard bounds
-        # the post-handle current price vs the pivot.)
+        # "Stale"/extended cup-with-handle: price already >20% past pivot — the base
+        # broke out and ran, so the buy point is gone. Now that the rim/handle anchors
+        # are correct, this guard operates on the true pivot.
+        #   * include_extended False (DEFAULT) -> reject (return None). Scanner path.
+        #   * include_extended True            -> return the match, tagged extended,
+        #     so the overlay can still draw the (historical) cup.
         last_close_now = float(close[-1])
-        if pivot > 0 and last_close_now > pivot * 1.20:
+        extension_pct = (last_close_now - pivot) / pivot if pivot > 0 else 0.0
+        extended = pivot > 0 and last_close_now > pivot * 1.20
+        if extended and not p.include_extended:
             return None
 
         # Confidence blends: depth in classic range, handle depth, volume quality, right-side recovery
@@ -159,14 +230,20 @@ class CupWithHandle(ChartPattern):
         started_on = _as_date(index[left_idx])
         completed_on = _as_date(index[-1])
 
-        # Tier-3 overlay (quickview) needs the pivot DATES, not just the prices.
-        # The indices already exist above — map them through `index[...]` to ISO
-        # strings. handle_start == right_peak bar (the handle begins at the right
-        # peak). Kept in sync with the vendored copy in stock-quickview/patterns/.
+        # Tier-3 overlay needs the pivot DATES, not just the prices. The indices
+        # already exist above — map them through `index[...]` to ISO strings.
+        # handle_start == right_peak bar (the handle begins at the right peak).
+        # handle_low / handle_end let the overlay draw the handle as ONE short
+        # segment from the rim down to the real handle low (the handle no longer
+        # runs to the series end now that the rim is the May recovery, not the
+        # latest breakout bar).
+        handle_low_idx = int(handle_region["low"].values.argmin()) + right_idx if "low" in handle_region else right_idx
         left_peak_date = _as_iso(index[left_idx])
         cup_bottom_date = _as_iso(index[bottom_idx])
         right_peak_date = _as_iso(index[right_idx])
         handle_start_date = right_peak_date
+        handle_low_date = _as_iso(index[handle_low_idx])
+        handle_end_date = _as_iso(index[handle_end_idx])
 
         return PatternMatch(
             name=self.name,
@@ -189,11 +266,19 @@ class CupWithHandle(ChartPattern):
                 "light_handle_volume": light_handle_volume,
                 "current_close": round(float(close[-1]), 2),
                 "dist_to_pivot_pct": round((pivot - float(close[-1])) / pivot, 4) if pivot else None,
+                # Extended flag: True when price has already run >20% past pivot
+                # (only reachable when include_extended=True). extension_pct is the
+                # signed distance (last_close - pivot)/pivot — negative/small for a
+                # live base, ~+0.23 for an extended one.
+                "extended": bool(extended),
+                "extension_pct": round(extension_pct, 4),
                 # Pivot DATES (ISO) for Tier-3 overlay drawing.
                 "left_peak_date": left_peak_date,
                 "cup_bottom_date": cup_bottom_date,
                 "right_peak_date": right_peak_date,
                 "handle_start_date": handle_start_date,
+                "handle_low_date": handle_low_date,
+                "handle_end_date": handle_end_date,
             },
         )
 

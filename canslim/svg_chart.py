@@ -82,6 +82,7 @@ def render_svg(
     # Pattern overlays from highest-confidence pattern with a numeric pivot
     pivot, buy_zone_high, stop_loss = None, None, None
     pattern_label = None
+    drawn_pattern = None  # the selected pattern object — drawn as a shape overlay below
     if result and result.patterns:
         candidates = [p for p in result.patterns if p.pivot is not None]
         if candidates:
@@ -91,6 +92,10 @@ def render_svg(
                 buy_zone_high = pivot * 1.05
                 stop_loss = pivot * 0.93
                 pattern_label = p.name
+                # Keep the whole pattern so we can DRAW its shape (cup arc, base box,
+                # double-bottom W, saucer, flag, triangle…) anchored to the real bars
+                # the detector identified, via started_on/completed_on + price levels.
+                drawn_pattern = p
     extra_h_lines = horizontal_lines or []
     extra_v_markers = vertical_markers or []
 
@@ -206,6 +211,176 @@ def render_svg(
             f'font-size="10" fill="#c62828" font-family="ui-monospace,Menlo,monospace">'
             f'pivot ${pivot:.2f}</text>'
         )
+
+    # Pattern shape overlay: draw the recognized base (cup+handle, saucer, double
+    # bottom, ascending triangle, high-tight flag) anchored to the REAL bars the
+    # detector identified. Purely visual; fails soft — a missing/unmappable anchor
+    # just skips that overlay, never breaks the chart. Other pattern types (flat
+    # base, consolidation, 3-weeks-tight) intentionally have no shape drawn.
+    _OVERLAY = "#1565c0"
+    if drawn_pattern is not None and isinstance(drawn_pattern.evidence, dict):
+        ev = drawn_pattern.evidence
+        pname = drawn_pattern.name
+
+        # Map an ISO date string to its session index within the visible window.
+        # The detector's lookback (150 sessions) is WIDER than the visible chart
+        # window (VISIBLE_SESSIONS=130), so a pattern anchor can fall BEFORE the
+        # left edge. In that case clamp to index 0 (draw from the visible edge)
+        # rather than bail — otherwise long bases (saucer, double bottom) silently
+        # never draw. Returns None only when the string is missing/unparseable.
+        def _idx_of_date(iso: object) -> Optional[int]:
+            if not isinstance(iso, str) or not iso:
+                return None
+            try:
+                target = pd.Timestamp(iso).date()
+            except Exception:
+                return None
+            best = None
+            first_dd = dates[0].date() if hasattr(dates[0], "date") else dates[0]
+            for j, d in enumerate(dates):
+                dd = d.date() if hasattr(d, "date") else d
+                if dd == target:
+                    return j
+                if dd <= target:
+                    best = j
+            if best is not None:
+                return best
+            # target precedes the entire visible window -> clamp to the left edge.
+            if target < first_dd:
+                return 0
+            return None
+
+        def _dot(cx: float, cy: float) -> str:
+            return (f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="2.4" '
+                    f'fill="{_OVERLAY}" stroke="#fff" stroke-width="0.6"/>')
+
+        def _label(cx: float, cy: float, text: str) -> str:
+            return (f'<text x="{cx:.1f}" y="{cy:.1f}" font-size="9" fill="{_OVERLAY}" '
+                    f'font-family="ui-monospace,Menlo,monospace" text-anchor="middle">{text}</text>')
+
+        # started_on / completed_on bound every pattern's span on the x-axis.
+        si = _idx_of_date(drawn_pattern.started_on.isoformat() if drawn_pattern.started_on else None)
+        ei = _idx_of_date(drawn_pattern.completed_on.isoformat() if drawn_pattern.completed_on else None)
+        if ei is None:
+            ei = n - 1
+
+        # ---- Cup-with-handle: arc (left peak -> bottom -> right rim) + handle ----
+        if pname == "cup_with_handle":
+            lp_i = _idx_of_date(ev.get("left_peak_date")); cb_i = _idx_of_date(ev.get("cup_bottom_date"))
+            rp_i = _idx_of_date(ev.get("right_peak_date")); hl_i = _idx_of_date(ev.get("handle_low_date"))
+            he_i = _idx_of_date(ev.get("handle_end_date"))
+            lp_v, cb_v, rp_v = ev.get("left_peak"), ev.get("cup_bottom"), ev.get("right_peak")
+            hl_v, hh_v = ev.get("handle_low"), ev.get("handle_high")
+            if None not in (lp_i, cb_i, rp_i, lp_v, cb_v, rp_v):
+                x_lp, y_lp = x_of(lp_i), y_price(float(lp_v))
+                x_cb, y_cb = x_of(cb_i), y_price(float(cb_v))
+                x_rp, y_rp = x_of(rp_i), y_price(float(rp_v))
+                cx1 = x_lp + (x_cb - x_lp) * 0.5
+                cx2 = x_cb + (x_rp - x_cb) * 0.5
+                parts.append(
+                    f'<path class="cup-arc" d="M {x_lp:.1f} {y_lp:.1f} '
+                    f'Q {cx1:.1f} {y_cb:.1f} {x_cb:.1f} {y_cb:.1f} '
+                    f'Q {cx2:.1f} {y_cb:.1f} {x_rp:.1f} {y_rp:.1f}" fill="none" '
+                    f'stroke="{_OVERLAY}" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.85"/>'
+                )
+                for cx, cy in ((x_lp, y_lp), (x_cb, y_cb), (x_rp, y_rp)):
+                    parts.append(_dot(cx, cy))
+                if hl_i is not None and hl_v is not None:
+                    x_hl, y_hl = x_of(hl_i), y_price(float(hl_v))
+                    x_he = x_of(he_i) if he_i is not None else x_hl
+                    y_he = y_price(float(hh_v)) if hh_v is not None else y_rp
+                    parts.append(
+                        f'<path class="cup-handle" d="M {x_rp:.1f} {y_rp:.1f} '
+                        f'L {x_hl:.1f} {y_hl:.1f} L {x_he:.1f} {y_he:.1f}" fill="none" '
+                        f'stroke="{_OVERLAY}" stroke-width="1.6" opacity="0.85"/>'
+                    )
+                parts.append(_label(x_cb, y_cb + 12, "cup&amp;handle"))
+
+        # ---- Saucer: rounded arc (left peak -> bottom -> right peak), no handle ----
+        elif pname == "saucer":
+            lp_v, sb_v, rp_v = ev.get("left_peak"), ev.get("saucer_bottom"), ev.get("right_peak")
+            # span: started_on..completed_on; bottom at the midpoint x.
+            if None not in (lp_v, sb_v, rp_v) and si is not None:
+                x_lp, y_lp = x_of(si), y_price(float(lp_v))
+                x_rp, y_rp = x_of(ei), y_price(float(rp_v))
+                x_sb = (x_lp + x_rp) / 2.0
+                y_sb = y_price(float(sb_v))
+                cx1 = x_lp + (x_sb - x_lp) * 0.5
+                cx2 = x_sb + (x_rp - x_sb) * 0.5
+                parts.append(
+                    f'<path class="saucer-arc" d="M {x_lp:.1f} {y_lp:.1f} '
+                    f'Q {cx1:.1f} {y_sb:.1f} {x_sb:.1f} {y_sb:.1f} '
+                    f'Q {cx2:.1f} {y_sb:.1f} {x_rp:.1f} {y_rp:.1f}" fill="none" '
+                    f'stroke="{_OVERLAY}" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.85"/>'
+                )
+                for cx, cy in ((x_lp, y_lp), (x_sb, y_sb), (x_rp, y_rp)):
+                    parts.append(_dot(cx, cy))
+                parts.append(_label(x_sb, y_sb + 12, "saucer"))
+
+        # ---- Double bottom: W shape (first low -> middle peak -> second low) ----
+        elif pname == "double_bottom":
+            fl_v, mp_v, sl_v = ev.get("first_low"), ev.get("middle_peak"), ev.get("second_low")
+            # Place the W across the span: first low at start, second low near end,
+            # middle peak between them.
+            if None not in (fl_v, mp_v, sl_v) and si is not None:
+                x_fl = x_of(si)
+                x_sl = x_of(ei)
+                x_mp = (x_fl + x_sl) / 2.0
+                y_fl, y_mp, y_sl = y_price(float(fl_v)), y_price(float(mp_v)), y_price(float(sl_v))
+                parts.append(
+                    f'<path class="double-bottom" d="M {x_fl:.1f} {y_fl:.1f} '
+                    f'L {x_mp:.1f} {y_mp:.1f} L {x_sl:.1f} {y_sl:.1f}" fill="none" '
+                    f'stroke="{_OVERLAY}" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.85"/>'
+                )
+                for cx, cy in ((x_fl, y_fl), (x_mp, y_mp), (x_sl, y_sl)):
+                    parts.append(_dot(cx, cy))
+                parts.append(_label(x_mp, y_mp - 6, "double bottom"))
+
+        # ---- Ascending triangle: flat top + rising lower support ----
+        elif pname == "ascending_triangle":
+            top_v = ev.get("top_max")
+            if top_v is not None and si is not None:
+                x0, x1 = x_of(si), x_of(ei)
+                y_top = y_price(float(top_v))
+                # Flat resistance across the top.
+                parts.append(
+                    f'<line class="tri-top" x1="{x0:.1f}" y1="{y_top:.1f}" '
+                    f'x2="{x1:.1f}" y2="{y_top:.1f}" stroke="{_OVERLAY}" '
+                    f'stroke-width="1.6" stroke-dasharray="4 3" opacity="0.85"/>'
+                )
+                # Rising support: from the low at the start up toward the top at the end.
+                y_lo_start = y_price(float(np.nanmin(low[si:ei + 1]))) if ei > si else y_top
+                parts.append(
+                    f'<line class="tri-support" x1="{x0:.1f}" y1="{y_lo_start:.1f}" '
+                    f'x2="{x1:.1f}" y2="{y_top:.1f}" stroke="{_OVERLAY}" '
+                    f'stroke-width="1.6" opacity="0.85"/>'
+                )
+                parts.append(_label((x0 + x1) / 2.0, y_top - 6, "asc triangle"))
+
+        # ---- High-tight flag: flagpole rise + tight flag box ----
+        elif pname == "high_tight_flag":
+            fh_v, fl_v = ev.get("flag_high"), ev.get("flag_low")
+            flag_sessions = ev.get("flag_sessions")
+            if None not in (fh_v, fl_v):
+                # Flag box occupies the last `flag_sessions` bars.
+                fx0 = x_of(max(0, n - int(flag_sessions))) if flag_sessions else x_of(max(0, (si or 0)))
+                fx1 = x_of(n - 1)
+                y_fh, y_fl = y_price(float(fh_v)), y_price(float(fl_v))
+                parts.append(
+                    f'<rect class="flag-box" x="{fx0:.1f}" y="{y_fh:.1f}" '
+                    f'width="{(fx1 - fx0):.1f}" height="{(y_fl - y_fh):.1f}" '
+                    f'fill="rgba(21,101,192,0.08)" stroke="{_OVERLAY}" '
+                    f'stroke-width="1.4" stroke-dasharray="4 3" opacity="0.9"/>'
+                )
+                # Flagpole: steep rise into the flag (start-of-pattern low up to flag high).
+                if si is not None and si < n:
+                    y_pole_lo = y_price(float(np.nanmin(low[si:max(si + 1, int(n - (flag_sessions or 0)))])))
+                    parts.append(
+                        f'<line class="flag-pole" x1="{x_of(si):.1f}" y1="{y_pole_lo:.1f}" '
+                        f'x2="{fx0:.1f}" y2="{y_fh:.1f}" stroke="{_OVERLAY}" '
+                        f'stroke-width="1.6" opacity="0.85"/>'
+                    )
+                parts.append(_label((fx0 + fx1) / 2.0, y_fh - 6, "high tight flag"))
 
     # Stop loss line (yellow dashed)
     if stop_loss:
