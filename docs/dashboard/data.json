@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-06-26",
     "2026-06-25",
     "2026-06-24",
     "2026-06-23",
@@ -2566,6 +2567,127 @@
         }
       ],
       "full_matches_total": 15
+    },
+    "2026-06-26": {
+      "date": "2026-06-26",
+      "run_id": "2026-06-26_225949",
+      "source_url": "../runs/2026-06-26_225949/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9781,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "ATEN",
+          "score": 0.972,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "UAL",
+          "score": 0.9715,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "ATI",
+          "score": 0.9557,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "ATRO",
+          "score": 0.9488,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "TGTX",
+          "score": 0.9388,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "CBL",
+          "score": 0.935,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "AYA",
+          "score": 0.9316,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 9,
+          "ticker": "LLY",
+          "score": 0.9237,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 10,
+          "ticker": "VIAV",
+          "score": 0.9101,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 11,
+          "ticker": "STRL",
+          "score": 0.9067,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 12,
+          "ticker": "ALAB",
+          "score": 0.9045,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 13,
+          "ticker": "GEV",
+          "score": 0.8772,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 14,
+          "ticker": "CRDO",
+          "score": 0.8767,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 15,
+          "ticker": "NUTX",
+          "score": 0.8751,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 16,
+          "ticker": "GRDN",
+          "score": 0.8488,
+          "gates": "CANSLIM",
+          "ad": "B"
+        }
+      ],
+      "full_matches_total": 16
     }
   },
   "companies": {
@@ -3551,10 +3673,10 @@
     },
     "ALGT": {
       "ticker": "ALGT",
-      "name": "ALGT",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Allegiant Travel Company",
+      "industry": "Airlines",
+      "sector": "Industrials",
+      "blurb": "Allegiant Travel Company, a leisure travel company, provides travel and leisure services and products to residents of under-served cities in the United States. The company offers scheduled air transportation on limited-frequency, nonstop flights between underserved cities and leisure destinations."
     },
     "MBIN": {
       "ticker": "MBIN",
@@ -3569,6 +3691,20 @@
       "industry": "Rental & Leasing Services",
       "sector": "Industrials",
       "blurb": "Willis Lease Finance Corporation, together with its subsidiaries, operates as a lessor and servicer of commercial aircraft and aircraft engines worldwide. It operates in two segments, Leasing and Related Operations, and Spare Parts Sales."
+    },
+    "BNY": {
+      "ticker": "BNY",
+      "name": "The Bank of New York Mellon Cor",
+      "industry": "Banks - Diversified",
+      "sector": "Financial Services",
+      "blurb": "The Bank of New York Mellon Corporation provides a range of financial products and services in the United States and internationally. It operates through Securities Services, Market and Wealth Services, Investment and Wealth Management, and Other segments."
+    },
+    "GRDN": {
+      "ticker": "GRDN",
+      "name": "Guardian Pharmacy Services, Inc.",
+      "industry": "Medical Care Facilities",
+      "sector": "Healthcare",
+      "blurb": "Guardian Pharmacy Services, Inc., a pharmacy service company, provides a suite of technology-enabled services to help residents of long-term health care facilities (LTCFs) in the United States."
     }
   }
 }
