@@ -2570,65 +2570,65 @@
     },
     "2026-06-26": {
       "date": "2026-06-26",
-      "run_id": "2026-06-26_225949",
-      "source_url": "../runs/2026-06-26_225949/",
+      "run_id": "2026-06-27_225646",
+      "source_url": "../runs/2026-06-27_225646/",
       "regime": "UPTREND",
       "full_matches": [
         {
           "rank": 1,
           "ticker": "FTNT",
-          "score": 0.9781,
+          "score": 0.9752,
           "gates": "CANSLIM",
           "ad": "A"
         },
         {
           "rank": 2,
+          "ticker": "AGX",
+          "score": 0.9736,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "ATI",
+          "score": 0.9724,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
           "ticker": "ATEN",
           "score": 0.972,
           "gates": "CANSLIM",
           "ad": "A"
         },
         {
-          "rank": 3,
-          "ticker": "UAL",
-          "score": 0.9715,
-          "gates": "CANSLIM",
-          "ad": "A"
-        },
-        {
-          "rank": 4,
-          "ticker": "ATI",
-          "score": 0.9557,
-          "gates": "CANSLIM",
-          "ad": "A"
-        },
-        {
           "rank": 5,
-          "ticker": "ATRO",
-          "score": 0.9488,
+          "ticker": "UAL",
+          "score": 0.9714,
           "gates": "CANSLIM",
           "ad": "A"
         },
         {
           "rank": 6,
+          "ticker": "ATRO",
+          "score": 0.9485,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
           "ticker": "TGTX",
           "score": 0.9388,
           "gates": "CANSLIM",
           "ad": "A"
         },
         {
-          "rank": 7,
+          "rank": 8,
           "ticker": "CBL",
-          "score": 0.935,
+          "score": 0.9348,
           "gates": "CANSLIM",
           "ad": "A"
-        },
-        {
-          "rank": 8,
-          "ticker": "AYA",
-          "score": 0.9316,
-          "gates": "CANSLIM",
-          "ad": "B"
         },
         {
           "rank": 9,
@@ -2640,14 +2640,14 @@
         {
           "rank": 10,
           "ticker": "VIAV",
-          "score": 0.9101,
+          "score": 0.91,
           "gates": "CANSLIM",
-          "ad": "B"
+          "ad": "C"
         },
         {
           "rank": 11,
           "ticker": "STRL",
-          "score": 0.9067,
+          "score": 0.9064,
           "gates": "CAnSLIM",
           "ad": "A"
         },
@@ -2661,7 +2661,7 @@
         {
           "rank": 13,
           "ticker": "GEV",
-          "score": 0.8772,
+          "score": 0.877,
           "gates": "CANSLIM",
           "ad": "C"
         },
@@ -2675,16 +2675,16 @@
         {
           "rank": 15,
           "ticker": "NUTX",
-          "score": 0.8751,
+          "score": 0.8753,
           "gates": "CANSLIM",
           "ad": "A"
         },
         {
           "rank": 16,
-          "ticker": "GRDN",
-          "score": 0.8488,
+          "ticker": "OUT",
+          "score": 0.8194,
           "gates": "CANSLIM",
-          "ad": "B"
+          "ad": "A"
         }
       ],
       "full_matches_total": 16
