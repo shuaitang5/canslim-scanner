@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-01",
     "2026-06-30",
     "2026-06-29",
     "2026-06-26",
@@ -2981,6 +2982,141 @@
         }
       ],
       "full_matches_total": 20
+    },
+    "2026-07-01": {
+      "date": "2026-07-01",
+      "run_id": "2026-07-01_230435",
+      "source_url": "../runs/2026-07-01_230435/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9808,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "ATEN",
+          "score": 0.9742,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "AGX",
+          "score": 0.9601,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 4,
+          "ticker": "UAL",
+          "score": 0.9582,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "VIRT",
+          "score": 0.9381,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "CBL",
+          "score": 0.9356,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "ATI",
+          "score": 0.9346,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 8,
+          "ticker": "GEV",
+          "score": 0.913,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 9,
+          "ticker": "TGTX",
+          "score": 0.9115,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 10,
+          "ticker": "TDC",
+          "score": 0.9068,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 11,
+          "ticker": "STRL",
+          "score": 0.9062,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 12,
+          "ticker": "ALAB",
+          "score": 0.9057,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 13,
+          "ticker": "VIAV",
+          "score": 0.9041,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 14,
+          "ticker": "CRDO",
+          "score": 0.8823,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 15,
+          "ticker": "ATRO",
+          "score": 0.873,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 16,
+          "ticker": "CLS",
+          "score": 0.8561,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 17,
+          "ticker": "OUT",
+          "score": 0.7981,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 18,
+          "ticker": "STX",
+          "score": 0.7442,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 18
     }
   },
   "companies": {
@@ -3998,6 +4134,20 @@
       "industry": "Medical Care Facilities",
       "sector": "Healthcare",
       "blurb": "Guardian Pharmacy Services, Inc., a pharmacy service company, provides a suite of technology-enabled services to help residents of long-term health care facilities (LTCFs) in the United States."
+    },
+    "SEZL": {
+      "ticker": "SEZL",
+      "name": "SEZL",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "UVE": {
+      "ticker": "UVE",
+      "name": "UVE",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
