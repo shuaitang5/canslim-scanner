@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-02",
     "2026-07-01",
     "2026-06-30",
     "2026-06-29",
@@ -3117,6 +3118,141 @@
         }
       ],
       "full_matches_total": 18
+    },
+    "2026-07-02": {
+      "date": "2026-07-02",
+      "run_id": "2026-07-02_225814",
+      "source_url": "../runs/2026-07-02_225814/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "NUTX",
+          "score": 0.9893,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "FTNT",
+          "score": 0.972,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "UAL",
+          "score": 0.9589,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "ATEN",
+          "score": 0.9503,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "VIRT",
+          "score": 0.9377,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "WLFC",
+          "score": 0.9304,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 7,
+          "ticker": "ATI",
+          "score": 0.9301,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "CBL",
+          "score": 0.9234,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "MCY",
+          "score": 0.9214,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 10,
+          "ticker": "AGX",
+          "score": 0.9201,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 11,
+          "ticker": "AYA",
+          "score": 0.9164,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 12,
+          "ticker": "TDC",
+          "score": 0.9115,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 13,
+          "ticker": "TGTX",
+          "score": 0.9111,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 14,
+          "ticker": "ALAB",
+          "score": 0.8821,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 15,
+          "ticker": "CRDO",
+          "score": 0.8783,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 16,
+          "ticker": "ATRO",
+          "score": 0.8633,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 17,
+          "ticker": "GRDN",
+          "score": 0.8475,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 18,
+          "ticker": "OUT",
+          "score": 0.8014,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 18
     }
   },
   "companies": {
@@ -4137,17 +4273,17 @@
     },
     "SEZL": {
       "ticker": "SEZL",
-      "name": "SEZL",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Sezzle Inc.",
+      "industry": "Credit Services",
+      "sector": "Financial Services",
+      "blurb": "Sezzle Inc. operates as a technology-enabled payments company in the United States and Canada."
     },
     "UVE": {
       "ticker": "UVE",
-      "name": "UVE",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Universal Insurance Holdings, Inc.",
+      "industry": "Insurance - Property & Casualty",
+      "sector": "Financial Services",
+      "blurb": "Universal Insurance Holdings, Inc., together with its subsidiaries, operates as an integrated insurance holding company in the United States. The company offers insurance products for personal residential insurance, such as homeowners, renters and tenants, condo unit owners, and dwelling and fire; and allied lines,\u2026"
     }
   }
 }
