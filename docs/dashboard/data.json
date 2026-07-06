@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-06",
     "2026-07-02",
     "2026-07-01",
     "2026-06-30",
@@ -3239,6 +3240,127 @@
         }
       ],
       "full_matches_total": 16
+    },
+    "2026-07-06": {
+      "date": "2026-07-06",
+      "run_id": "2026-07-06_225946",
+      "source_url": "../runs/2026-07-06_225946/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "NUTX",
+          "score": 0.9785,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "WLFC",
+          "score": 0.9635,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 3,
+          "ticker": "ATEN",
+          "score": 0.9531,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "UAL",
+          "score": 0.9523,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "FTNT",
+          "score": 0.9512,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "TDC",
+          "score": 0.9428,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "TGTX",
+          "score": 0.9381,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "AGX",
+          "score": 0.9342,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 9,
+          "ticker": "MCY",
+          "score": 0.9213,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 10,
+          "ticker": "CBL",
+          "score": 0.911,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 11,
+          "ticker": "LLY",
+          "score": 0.9083,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 12,
+          "ticker": "ALAB",
+          "score": 0.9079,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 13,
+          "ticker": "CRDO",
+          "score": 0.8947,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 14,
+          "ticker": "ATRO",
+          "score": 0.8595,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 15,
+          "ticker": "GRDN",
+          "score": 0.8317,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 16,
+          "ticker": "OUT",
+          "score": 0.7937,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 16
     }
   },
   "companies": {
@@ -4270,6 +4392,20 @@
       "industry": "Insurance - Property & Casualty",
       "sector": "Financial Services",
       "blurb": "Universal Insurance Holdings, Inc., together with its subsidiaries, operates as an integrated insurance holding company in the United States. The company offers insurance products for personal residential insurance, such as homeowners, renters and tenants, condo unit owners, and dwelling and fire; and allied lines,\u2026"
+    },
+    "THG": {
+      "ticker": "THG",
+      "name": "THG",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "WLY": {
+      "ticker": "WLY",
+      "name": "WLY",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
