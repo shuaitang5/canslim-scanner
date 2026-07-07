@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-07",
     "2026-07-06",
     "2026-07-02",
     "2026-07-01",
@@ -3361,6 +3362,113 @@
         }
       ],
       "full_matches_total": 16
+    },
+    "2026-07-07": {
+      "date": "2026-07-07",
+      "run_id": "2026-07-07_225302",
+      "source_url": "../runs/2026-07-07_225302/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "NUTX",
+          "score": 0.9585,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "HALO",
+          "score": 0.956,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "ATEN",
+          "score": 0.9542,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "TGTX",
+          "score": 0.9483,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "TDC",
+          "score": 0.9457,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "FTNT",
+          "score": 0.9383,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "LLY",
+          "score": 0.9278,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "CBL",
+          "score": 0.9216,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "MCY",
+          "score": 0.9195,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 10,
+          "ticker": "UAL",
+          "score": 0.9153,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 11,
+          "ticker": "ALAB",
+          "score": 0.8824,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 12,
+          "ticker": "CRDO",
+          "score": 0.8789,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 13,
+          "ticker": "ATRO",
+          "score": 0.8626,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 14,
+          "ticker": "OUT",
+          "score": 0.8108,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 14
     }
   },
   "companies": {
@@ -4395,17 +4503,38 @@
     },
     "THG": {
       "ticker": "THG",
-      "name": "THG",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "The Hanover Insurance Group, Inc.",
+      "industry": "Insurance - Property & Casualty",
+      "sector": "Financial Services",
+      "blurb": "The Hanover Insurance Group, Inc., through its subsidiaries, provides various property and casualty insurance products and services for individuals and businesses in the United States."
     },
     "WLY": {
       "ticker": "WLY",
-      "name": "WLY",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "John Wiley & Sons, Inc.",
+      "industry": "Publishing",
+      "sector": "Communication Services",
+      "blurb": "John Wiley & Sons, Inc., a publisher, provides authoritative content and research intelligence for the advancement of scientific discovery, innovation, and learning in the United States, the United Kingdom, Germany, and internationally."
+    },
+    "APEI": {
+      "ticker": "APEI",
+      "name": "American Public Education, Inc.",
+      "industry": "Education & Training Services",
+      "sector": "Consumer Defensive",
+      "blurb": "American Public Education, Inc., together with its subsidiaries, provides online and campus-based postsecondary education services in the United States. It operates through three segments: American Public University System, Rasmussen University, and Hondros College of Nursing."
+    },
+    "HALO": {
+      "ticker": "HALO",
+      "name": "Halozyme Therapeutics, Inc.",
+      "industry": "Biotechnology",
+      "sector": "Healthcare",
+      "blurb": "Halozyme Therapeutics, Inc., a biopharmaceutical company, researches, develops, and commercializes of proprietary enzymes and devices in the United States, Switzerland, Belgium, Japan, and internationally."
+    },
+    "TRGP": {
+      "ticker": "TRGP",
+      "name": "Targa Resources Corp.",
+      "industry": "Oil & Gas Midstream",
+      "sector": "Energy",
+      "blurb": "Targa Resources Corp., together with its subsidiaries, owns, operates, acquires, and develops a portfolio of complementary domestic infrastructure assets in North America. It operates in two segments, Gathering and Processing, and Logistics and Transportation."
     }
   }
 }
