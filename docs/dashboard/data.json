@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-08",
     "2026-07-07",
     "2026-07-06",
     "2026-07-02",
@@ -3469,6 +3470,127 @@
         }
       ],
       "full_matches_total": 14
+    },
+    "2026-07-08": {
+      "date": "2026-07-08",
+      "run_id": "2026-07-08_225714",
+      "source_url": "../runs/2026-07-08_225714/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "ATEN",
+          "score": 0.9655,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "KRYS",
+          "score": 0.9476,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "TGTX",
+          "score": 0.9395,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "NUTX",
+          "score": 0.9331,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "FTNT",
+          "score": 0.9321,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "TDC",
+          "score": 0.9236,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "MCY",
+          "score": 0.9191,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "LLY",
+          "score": 0.9141,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "CBL",
+          "score": 0.9043,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 10,
+          "ticker": "UAL",
+          "score": 0.8955,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 11,
+          "ticker": "CRDO",
+          "score": 0.8822,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 12,
+          "ticker": "ATRO",
+          "score": 0.8643,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 13,
+          "ticker": "ALAB",
+          "score": 0.8537,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 14,
+          "ticker": "CLS",
+          "score": 0.8527,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 15,
+          "ticker": "GRDN",
+          "score": 0.8188,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 16,
+          "ticker": "OUT",
+          "score": 0.8084,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 16
     }
   },
   "companies": {
@@ -4535,6 +4657,20 @@
       "industry": "Oil & Gas Midstream",
       "sector": "Energy",
       "blurb": "Targa Resources Corp., together with its subsidiaries, owns, operates, acquires, and develops a portfolio of complementary domestic infrastructure assets in North America. It operates in two segments, Gathering and Processing, and Logistics and Transportation."
+    },
+    "AVAH": {
+      "ticker": "AVAH",
+      "name": "AVAH",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "HG": {
+      "ticker": "HG",
+      "name": "HG",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
