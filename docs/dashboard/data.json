@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-09",
     "2026-07-08",
     "2026-07-07",
     "2026-07-06",
@@ -3591,6 +3592,113 @@
         }
       ],
       "full_matches_total": 16
+    },
+    "2026-07-09": {
+      "date": "2026-07-09",
+      "run_id": "2026-07-09_230400",
+      "source_url": "../runs/2026-07-09_230400/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "ATEN",
+          "score": 0.9801,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "FTNT",
+          "score": 0.954,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "NUTX",
+          "score": 0.9476,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "TGTX",
+          "score": 0.9446,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "TDC",
+          "score": 0.9242,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "LLY",
+          "score": 0.9103,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "CBL",
+          "score": 0.9026,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "UAL",
+          "score": 0.8988,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "CRDO",
+          "score": 0.895,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 10,
+          "ticker": "ATRO",
+          "score": 0.8641,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 11,
+          "ticker": "ALAB",
+          "score": 0.8568,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 12,
+          "ticker": "CLS",
+          "score": 0.8479,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 13,
+          "ticker": "GRDN",
+          "score": 0.8244,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 14,
+          "ticker": "OUT",
+          "score": 0.8168,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 14
     }
   },
   "companies": {
@@ -4660,17 +4768,24 @@
     },
     "AVAH": {
       "ticker": "AVAH",
-      "name": "AVAH",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Aveanna Healthcare Holdings Inc.",
+      "industry": "Medical Care Facilities",
+      "sector": "Healthcare",
+      "blurb": "Aveanna Healthcare Holdings Inc., a diversified home care platform company, provides pediatric and adult healthcare services in the United States. Its patient-centered care delivery platform allows patients to remain in their homes and minimizes the overutilization of high-cost care settings, such as hospitals or sk\u2026"
     },
     "HG": {
       "ticker": "HG",
-      "name": "HG",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Hamilton Insurance Group, Ltd.",
+      "industry": "Insurance - Reinsurance",
+      "sector": "Financial Services",
+      "blurb": "Hamilton Insurance Group, Ltd., through its subsidiaries, operates as specialty insurance and reinsurance company in Bermuda and internationally. It operates Hamilton Global Specialty, Hamilton Select, and Hamilton Re underwriting platforms."
+    },
+    "MTCH": {
+      "ticker": "MTCH",
+      "name": "Match Group, Inc.",
+      "industry": "Internet Content & Information",
+      "sector": "Communication Services",
+      "blurb": "Match Group, Inc. provides digital technologies in the United States and internationally."
     }
   }
 }
