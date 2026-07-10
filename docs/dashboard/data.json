@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-10",
     "2026-07-09",
     "2026-07-08",
     "2026-07-07",
@@ -3694,6 +3695,113 @@
           "rank": 14,
           "ticker": "OUT",
           "score": 0.8168,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 14
+    },
+    "2026-07-10": {
+      "date": "2026-07-10",
+      "run_id": "2026-07-10_225244",
+      "source_url": "../runs/2026-07-10_225244/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "ATEN",
+          "score": 0.9678,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "NUTX",
+          "score": 0.9519,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "FTNT",
+          "score": 0.9346,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "TGTX",
+          "score": 0.9283,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "MCY",
+          "score": 0.9117,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "TDC",
+          "score": 0.9069,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "CBL",
+          "score": 0.9059,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "LLY",
+          "score": 0.9028,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "CRDO",
+          "score": 0.8779,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 10,
+          "ticker": "UAL",
+          "score": 0.8761,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 11,
+          "ticker": "ATRO",
+          "score": 0.8646,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 12,
+          "ticker": "ALAB",
+          "score": 0.8512,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 13,
+          "ticker": "CLS",
+          "score": 0.8469,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 14,
+          "ticker": "OUT",
+          "score": 0.8034,
           "gates": "CANSLIM",
           "ad": "A"
         }
