@@ -3703,8 +3703,8 @@
     },
     "2026-07-10": {
       "date": "2026-07-10",
-      "run_id": "2026-07-11_223914",
-      "source_url": "../runs/2026-07-11_223914/",
+      "run_id": "2026-07-12_223937",
+      "source_url": "../runs/2026-07-12_223937/",
       "regime": "UPTREND",
       "full_matches": [
         {
@@ -3800,13 +3800,20 @@
         },
         {
           "rank": 14,
+          "ticker": "GRDN",
+          "score": 0.832,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 15,
           "ticker": "OUT",
           "score": 0.8034,
           "gates": "CANSLIM",
           "ad": "A"
         }
       ],
-      "full_matches_total": 14
+      "full_matches_total": 15
     }
   },
   "companies": {
