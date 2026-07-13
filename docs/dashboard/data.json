@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-13",
     "2026-07-10",
     "2026-07-09",
     "2026-07-08",
@@ -3814,6 +3815,50 @@
         }
       ],
       "full_matches_total": 15
+    },
+    "2026-07-13": {
+      "date": "2026-07-13",
+      "run_id": "2026-07-13_224651",
+      "source_url": "../runs/2026-07-13_224651/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9464,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "NUTX",
+          "score": 0.9383,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "CBL",
+          "score": 0.9046,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "LLY",
+          "score": 0.9022,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "CRDO",
+          "score": 0.8395,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -4901,6 +4946,34 @@
       "industry": "Internet Content & Information",
       "sector": "Communication Services",
       "blurb": "Match Group, Inc. provides digital technologies in the United States and internationally."
+    },
+    "CNC": {
+      "ticker": "CNC",
+      "name": "Centene Corporation",
+      "industry": "Healthcare Plans",
+      "sector": "Healthcare",
+      "blurb": "Centene Corporation operates as a managed care company that provides programs and services to under-insured families, and commercial organizations in the United States. It operates through four segments: Medicaid, Medicare, Commercial, and Other."
+    },
+    "MET": {
+      "ticker": "MET",
+      "name": "MetLife, Inc.",
+      "industry": "Insurance - Life",
+      "sector": "Financial Services",
+      "blurb": "MetLife, Inc., a financial services company, provides insurance, annuities, employee benefits, and asset management services worldwide. It operates in six segments: Group Benefits; Retirement and Income Solutions; Asia; Latin America; Europe, the Middle East and Africa; and MetLife Holdings."
+    },
+    "TCBK": {
+      "ticker": "TCBK",
+      "name": "TriCo Bancshares",
+      "industry": "Banks - Regional",
+      "sector": "Financial Services",
+      "blurb": "TriCo Bancshares operates as a bank holding company for Tri Counties Bank that provides commercial and retail banking services to individual and corporate customers. The company accepts demand, savings, and time deposits; and offers checking, specialized, money market, education, health savings, certificate of depos\u2026"
+    },
+    "VCYT": {
+      "ticker": "VCYT",
+      "name": "Veracyte, Inc.",
+      "industry": "Diagnostics & Research",
+      "sector": "Healthcare",
+      "blurb": "Veracyte, Inc. operates as a diagnostics company in the United States and internationally."
     }
   }
 }
