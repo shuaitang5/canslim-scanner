@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-14",
     "2026-07-13",
     "2026-07-10",
     "2026-07-09",
@@ -3859,6 +3860,57 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-07-14": {
+      "date": "2026-07-14",
+      "run_id": "2026-07-14_224920",
+      "source_url": "../runs/2026-07-14_224920/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9577,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "NUTX",
+          "score": 0.9365,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "CBL",
+          "score": 0.908,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "LLY",
+          "score": 0.8801,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "CRDO",
+          "score": 0.8331,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 6,
+          "ticker": "STX",
+          "score": 0.7123,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -4974,6 +5026,27 @@
       "industry": "Diagnostics & Research",
       "sector": "Healthcare",
       "blurb": "Veracyte, Inc. operates as a diagnostics company in the United States and internationally."
+    },
+    "DVA": {
+      "ticker": "DVA",
+      "name": "DVA",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "OKTA": {
+      "ticker": "OKTA",
+      "name": "OKTA",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "QLYS": {
+      "ticker": "QLYS",
+      "name": "QLYS",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
