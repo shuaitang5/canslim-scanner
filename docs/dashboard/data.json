@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-15",
     "2026-07-14",
     "2026-07-13",
     "2026-07-10",
@@ -3911,6 +3912,50 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-07-15": {
+      "date": "2026-07-15",
+      "run_id": "2026-07-15_225128",
+      "source_url": "../runs/2026-07-15_225128/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9498,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "NUTX",
+          "score": 0.9279,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "LLY",
+          "score": 0.8929,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "UAL",
+          "score": 0.8588,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "STX",
+          "score": 0.7126,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -5044,6 +5089,13 @@
     "QLYS": {
       "ticker": "QLYS",
       "name": "QLYS",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "HCSG": {
+      "ticker": "HCSG",
+      "name": "HCSG",
       "industry": "",
       "sector": "",
       "blurb": ""
