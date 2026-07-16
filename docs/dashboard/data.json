@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-16",
     "2026-07-15",
     "2026-07-14",
     "2026-07-13",
@@ -3956,6 +3957,36 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-07-16": {
+      "date": "2026-07-16",
+      "run_id": "2026-07-16_225047",
+      "source_url": "../runs/2026-07-16_225047/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9371,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "NUTX",
+          "score": 0.9064,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "LLY",
+          "score": 0.8997,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 3
     }
   },
   "companies": {
@@ -5096,6 +5127,20 @@
     "HCSG": {
       "ticker": "HCSG",
       "name": "HCSG",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "AXS": {
+      "ticker": "AXS",
+      "name": "AXS",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "EAT": {
+      "ticker": "EAT",
+      "name": "EAT",
       "industry": "",
       "sector": "",
       "blurb": ""
