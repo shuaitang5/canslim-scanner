@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-17",
     "2026-07-16",
     "2026-07-15",
     "2026-07-14",
@@ -3987,6 +3988,36 @@
         }
       ],
       "full_matches_total": 3
+    },
+    "2026-07-17": {
+      "date": "2026-07-17",
+      "run_id": "2026-07-17_224037",
+      "source_url": "../runs/2026-07-17_224037/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9406,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "LLY",
+          "score": 0.9081,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "ATI",
+          "score": 0.891,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 3
     }
   },
   "companies": {
@@ -5141,6 +5172,13 @@
     "EAT": {
       "ticker": "EAT",
       "name": "EAT",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "TRV": {
+      "ticker": "TRV",
+      "name": "TRV",
       "industry": "",
       "sector": "",
       "blurb": ""
