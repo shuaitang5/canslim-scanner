@@ -1,9 +1,9 @@
 {
-  "run_id": "2026-07-17_224037",
+  "run_id": "2026-07-18_224041",
   "as_of": "2026-07-17",
   "universe": "us_all",
   "regime": "UPTREND",
-  "generated": "2026-07-17T22:50:33.623574+00:00",
+  "generated": "2026-07-18T22:53:16.471489+00:00",
   "tickers": [
     {
       "ticker": "FTNT",
@@ -14,7 +14,7 @@
       "pivot": 170.45,
       "dist": 0.0519,
       "market_cap": 122227732412.04927,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "LLY",
@@ -25,7 +25,7 @@
       "pivot": 1149.2,
       "dist": -0.026,
       "market_cap": 1042597338840.8748,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "ATI",
@@ -36,18 +36,18 @@
       "pivot": 188.2,
       "dist": 0.0108,
       "market_cap": 25852958024.059753,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "ACA",
       "bucket": "buyable",
-      "score": 0.9305,
+      "score": 0.9639,
       "gates": "caNSLIM",
       "ad": "A",
       "pivot": 145.11,
       "dist": 0.0007,
       "market_cap": 7120487305.0,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "VCYT",
@@ -58,7 +58,7 @@
       "pivot": 61.01,
       "dist": 0.0308,
       "market_cap": 4517859587.912258,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "INCY",
@@ -69,18 +69,29 @@
       "pivot": 117.35,
       "dist": 0.0009,
       "market_cap": 22950973417.681923,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "CHEF",
       "bucket": "buyable",
-      "score": 0.9247,
+      "score": 0.9248,
       "gates": "CaNSLIM",
       "ad": "A",
       "pivot": 99.57,
-      "dist": 0.025,
+      "dist": 0.0249,
       "market_cap": 4173998129.3286896,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
+    },
+    {
+      "ticker": "AXS",
+      "bucket": "buyable",
+      "score": 0.911,
+      "gates": "CaNSlIM",
+      "ad": "A",
+      "pivot": 116.01,
+      "dist": 0.0106,
+      "market_cap": 8461952938.085815,
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "HCSG",
@@ -91,7 +102,7 @@
       "pivot": 24.49,
       "dist": -0.0335,
       "market_cap": 1646112152.3367157,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "CNC",
@@ -102,29 +113,18 @@
       "pivot": 69.46,
       "dist": 0.0435,
       "market_cap": 33933730442.77954,
-      "as_of": "2026-07-17"
-    },
-    {
-      "ticker": "AXS",
-      "bucket": "buyable",
-      "score": 0.8968,
-      "gates": "CaNSlIM",
-      "ad": "A",
-      "pivot": 116.01,
-      "dist": 0.0106,
-      "market_cap": 8461952938.085815,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "BNY",
       "bucket": "watchlist",
-      "score": 0.9319,
+      "score": 0.9394,
       "gates": "caNSLIM",
       "ad": "B",
       "pivot": 139.25,
       "dist": -0.1284,
       "market_cap": 106045562452.5,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "CNO",
@@ -135,7 +135,7 @@
       "pivot": 48.05,
       "dist": -0.1153,
       "market_cap": 4924133533.25,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "ODC",
@@ -146,7 +146,7 @@
       "pivot": 107.1,
       "dist": 0.0923,
       "market_cap": 1476671162.468422,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "SEZL",
@@ -157,18 +157,29 @@
       "pivot": 195.81,
       "dist": 0.108,
       "market_cap": 6133231974.885696,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "TRV",
       "bucket": "watchlist",
-      "score": 0.9061,
+      "score": 0.9073,
       "gates": "CANsLIM",
       "ad": "A",
       "pivot": 313.22,
       "dist": -0.178,
       "market_cap": 78461641159.32437,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
+    },
+    {
+      "ticker": "DCO",
+      "bucket": "watchlist",
+      "score": 0.9053,
+      "gates": "caNSLIM",
+      "ad": "A",
+      "pivot": 146.0,
+      "dist": -0.1539,
+      "market_cap": 2545688081.25,
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "MET",
@@ -179,40 +190,18 @@
       "pivot": 81.69,
       "dist": -0.1507,
       "market_cap": 60483057226.0,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
-      "ticker": "GTX",
+      "ticker": "THG",
       "bucket": "watchlist",
-      "score": 0.8836,
-      "gates": "CaNSLIM",
+      "score": 0.8928,
+      "gates": "CANslIM",
       "ad": "A",
-      "pivot": 36.35,
-      "dist": 0.126,
-      "market_cap": 5930131832.165398,
-      "as_of": "2026-07-17"
-    },
-    {
-      "ticker": "NBIX",
-      "bucket": "watchlist",
-      "score": 0.8825,
-      "gates": "CaNSlIM",
-      "ad": "A",
-      "pivot": 162.49,
-      "dist": -0.0516,
-      "market_cap": 17249349890.504196,
-      "as_of": "2026-07-17"
-    },
-    {
-      "ticker": "DCO",
-      "bucket": "watchlist",
-      "score": 0.8818,
-      "gates": "caNSLIM",
-      "ad": "A",
-      "pivot": 146.0,
-      "dist": -0.1539,
-      "market_cap": 2545688081.25,
-      "as_of": "2026-07-17"
+      "pivot": 225.39,
+      "dist": 0.054,
+      "market_cap": 7460232442.530319,
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "WKC",
@@ -223,7 +212,7 @@
       "pivot": null,
       "dist": null,
       "market_cap": 1895016220.2621994,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "TCBK",
@@ -234,7 +223,7 @@
       "pivot": null,
       "dist": null,
       "market_cap": 1910712069.5715942,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "AVAH",
@@ -245,18 +234,29 @@
       "pivot": null,
       "dist": null,
       "market_cap": 2155776426.6329823,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
     },
     {
       "ticker": "EAT",
       "bucket": "basing",
-      "score": 0.8829,
+      "score": 0.89,
       "gates": "cANslIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 7954398463.653259,
-      "as_of": "2026-07-17"
+      "as_of": "2026-07-18"
+    },
+    {
+      "ticker": "UVE",
+      "bucket": "basing",
+      "score": 0.8845,
+      "gates": "CaNslIM",
+      "ad": "C",
+      "pivot": null,
+      "dist": null,
+      "market_cap": 1156915862.394493,
+      "as_of": "2026-07-18"
     }
   ]
 }
