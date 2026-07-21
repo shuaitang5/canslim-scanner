@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-21",
     "2026-07-20",
     "2026-07-17",
     "2026-07-16",
@@ -4063,6 +4064,50 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-07-21": {
+      "date": "2026-07-21",
+      "run_id": "2026-07-21_224625",
+      "source_url": "../runs/2026-07-21_224625/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9227,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "LLY",
+          "score": 0.9026,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "NUTX",
+          "score": 0.8693,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "PARR",
+          "score": 0.8518,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "STX",
+          "score": 0.7128,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -5227,6 +5272,13 @@
       "industry": "Insurance - Property & Casualty",
       "sector": "Financial Services",
       "blurb": "The Travelers Companies, Inc., through its subsidiaries, provides a range of commercial and personal property, and casualty insurance products and services to businesses, government units, associations, and individuals in the United States, Canada, and internationally."
+    },
+    "INDV": {
+      "ticker": "INDV",
+      "name": "INDV",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
