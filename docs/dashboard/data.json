@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-22",
     "2026-07-21",
     "2026-07-20",
     "2026-07-17",
@@ -4108,6 +4109,50 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-07-22": {
+      "date": "2026-07-22",
+      "run_id": "2026-07-22_225458",
+      "source_url": "../runs/2026-07-22_225458/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9726,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 2,
+          "ticker": "FTNT",
+          "score": 0.9139,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "LLY",
+          "score": 0.893,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "NUTX",
+          "score": 0.8577,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "STX",
+          "score": 0.7138,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -5275,10 +5320,17 @@
     },
     "INDV": {
       "ticker": "INDV",
-      "name": "INDV",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Indivior Pharmaceuticals, Inc.",
+      "industry": "Drug Manufacturers - Specialty & Generic",
+      "sector": "Healthcare",
+      "blurb": "Indivior Pharmaceuticals, Inc., together with its subsidiaries, engages in the development, manufacture, and sale of buprenorphine-based prescription drugs for the treatment of opioid dependence and related disorders in the United States, Europe, Canada, Australia, and internationally."
+    },
+    "GM": {
+      "ticker": "GM",
+      "name": "General Motors Company",
+      "industry": "Auto Manufacturers",
+      "sector": "Consumer Cyclical",
+      "blurb": "General Motors Company designs, builds, and sells trucks, crossovers, cars, and automobile parts worldwide. It operates through GM North America, GM International, and GM Financial segments."
     }
   }
 }
