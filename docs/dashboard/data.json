@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-24",
     "2026-07-23",
     "2026-07-22",
     "2026-07-21",
@@ -4184,6 +4185,50 @@
         }
       ],
       "full_matches_total": 3
+    },
+    "2026-07-24": {
+      "date": "2026-07-24",
+      "run_id": "2026-07-24_225448",
+      "source_url": "../runs/2026-07-24_225448/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "MEDP",
+          "score": 0.9724,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "HALO",
+          "score": 0.9229,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "LLY",
+          "score": 0.9215,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FTNT",
+          "score": 0.9055,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "STX",
+          "score": 0.7133,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -5376,6 +5421,20 @@
       "industry": "Diagnostics & Research",
       "sector": "Healthcare",
       "blurb": "Medpace Holdings, Inc. provides clinical research-based drug and medical device development services in North America, Europe, Asia, South America, Africa, and Australia."
+    },
+    "THC": {
+      "ticker": "THC",
+      "name": "THC",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "WAB": {
+      "ticker": "WAB",
+      "name": "WAB",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
