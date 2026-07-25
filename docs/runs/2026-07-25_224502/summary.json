@@ -1,9 +1,9 @@
 {
-  "run_id": "2026-07-24_225448",
+  "run_id": "2026-07-25_224502",
   "as_of": "2026-07-24",
   "universe": "us_all",
   "regime": "UPTREND",
-  "generated": "2026-07-24T23:04:12.736090+00:00",
+  "generated": "2026-07-25T22:54:26.098538+00:00",
   "tickers": [
     {
       "ticker": "MEDP",
@@ -14,7 +14,7 @@
       "pivot": null,
       "dist": null,
       "market_cap": 16784879771.182251,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "HALO",
@@ -25,7 +25,7 @@
       "pivot": 82.36,
       "dist": 0.0052,
       "market_cap": 9717963126.197815,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "LLY",
@@ -36,7 +36,7 @@
       "pivot": 1149.2,
       "dist": -0.0408,
       "market_cap": 1066549499943.4165,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "FTNT",
@@ -47,7 +47,18 @@
       "pivot": 170.45,
       "dist": 0.1061,
       "market_cap": 113597135260.41545,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
+    },
+    {
+      "ticker": "PARR",
+      "bucket": "full_match",
+      "score": 0.8366,
+      "gates": "CANSLIM",
+      "ad": "B",
+      "pivot": null,
+      "dist": null,
+      "market_cap": 3880665566.424362,
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "STX",
@@ -58,7 +69,7 @@
       "pivot": 937.64,
       "dist": 0.0917,
       "market_cap": 205459541015.8667,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "ENVA",
@@ -69,7 +80,7 @@
       "pivot": 246.48,
       "dist": 0.0374,
       "market_cap": 5536640647.736816,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "ACA",
@@ -80,7 +91,7 @@
       "pivot": 145.11,
       "dist": 0.0008,
       "market_cap": 7120487305.0,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "INCY",
@@ -91,29 +102,29 @@
       "pivot": 117.77,
       "dist": 0.0008,
       "market_cap": 23132775910.356026,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "EAT",
       "bucket": "buyable",
-      "score": 0.9245,
+      "score": 0.9246,
       "gates": "cANsLIM",
       "ad": "A",
       "pivot": 196.49,
       "dist": 0.0484,
       "market_cap": 8019158790.963593,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "UFCS",
       "bucket": "buyable",
-      "score": 0.9209,
+      "score": 0.9231,
       "gates": "CaNsLIM",
       "ad": "B",
       "pivot": 51.78,
       "dist": 0.0087,
       "market_cap": 1316931047.757843,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "CHEF",
@@ -124,7 +135,7 @@
       "pivot": 99.57,
       "dist": 0.0473,
       "market_cap": 3868165911.8286896,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "PLD",
@@ -134,8 +145,8 @@
       "ad": "C",
       "pivot": 153.45,
       "dist": 0.0379,
-      "market_cap": 139654902760.4065,
-      "as_of": "2026-07-24"
+      "market_cap": 137641063492.43164,
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "INDV",
@@ -146,18 +157,18 @@
       "pivot": 40.64,
       "dist": 0.0028,
       "market_cap": 4781375553.432941,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "BNY",
       "bucket": "watchlist",
-      "score": 0.9469,
+      "score": 0.947,
       "gates": "caNSLIM",
       "ad": "B",
       "pivot": 139.25,
       "dist": -0.1412,
       "market_cap": 108825256145.87402,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "DELL",
@@ -168,7 +179,7 @@
       "pivot": 463.58,
       "dist": 0.0563,
       "market_cap": 285465716802.9192,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "NBIX",
@@ -179,18 +190,18 @@
       "pivot": 162.49,
       "dist": -0.0817,
       "market_cap": 17673670941.505875,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "CNO",
       "bucket": "watchlist",
-      "score": 0.9131,
+      "score": 0.9132,
       "gates": "CaNSLIM",
       "ad": "B",
       "pivot": 48.05,
       "dist": -0.1078,
       "market_cap": 4954938710.166214,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "AMD",
@@ -201,7 +212,7 @@
       "pivot": 584.83,
       "dist": 0.1075,
       "market_cap": 900629678805.5801,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "WAB",
@@ -212,18 +223,7 @@
       "pivot": 266.37,
       "dist": -0.1356,
       "market_cap": 44469036561.29767,
-      "as_of": "2026-07-24"
-    },
-    {
-      "ticker": "VCYT",
-      "bucket": "watchlist",
-      "score": 0.8909,
-      "gates": "cANSLIM",
-      "ad": "A",
-      "pivot": 61.01,
-      "dist": 0.0721,
-      "market_cap": 4628771318.540691,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "WKC",
@@ -234,7 +234,7 @@
       "pivot": null,
       "dist": null,
       "market_cap": 1863689363.8073196,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "THC",
@@ -245,7 +245,7 @@
       "pivot": null,
       "dist": null,
       "market_cap": 16788962985.443115,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "TRV",
@@ -256,18 +256,18 @@
       "pivot": null,
       "dist": null,
       "market_cap": 80772765056.58545,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "DCO",
       "bucket": "basing",
-      "score": 0.919,
+      "score": 0.9195,
       "gates": "caNsLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 2633787690.565033,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
     },
     {
       "ticker": "TCBK",
@@ -278,7 +278,18 @@
       "pivot": null,
       "dist": null,
       "market_cap": 1912641151.6437683,
-      "as_of": "2026-07-24"
+      "as_of": "2026-07-25"
+    },
+    {
+      "ticker": "UVE",
+      "bucket": "basing",
+      "score": 0.8926,
+      "gates": "CaNslIM",
+      "ad": "B",
+      "pivot": null,
+      "dist": null,
+      "market_cap": 1055040239.1055069,
+      "as_of": "2026-07-25"
     }
   ]
 }

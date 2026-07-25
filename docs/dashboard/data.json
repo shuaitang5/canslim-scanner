@@ -4188,8 +4188,8 @@
     },
     "2026-07-24": {
       "date": "2026-07-24",
-      "run_id": "2026-07-24_225448",
-      "source_url": "../runs/2026-07-24_225448/",
+      "run_id": "2026-07-25_224502",
+      "source_url": "../runs/2026-07-25_224502/",
       "regime": "UPTREND",
       "full_matches": [
         {
@@ -4222,13 +4222,20 @@
         },
         {
           "rank": 5,
+          "ticker": "PARR",
+          "score": 0.8366,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 6,
           "ticker": "STX",
           "score": 0.7133,
           "gates": "CAnSLIM",
           "ad": "C"
         }
       ],
-      "full_matches_total": 5
+      "full_matches_total": 6
     }
   },
   "companies": {
