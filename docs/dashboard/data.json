@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-29",
     "2026-07-28",
     "2026-07-27",
     "2026-07-24",
@@ -4340,6 +4341,50 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-07-29": {
+      "date": "2026-07-29",
+      "run_id": "2026-07-29_225309",
+      "source_url": "../runs/2026-07-29_225309/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "MEDP",
+          "score": 0.9401,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "LLY",
+          "score": 0.934,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "HALO",
+          "score": 0.925,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FTNT",
+          "score": 0.9091,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "PARR",
+          "score": 0.857,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -5546,6 +5591,20 @@
       "industry": "Railroads",
       "sector": "Industrials",
       "blurb": "Westinghouse Air Brake Technologies Corporation provides locomotives, equipment, systems, and services for the freight rail and passenger transit industries worldwide. It operates in two segments, Freight and Transit."
+    },
+    "BOX": {
+      "ticker": "BOX",
+      "name": "Box, Inc.",
+      "industry": "Software - Infrastructure",
+      "sector": "Technology",
+      "blurb": "Box, Inc. provides a cloud content management platform that enables organizations of various sizes to manage cloud content from anywhere and on any device in Poland, Australia, Canada, the European Union, France, Israel, Japan, Singapore, Switzerland, the United Kingdom, and the United States."
+    },
+    "ECPG": {
+      "ticker": "ECPG",
+      "name": "Encore Capital Group, Inc.",
+      "industry": "Credit Services",
+      "sector": "Financial Services",
+      "blurb": "Encore Capital Group, Inc., a specialty finance company, provides debt recovery solutions and other related services for consumers across financial assets worldwide. The company purchases portfolios of defaulted consumer receivables at discounts to face value, as well as manages them by working with individuals as t\u2026"
     }
   }
 }
