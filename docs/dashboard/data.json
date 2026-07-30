@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-30",
     "2026-07-29",
     "2026-07-28",
     "2026-07-27",
@@ -4385,6 +4386,78 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-07-30": {
+      "date": "2026-07-30",
+      "run_id": "2026-07-30_225740",
+      "source_url": "../runs/2026-07-30_225740/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "MEDP",
+          "score": 0.9323,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "HALO",
+          "score": 0.9258,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "FTNT",
+          "score": 0.914,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "LAUR",
+          "score": 0.9125,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "LLY",
+          "score": 0.8858,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "PARR",
+          "score": 0.8619,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "NUTX",
+          "score": 0.8587,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "COCO",
+          "score": 0.8404,
+          "gates": "CAnSLIM",
+          "ad": "E"
+        },
+        {
+          "rank": 9,
+          "ticker": "STX",
+          "score": 0.746,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 9
     }
   },
   "companies": {
@@ -5605,6 +5678,27 @@
       "industry": "Credit Services",
       "sector": "Financial Services",
       "blurb": "Encore Capital Group, Inc., a specialty finance company, provides debt recovery solutions and other related services for consumers across financial assets worldwide. The company purchases portfolios of defaulted consumer receivables at discounts to face value, as well as manages them by working with individuals as t\u2026"
+    },
+    "CAH": {
+      "ticker": "CAH",
+      "name": "Cardinal Health, Inc.",
+      "industry": "Medical Distribution",
+      "sector": "Healthcare",
+      "blurb": "Cardinal Health, Inc. operates as a healthcare services and products company in the United States and internationally."
+    },
+    "LAUR": {
+      "ticker": "LAUR",
+      "name": "Laureate Education, Inc.",
+      "industry": "Education & Training Services",
+      "sector": "Consumer Defensive",
+      "blurb": "Laureate Education, Inc., together with its subsidiaries, offers higher education programs and services to students through a portfolio of higher education institutions in Mexico, Peru, and the United States."
+    },
+    "LNC": {
+      "ticker": "LNC",
+      "name": "Lincoln National Corporation",
+      "industry": "Insurance - Life",
+      "sector": "Financial Services",
+      "blurb": "Lincoln National Corporation, through its subsidiaries, operates multiple insurance and retirement businesses in the United States. It operates through four segments: Life Insurance, Annuities, Group Protection, and Retirement Plan Services."
     }
   }
 }
