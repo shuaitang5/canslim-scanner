@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-07-31",
     "2026-07-30",
     "2026-07-29",
     "2026-07-28",
@@ -4458,6 +4459,64 @@
         }
       ],
       "full_matches_total": 9
+    },
+    "2026-07-31": {
+      "date": "2026-07-31",
+      "run_id": "2026-07-31_225325",
+      "source_url": "../runs/2026-07-31_225325/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.941,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "MEDP",
+          "score": 0.9305,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "HALO",
+          "score": 0.916,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "LAUR",
+          "score": 0.9057,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "LLY",
+          "score": 0.8794,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "PARR",
+          "score": 0.8606,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "STX",
+          "score": 0.7448,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -5699,6 +5758,27 @@
       "industry": "Insurance - Life",
       "sector": "Financial Services",
       "blurb": "Lincoln National Corporation, through its subsidiaries, operates multiple insurance and retirement businesses in the United States. It operates through four segments: Life Insurance, Annuities, Group Protection, and Retirement Plan Services."
+    },
+    "GRMN": {
+      "ticker": "GRMN",
+      "name": "Garmin Ltd.",
+      "industry": "Scientific & Technical Instruments",
+      "sector": "Technology",
+      "blurb": "Garmin Ltd. designs, develops, manufactures, markets, and distributes a diverse range of GPS-enabled products and navigation, communications, sensor-based, and information products and services worldwide."
+    },
+    "ITGR": {
+      "ticker": "ITGR",
+      "name": "Integer Holdings Corporation",
+      "industry": "Medical Devices",
+      "sector": "Healthcare",
+      "blurb": "Integer Holdings Corporation operates as a medical device contract development and manufacturing company in the United States, Costa Rica, Puerto Rico, Ireland, and internationally."
+    },
+    "NSIT": {
+      "ticker": "NSIT",
+      "name": "Insight Enterprises, Inc.",
+      "industry": "Electronics & Computer Distribution",
+      "sector": "Technology",
+      "blurb": "Insight Enterprises, Inc., together with its subsidiaries, provides information technology, hardware, software, and services in the United States, rest of North America, Europe, Middle East, Africa, and the Asia-Pacific."
     }
   }
 }
