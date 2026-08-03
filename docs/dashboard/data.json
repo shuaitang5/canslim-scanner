@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-03",
     "2026-07-31",
     "2026-07-30",
     "2026-07-29",
@@ -4517,6 +4518,43 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-08-03": {
+      "date": "2026-08-03",
+      "run_id": "2026-08-03_225410",
+      "source_url": "../runs/2026-08-03_225410/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9435,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "MEDP",
+          "score": 0.9247,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "PARR",
+          "score": 0.8389,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "STX",
+          "score": 0.7447,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 4
     }
   },
   "companies": {
@@ -5779,6 +5817,27 @@
       "industry": "Electronics & Computer Distribution",
       "sector": "Technology",
       "blurb": "Insight Enterprises, Inc., together with its subsidiaries, provides information technology, hardware, software, and services in the United States, rest of North America, Europe, Middle East, Africa, and the Asia-Pacific."
+    },
+    "BOW": {
+      "ticker": "BOW",
+      "name": "BOW",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "GE": {
+      "ticker": "GE",
+      "name": "GE",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "SAN": {
+      "ticker": "SAN",
+      "name": "SAN",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
