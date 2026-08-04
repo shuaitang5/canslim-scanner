@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-04",
     "2026-08-03",
     "2026-07-31",
     "2026-07-30",
@@ -4555,6 +4556,71 @@
         }
       ],
       "full_matches_total": 4
+    },
+    "2026-08-04": {
+      "date": "2026-08-04",
+      "run_id": "2026-08-04_225358",
+      "source_url": "../runs/2026-08-04_225358/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FTNT",
+          "score": 0.9567,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "MEDP",
+          "score": 0.9184,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "LAUR",
+          "score": 0.8927,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 4,
+          "ticker": "NUTX",
+          "score": 0.8663,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "PARR",
+          "score": 0.8365,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "COCO",
+          "score": 0.8352,
+          "gates": "CAnSLIM",
+          "ad": "E"
+        },
+        {
+          "rank": 7,
+          "ticker": "CRDO",
+          "score": 0.8293,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 8,
+          "ticker": "STX",
+          "score": 0.7295,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 8
     }
   },
   "companies": {
@@ -5835,6 +5901,20 @@
     "SAN": {
       "ticker": "SAN",
       "name": "SAN",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "DXCM": {
+      "ticker": "DXCM",
+      "name": "DXCM",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "EXPE": {
+      "ticker": "EXPE",
+      "name": "EXPE",
       "industry": "",
       "sector": "",
       "blurb": ""
