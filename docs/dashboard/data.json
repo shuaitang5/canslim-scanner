@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-05",
     "2026-08-04",
     "2026-08-03",
     "2026-07-31",
@@ -4621,6 +4622,71 @@
         }
       ],
       "full_matches_total": 8
+    },
+    "2026-08-05": {
+      "date": "2026-08-05",
+      "run_id": "2026-08-05_225031",
+      "source_url": "../runs/2026-08-05_225031/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "EXPE",
+          "score": 0.9722,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "FTNT",
+          "score": 0.9408,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "MEDP",
+          "score": 0.936,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "LAUR",
+          "score": 0.8884,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "NUTX",
+          "score": 0.8533,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "COCO",
+          "score": 0.8479,
+          "gates": "CAnSLIM",
+          "ad": "E"
+        },
+        {
+          "rank": 7,
+          "ticker": "PARR",
+          "score": 0.7682,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 8,
+          "ticker": "STX",
+          "score": 0.7111,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 8
     }
   },
   "companies": {
@@ -5915,6 +5981,20 @@
     "EXPE": {
       "ticker": "EXPE",
       "name": "EXPE",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "ANET": {
+      "ticker": "ANET",
+      "name": "ANET",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "EPC": {
+      "ticker": "EPC",
+      "name": "EPC",
       "industry": "",
       "sector": "",
       "blurb": ""
