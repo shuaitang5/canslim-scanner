@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-06",
     "2026-08-05",
     "2026-08-04",
     "2026-08-03",
@@ -4687,6 +4688,78 @@
         }
       ],
       "full_matches_total": 8
+    },
+    "2026-08-06": {
+      "date": "2026-08-06",
+      "run_id": "2026-08-07_012824",
+      "source_url": "../runs/2026-08-07_012824/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9897,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "GCT",
+          "score": 0.983,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "FTK",
+          "score": 0.9638,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "MEDP",
+          "score": 0.932,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "FTNT",
+          "score": 0.9104,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "NUTX",
+          "score": 0.8527,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "STX",
+          "score": 0.8459,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 8,
+          "ticker": "COCO",
+          "score": 0.8368,
+          "gates": "CAnSLIM",
+          "ad": "E"
+        },
+        {
+          "rank": 9,
+          "ticker": "PARR",
+          "score": 0.7682,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 9
     }
   },
   "companies": {
@@ -5952,52 +6025,80 @@
     },
     "BOW": {
       "ticker": "BOW",
-      "name": "BOW",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Bowhead Specialty Holdings Inc.",
+      "industry": "Insurance - Property & Casualty",
+      "sector": "Financial Services",
+      "blurb": "Bowhead Specialty Holdings Inc. provides commercial specialty property and casualty insurance products in the United States."
     },
     "GE": {
       "ticker": "GE",
-      "name": "GE",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "GE Aerospace",
+      "industry": "Aerospace & Defense",
+      "sector": "Industrials",
+      "blurb": "General Electric Company, doing business as GE Aerospace, designs and produces commercial and defense aircraft engines, integrated engine components, electric power, and aircraft systems."
     },
     "SAN": {
       "ticker": "SAN",
-      "name": "SAN",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Banco Santander, S.A. Sponsored",
+      "industry": "Banks - Diversified",
+      "sector": "Financial Services",
+      "blurb": "Banco Santander, S.A. provides various financial products and services to individuals, small and medium-sized enterprises, large corporations, and public entities worldwide."
     },
     "DXCM": {
       "ticker": "DXCM",
-      "name": "DXCM",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "DexCom, Inc.",
+      "industry": "Medical Devices",
+      "sector": "Healthcare",
+      "blurb": "DexCom, Inc., a medical device company, focuses on the design, development, and commercialization of continuous glucose monitoring (CGM) systems for the management of diabetes and metabolic health in the United States and internationally."
     },
     "EXPE": {
       "ticker": "EXPE",
-      "name": "EXPE",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Expedia Group, Inc.",
+      "industry": "Travel Services",
+      "sector": "Consumer Cyclical",
+      "blurb": "Expedia Group, Inc. operates as an online travel company in the United States and internationally."
     },
     "ANET": {
       "ticker": "ANET",
-      "name": "ANET",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Arista Networks, Inc.",
+      "industry": "Computer Hardware",
+      "sector": "Technology",
+      "blurb": "Arista Networks, Inc. engages in the development, marketing, and sale of data-driven, client to cloud networking solutions for AI, data center, campus, and routing environments in the Americas, Europe, the Middle East, Africa, and the Asia-Pacific."
     },
     "EPC": {
       "ticker": "EPC",
-      "name": "EPC",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Edgewell Personal Care Company",
+      "industry": "Household & Personal Products",
+      "sector": "Consumer Defensive",
+      "blurb": "Edgewell Personal Care Company, together with its subsidiaries, manufactures and markets personal care products worldwide. It operates through three segments: Wet Shave, Sun and Skin Care, and Feminine Care."
+    },
+    "FFIV": {
+      "ticker": "FFIV",
+      "name": "F5, Inc.",
+      "industry": "Software - Infrastructure",
+      "sector": "Technology",
+      "blurb": "F5, Inc. provides multicloud application security and delivery solutions in the United States, Europe, the Middle East, Africa, and the Asia Pacific region."
+    },
+    "FTK": {
+      "ticker": "FTK",
+      "name": "Flotek Industries, Inc.",
+      "industry": "Oil & Gas Equipment & Services",
+      "sector": "Energy",
+      "blurb": "Flotek Industries, Inc. operates as a chemical and data analytics company in the United States, the United Arab Emirates, and internationally."
+    },
+    "HAE": {
+      "ticker": "HAE",
+      "name": "Haemonetics Corporation",
+      "industry": "Medical Devices",
+      "sector": "Healthcare",
+      "blurb": "Haemonetics Corporation, a medical technology company, provides a suite of hospital technologies solutions. The company operates through Plasma, Blood Center, and Hospital segments."
+    },
+    "OPY": {
+      "ticker": "OPY",
+      "name": "Oppenheimer Holdings Inc.",
+      "industry": "Capital Markets",
+      "sector": "Financial Services",
+      "blurb": "Oppenheimer Holdings Inc. operates as a middle-market investment bank and full-service broker-dealer."
     }
   }
 }
