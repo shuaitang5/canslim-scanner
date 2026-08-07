@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-07",
     "2026-08-06",
     "2026-08-05",
     "2026-08-04",
@@ -4760,6 +4761,64 @@
         }
       ],
       "full_matches_total": 9
+    },
+    "2026-08-07": {
+      "date": "2026-08-07",
+      "run_id": "2026-08-07_222646",
+      "source_url": "../runs/2026-08-07_222646/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9888,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "GCT",
+          "score": 0.9852,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "HALO",
+          "score": 0.983,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FTK",
+          "score": 0.9477,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "FTNT",
+          "score": 0.9186,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "NUTX",
+          "score": 0.8558,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "PARR",
+          "score": 0.766,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -6099,6 +6158,13 @@
       "industry": "Capital Markets",
       "sector": "Financial Services",
       "blurb": "Oppenheimer Holdings Inc. operates as a middle-market investment bank and full-service broker-dealer."
+    },
+    "USFD": {
+      "ticker": "USFD",
+      "name": "US Foods Holding Corp.",
+      "industry": "Food Distribution",
+      "sector": "Consumer Defensive",
+      "blurb": "US Foods Holding Corp., together with its subsidiaries, markets, sells, and distributes fresh, frozen, and dry food and non-food products to foodservice customers in the United States."
     }
   }
 }
