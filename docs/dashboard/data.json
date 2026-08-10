@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-10",
     "2026-08-07",
     "2026-08-06",
     "2026-08-05",
@@ -4819,6 +4820,57 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-08-10": {
+      "date": "2026-08-10",
+      "run_id": "2026-08-10_222824",
+      "source_url": "../runs/2026-08-10_222824/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9889,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "NUTX",
+          "score": 0.9877,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "HALO",
+          "score": 0.9777,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FTK",
+          "score": 0.9633,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "GCT",
+          "score": 0.9616,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "FTNT",
+          "score": 0.9358,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -6165,6 +6217,20 @@
       "industry": "Food Distribution",
       "sector": "Consumer Defensive",
       "blurb": "US Foods Holding Corp., together with its subsidiaries, markets, sells, and distributes fresh, frozen, and dry food and non-food products to foodservice customers in the United States."
+    },
+    "HP": {
+      "ticker": "HP",
+      "name": "Helmerich & Payne, Inc.",
+      "industry": "Oil & Gas Drilling",
+      "sector": "Energy",
+      "blurb": "Helmerich & Payne, Inc., together with its subsidiaries, provides drilling solutions and technologies for oil and gas exploration and production companies. The company operates through North America Solutions, Offshore Solutions, and International Solutions segments."
+    },
+    "UFPT": {
+      "ticker": "UFPT",
+      "name": "UFP Technologies, Inc.",
+      "industry": "Medical Devices",
+      "sector": "Healthcare",
+      "blurb": "UFP Technologies, Inc., together with its subsidiaries, designs and manufactures solutions for medical devices, sterile packaging, and other engineered custom products in the United States."
     }
   }
 }
