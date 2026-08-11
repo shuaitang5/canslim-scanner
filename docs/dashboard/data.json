@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-11",
     "2026-08-10",
     "2026-08-07",
     "2026-08-06",
@@ -4871,6 +4872,43 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-08-11": {
+      "date": "2026-08-11",
+      "run_id": "2026-08-11_223328",
+      "source_url": "../runs/2026-08-11_223328/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "HALO",
+          "score": 0.9683,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "FTK",
+          "score": 0.9631,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "FTNT",
+          "score": 0.9273,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "NUTX",
+          "score": 0.8899,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 4
     }
   },
   "companies": {
@@ -6231,6 +6269,27 @@
       "industry": "Medical Devices",
       "sector": "Healthcare",
       "blurb": "UFP Technologies, Inc., together with its subsidiaries, designs and manufactures solutions for medical devices, sterile packaging, and other engineered custom products in the United States."
+    },
+    "DXPE": {
+      "ticker": "DXPE",
+      "name": "DXPE",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "P": {
+      "ticker": "P",
+      "name": "P",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "WT": {
+      "ticker": "WT",
+      "name": "WT",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
