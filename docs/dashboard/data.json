@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-12",
     "2026-08-11",
     "2026-08-10",
     "2026-08-07",
@@ -4909,6 +4910,64 @@
         }
       ],
       "full_matches_total": 4
+    },
+    "2026-08-12": {
+      "date": "2026-08-12",
+      "run_id": "2026-08-12_223129",
+      "source_url": "../runs/2026-08-12_223129/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9861,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "HALO",
+          "score": 0.9731,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "FTK",
+          "score": 0.9365,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FTNT",
+          "score": 0.9168,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "NUTX",
+          "score": 0.9049,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "STX",
+          "score": 0.8442,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 7,
+          "ticker": "COCO",
+          "score": 0.8363,
+          "gates": "CAnSLIM",
+          "ad": "E"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -6272,24 +6331,24 @@
     },
     "DXPE": {
       "ticker": "DXPE",
-      "name": "DXPE",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "DXP Enterprises, Inc.",
+      "industry": "Industrial Distribution",
+      "sector": "Industrials",
+      "blurb": "DXP Enterprises, Inc., together with its subsidiaries, engages in distributing maintenance, repair, and operating (MRO) products, equipment, and services in the United States, Canada, and internationally."
     },
     "P": {
       "ticker": "P",
-      "name": "P",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Everpure, Inc.",
+      "industry": "Computer Hardware",
+      "sector": "Technology",
+      "blurb": "Everpure, Inc. provides data storage and management technologies, products, and services in the United States and internationally."
     },
     "WT": {
       "ticker": "WT",
-      "name": "WT",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "WisdomTree, Inc.",
+      "industry": "Asset Management",
+      "sector": "Financial Services",
+      "blurb": "WisdomTree, Inc., through its subsidiaries, operates as an exchange-traded funds (ETFs) sponsor and asset manager. It offers ETFs in equities, currency, fixed income, and alternatives asset classes."
     }
   }
 }
