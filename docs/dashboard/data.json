@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-13",
     "2026-08-12",
     "2026-08-11",
     "2026-08-10",
@@ -4968,6 +4969,64 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-08-13": {
+      "date": "2026-08-13",
+      "run_id": "2026-08-13_223233",
+      "source_url": "../runs/2026-08-13_223233/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9839,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "HALO",
+          "score": 0.9566,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "NUTX",
+          "score": 0.948,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FTNT",
+          "score": 0.9343,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "FTK",
+          "score": 0.8937,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "ESTC",
+          "score": 0.8918,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "STX",
+          "score": 0.8451,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -6349,6 +6408,13 @@
       "industry": "Asset Management",
       "sector": "Financial Services",
       "blurb": "WisdomTree, Inc., through its subsidiaries, operates as an exchange-traded funds (ETFs) sponsor and asset manager. It offers ETFs in equities, currency, fixed income, and alternatives asset classes."
+    },
+    "ESTC": {
+      "ticker": "ESTC",
+      "name": "ESTC",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
