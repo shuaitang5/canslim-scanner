@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-14",
     "2026-08-13",
     "2026-08-12",
     "2026-08-11",
@@ -5027,6 +5028,78 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-08-14": {
+      "date": "2026-08-14",
+      "run_id": "2026-08-14_221403",
+      "source_url": "../runs/2026-08-14_221403/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "NUTX",
+          "score": 0.9457,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AVAH",
+          "score": 0.9456,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "AYA",
+          "score": 0.9444,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "HALO",
+          "score": 0.9438,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "FTK",
+          "score": 0.9166,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "FTNT",
+          "score": 0.9141,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 7,
+          "ticker": "GFF",
+          "score": 0.9012,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "ESTC",
+          "score": 0.8951,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "AZTA",
+          "score": 0.8708,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 9
     }
   },
   "companies": {
@@ -6411,10 +6484,24 @@
     },
     "ESTC": {
       "ticker": "ESTC",
-      "name": "ESTC",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Elastic N.V.",
+      "industry": "Software - Application",
+      "sector": "Technology",
+      "blurb": "Elastic N.V., a search artificial intelligence (AI) company, provides software platforms to run in hybrid, public or private clouds, and multi-cloud environments in the United States and internationally."
+    },
+    "AZTA": {
+      "ticker": "AZTA",
+      "name": "Azenta, Inc.",
+      "industry": "Medical Instruments & Supplies",
+      "sector": "Healthcare",
+      "blurb": "Azenta, Inc. provides biological and chemical compound sample exploration and management solutions for the life sciences industry in the United States, China, the United Kingdom, rest of Europe, the Asia Pacific, and internationally."
+    },
+    "GFF": {
+      "ticker": "GFF",
+      "name": "Griffon Corporation",
+      "industry": "Building Products & Equipment",
+      "sector": "Industrials",
+      "blurb": "Griffon Corporation, through its subsidiaries, provides home and building, and consumer and professional products in the United States, Europe, Canada, Australia, and internationally."
     }
   }
 }
