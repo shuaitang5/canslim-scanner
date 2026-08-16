@@ -1,328 +1,317 @@
 {
-  "run_id": "2026-08-15_221258",
+  "run_id": "2026-08-16_221224",
   "as_of": "2026-08-14",
   "universe": "us_all",
   "regime": "UPTREND",
-  "generated": "2026-08-15T22:22:51.403155+00:00",
+  "generated": "2026-08-16T22:21:27.422943+00:00",
   "tickers": [
     {
       "ticker": "NUTX",
       "bucket": "full_match",
-      "score": 0.9526,
+      "score": 0.9503,
       "gates": "CANSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 1283447087.120987,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "AVAH",
       "bucket": "full_match",
-      "score": 0.9456,
+      "score": 0.947,
       "gates": "CANSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 2066496826.6297894,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "HALO",
       "bucket": "full_match",
-      "score": 0.9422,
+      "score": 0.9445,
       "gates": "CANSLIM",
       "ad": "A",
       "pivot": 82.36,
       "dist": -0.1979,
       "market_cap": 12231372885.780334,
-      "as_of": "2026-08-15"
-    },
-    {
-      "ticker": "AYA",
-      "bucket": "full_match",
-      "score": 0.9389,
-      "gates": "CANSLIM",
-      "ad": "A",
-      "pivot": null,
-      "dist": null,
-      "market_cap": 3897679751.8670254,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "FTK",
       "bucket": "full_match",
-      "score": 0.9182,
+      "score": 0.9167,
       "gates": "CANSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 1297778037.3915863,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "FTNT",
       "bucket": "full_match",
-      "score": 0.9139,
+      "score": 0.9143,
       "gates": "CANSLIM",
       "ad": "B",
       "pivot": 172.19,
       "dist": 0.0707,
       "market_cap": 117401517586.12053,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "GFF",
       "bucket": "full_match",
-      "score": 0.9037,
+      "score": 0.9011,
       "gates": "CANSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 4750509689.674347,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "ESTC",
       "bucket": "full_match",
-      "score": 0.8951,
+      "score": 0.8965,
       "gates": "CANSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 8082623808.81134,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "AZTA",
       "bucket": "full_match",
-      "score": 0.8677,
+      "score": 0.8713,
       "gates": "CAnSLIM",
       "ad": "A",
       "pivot": 34.14,
       "dist": 0.0223,
       "market_cap": 1485542599.9453697,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "NSIT",
       "bucket": "buyable",
-      "score": 0.9701,
+      "score": 0.9663,
       "gates": "caNSLIM",
       "ad": "A",
       "pivot": 157.45,
       "dist": 0.0203,
       "market_cap": 4382370496.957397,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
+    },
+    {
+      "ticker": "HAE",
+      "bucket": "buyable",
+      "score": 0.947,
+      "gates": "caNsLIM",
+      "ad": "A",
+      "pivot": 92.35,
+      "dist": 0.0168,
+      "market_cap": 3996460793.224823,
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "ARMK",
       "bucket": "buyable",
-      "score": 0.9405,
+      "score": 0.9462,
       "gates": "caNSlIM",
       "ad": "A",
       "pivot": 62.75,
       "dist": 0.0057,
       "market_cap": 16405672697.465881,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "CNC",
       "bucket": "buyable",
-      "score": 0.932,
+      "score": 0.9319,
       "gates": "CaNSLIM",
       "ad": "B",
       "pivot": 69.46,
       "dist": 0.0286,
       "market_cap": 33329843253.02124,
-      "as_of": "2026-08-15"
-    },
-    {
-      "ticker": "SAN",
-      "bucket": "buyable",
-      "score": 0.9108,
-      "gates": "caNsLIM",
-      "ad": "A",
-      "pivot": 15.1,
-      "dist": 0.0225,
-      "market_cap": 210279589860.8644,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "RDVT",
       "bucket": "watchlist",
-      "score": 0.9499,
+      "score": 0.9482,
       "gates": "CaNSLIM",
-      "ad": "B",
+      "ad": "A",
       "pivot": 74.3,
       "dist": 0.0608,
       "market_cap": 1119757895.9114075,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
-      "ticker": "BNY",
+      "ticker": "EPC",
       "bucket": "watchlist",
-      "score": 0.9197,
+      "score": 0.9224,
       "gates": "caNSLIM",
-      "ad": "B",
-      "pivot": 139.25,
-      "dist": -0.1723,
-      "market_cap": 110759019867.21457,
-      "as_of": "2026-08-15"
+      "ad": "A",
+      "pivot": 30.05,
+      "dist": 0.0542,
+      "market_cap": 1290028720.3010845,
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "TKR",
       "bucket": "watchlist",
-      "score": 0.9106,
+      "score": 0.9127,
       "gates": "CaNSLIM",
       "ad": "D",
       "pivot": 146.47,
       "dist": 0.0886,
       "market_cap": 9031457153.756302,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "P",
       "bucket": "basing",
-      "score": 0.9812,
+      "score": 0.9815,
       "gates": "CaNSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 39276967982.42322,
-      "as_of": "2026-08-15"
-    },
-    {
-      "ticker": "HP",
-      "bucket": "basing",
-      "score": 0.9788,
-      "gates": "CaNSLIM",
-      "ad": "A",
-      "pivot": null,
-      "dist": null,
-      "market_cap": 4417301445.247364,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "EXPE",
       "bucket": "basing",
-      "score": 0.9763,
+      "score": 0.977,
       "gates": "cANSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 37688133570.860596,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
+    },
+    {
+      "ticker": "HP",
+      "bucket": "basing",
+      "score": 0.9761,
+      "gates": "CaNSLIM",
+      "ad": "A",
+      "pivot": null,
+      "dist": null,
+      "market_cap": 4417301445.247364,
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "EAT",
       "bucket": "basing",
-      "score": 0.9679,
+      "score": 0.9628,
       "gates": "cANSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 9658330177.116852,
-      "as_of": "2026-08-15"
-    },
-    {
-      "ticker": "DXPE",
-      "bucket": "basing",
-      "score": 0.9627,
-      "gates": "cANSLIM",
-      "ad": "A",
-      "pivot": null,
-      "dist": null,
-      "market_cap": 3116463947.494507,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "GCT",
       "bucket": "basing",
-      "score": 0.9542,
+      "score": 0.9594,
       "gates": "cANSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 1839791426.5868492,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
-      "ticker": "HAE",
+      "ticker": "DXPE",
       "bucket": "basing",
-      "score": 0.9365,
-      "gates": "caNsLIM",
+      "score": 0.9574,
+      "gates": "cANSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
-      "market_cap": 3996460793.224823,
-      "as_of": "2026-08-15"
+      "market_cap": 3116463947.494507,
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "ANET",
       "bucket": "basing",
-      "score": 0.9279,
+      "score": 0.9298,
       "gates": "CANsLIM",
       "ad": "B",
       "pivot": null,
       "dist": null,
       "market_cap": 241549749973.49304,
-      "as_of": "2026-08-15"
-    },
-    {
-      "ticker": "CHEF",
-      "bucket": "basing",
-      "score": 0.9239,
-      "gates": "CaNSLIM",
-      "ad": "A",
-      "pivot": null,
-      "dist": null,
-      "market_cap": 4495728222.100235,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "UFPT",
       "bucket": "basing",
-      "score": 0.9202,
+      "score": 0.9252,
       "gates": "caNSLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 2514505175.0,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
+    },
+    {
+      "ticker": "CHEF",
+      "bucket": "basing",
+      "score": 0.9246,
+      "gates": "CaNSLIM",
+      "ad": "A",
+      "pivot": null,
+      "dist": null,
+      "market_cap": 4495728222.100235,
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "DXCM",
       "bucket": "basing",
-      "score": 0.9179,
+      "score": 0.9206,
       "gates": "cANSlIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 33785108829.804535,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
     },
     {
-      "ticker": "QLYS",
+      "ticker": "ATI",
       "bucket": "basing",
-      "score": 0.9127,
-      "gates": "cANSLIM",
+      "score": 0.9176,
+      "gates": "CANsLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
-      "market_cap": 6543320008.073776,
-      "as_of": "2026-08-15"
+      "market_cap": 31112208526.057358,
+      "as_of": "2026-08-16"
     },
     {
       "ticker": "ATRO",
       "bucket": "basing",
-      "score": 0.9112,
+      "score": 0.9173,
       "gates": "CANsLIM",
       "ad": "A",
       "pivot": null,
       "dist": null,
       "market_cap": 4611608577.00061,
-      "as_of": "2026-08-15"
+      "as_of": "2026-08-16"
+    },
+    {
+      "ticker": "QLYS",
+      "bucket": "basing",
+      "score": 0.9126,
+      "gates": "cANSLIM",
+      "ad": "A",
+      "pivot": null,
+      "dist": null,
+      "market_cap": 6543320008.073776,
+      "as_of": "2026-08-16"
     }
   ]
 }
