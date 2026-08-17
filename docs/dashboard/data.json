@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-17",
     "2026-08-14",
     "2026-08-13",
     "2026-08-12",
@@ -5093,6 +5094,57 @@
         }
       ],
       "full_matches_total": 8
+    },
+    "2026-08-17": {
+      "date": "2026-08-17",
+      "run_id": "2026-08-17_221519",
+      "source_url": "../runs/2026-08-17_221519/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "HALO",
+          "score": 0.9704,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "NUTX",
+          "score": 0.9574,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "AVAH",
+          "score": 0.9494,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FTNT",
+          "score": 0.897,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "ESTC",
+          "score": 0.8702,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "AZTA",
+          "score": 0.8697,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
