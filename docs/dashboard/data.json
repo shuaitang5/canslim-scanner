@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-18",
     "2026-08-17",
     "2026-08-14",
     "2026-08-13",
@@ -5145,6 +5146,64 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-08-18": {
+      "date": "2026-08-18",
+      "run_id": "2026-08-18_221359",
+      "source_url": "../runs/2026-08-18_221359/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "HALO",
+          "score": 0.9764,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "NUTX",
+          "score": 0.9565,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "AVAH",
+          "score": 0.9507,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "ATI",
+          "score": 0.943,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "ATRO",
+          "score": 0.9095,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "FTNT",
+          "score": 0.9044,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 7,
+          "ticker": "ESTC",
+          "score": 0.8747,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -6547,6 +6606,13 @@
       "industry": "Building Products & Equipment",
       "sector": "Industrials",
       "blurb": "Griffon Corporation, through its subsidiaries, provides home and building, and consumer and professional products in the United States, Europe, Canada, Australia, and internationally."
+    },
+    "SAFT": {
+      "ticker": "SAFT",
+      "name": "SAFT",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
