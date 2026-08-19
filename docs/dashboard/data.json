@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-19",
     "2026-08-18",
     "2026-08-17",
     "2026-08-14",
@@ -5204,6 +5205,78 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-08-19": {
+      "date": "2026-08-19",
+      "run_id": "2026-08-19_221544",
+      "source_url": "../runs/2026-08-19_221544/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9925,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "HALO",
+          "score": 0.9758,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "NUTX",
+          "score": 0.9622,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "AVAH",
+          "score": 0.9531,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "ESTC",
+          "score": 0.8944,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "FTNT",
+          "score": 0.8848,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 7,
+          "ticker": "ATRO",
+          "score": 0.8818,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "COCO",
+          "score": 0.85,
+          "gates": "CAnSLIM",
+          "ad": "E"
+        },
+        {
+          "rank": 9,
+          "ticker": "AZTA",
+          "score": 0.8441,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 9
     }
   },
   "companies": {
@@ -6610,6 +6683,34 @@
     "SAFT": {
       "ticker": "SAFT",
       "name": "SAFT",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "BRKR": {
+      "ticker": "BRKR",
+      "name": "BRKR",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "FIVE": {
+      "ticker": "FIVE",
+      "name": "FIVE",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "PAYC": {
+      "ticker": "PAYC",
+      "name": "PAYC",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "WPM": {
+      "ticker": "WPM",
+      "name": "WPM",
       "industry": "",
       "sector": "",
       "blurb": ""
