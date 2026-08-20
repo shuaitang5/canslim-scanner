@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-20",
     "2026-08-19",
     "2026-08-18",
     "2026-08-17",
@@ -5277,6 +5278,64 @@
         }
       ],
       "full_matches_total": 9
+    },
+    "2026-08-20": {
+      "date": "2026-08-20",
+      "run_id": "2026-08-20_221810",
+      "source_url": "../runs/2026-08-20_221810/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9868,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "HALO",
+          "score": 0.9704,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "NUTX",
+          "score": 0.9595,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "AVAH",
+          "score": 0.9435,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "ESTC",
+          "score": 0.8824,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "FTNT",
+          "score": 0.8798,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 7,
+          "ticker": "ATRO",
+          "score": 0.8669,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -6682,38 +6741,59 @@
     },
     "SAFT": {
       "ticker": "SAFT",
-      "name": "SAFT",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Safety Insurance Group, Inc.",
+      "industry": "Insurance - Property & Casualty",
+      "sector": "Financial Services",
+      "blurb": "Safety Insurance Group, Inc. provides private passenger and commercial automobile, and homeowner insurance in Massachusetts, the United States."
     },
     "BRKR": {
       "ticker": "BRKR",
-      "name": "BRKR",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Bruker Corporation",
+      "industry": "Medical Devices",
+      "sector": "Healthcare",
+      "blurb": "Bruker Corporation, together with its subsidiaries, develops, manufactures, and distributes scientific instruments, and analytical and diagnostic solutions. It operates through four segments: Bruker Scientific Instruments (BSI) BioSpin, BSI CALID, BSI Nano, and Bruker Energy & Supercon Technologies."
     },
     "FIVE": {
       "ticker": "FIVE",
-      "name": "FIVE",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Five Below, Inc.",
+      "industry": "Specialty Retail",
+      "sector": "Consumer Cyclical",
+      "blurb": "Five Below, Inc. operates as a specialty value retailer in the United States."
     },
     "PAYC": {
       "ticker": "PAYC",
-      "name": "PAYC",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Paycom Software, Inc.",
+      "industry": "Software - Application",
+      "sector": "Technology",
+      "blurb": "Paycom Software, Inc. provides cloud-based human capital management (HCM) solution delivered as software-as-a-service for small to mid-sized companies in the United States."
     },
     "WPM": {
       "ticker": "WPM",
-      "name": "WPM",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Wheaton Precious Metals Corp.",
+      "industry": "Gold",
+      "sector": "Basic Materials",
+      "blurb": "Wheaton Precious Metals Corp. operates as a precious metal streaming company."
+    },
+    "NEM": {
+      "ticker": "NEM",
+      "name": "Newmont Corporation",
+      "industry": "Gold",
+      "sector": "Basic Materials",
+      "blurb": "Newmont Corporation operates as a gold producer. It also explores for copper, silver, lead, zinc, and other metals."
+    },
+    "TILE": {
+      "ticker": "TILE",
+      "name": "Interface, Inc.",
+      "industry": "Furnishings, Fixtures & Appliances",
+      "sector": "Consumer Cyclical",
+      "blurb": "Interface, Inc. designs, produces, and sells modular carpet products in the United States, Canada, Latin America, Europe, Africa, Asia, and Australia."
+    },
+    "TNK": {
+      "ticker": "TNK",
+      "name": "Teekay Tankers Ltd.",
+      "industry": "Oil & Gas Midstream",
+      "sector": "Energy",
+      "blurb": "Teekay Tankers Ltd., together with its subsidiaries, provides marine transportation services to oil industries in Bermuda and internationally. The company operates in two segments: Tankers and Marine Servies."
     }
   }
 }
