@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-21",
     "2026-08-20",
     "2026-08-19",
     "2026-08-18",
@@ -5336,6 +5337,57 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-08-21": {
+      "date": "2026-08-21",
+      "run_id": "2026-08-21_221455",
+      "source_url": "../runs/2026-08-21_221455/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "HALO",
+          "score": 0.9757,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AVAH",
+          "score": 0.956,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "NUTX",
+          "score": 0.946,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FTNT",
+          "score": 0.8909,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "ESTC",
+          "score": 0.8851,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "ATRO",
+          "score": 0.8668,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -6794,6 +6846,13 @@
       "industry": "Oil & Gas Midstream",
       "sector": "Energy",
       "blurb": "Teekay Tankers Ltd., together with its subsidiaries, provides marine transportation services to oil industries in Bermuda and internationally. The company operates in two segments: Tankers and Marine Servies."
+    },
+    "RNG": {
+      "ticker": "RNG",
+      "name": "RNG",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
