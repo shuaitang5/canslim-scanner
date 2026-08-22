@@ -5340,8 +5340,8 @@
     },
     "2026-08-21": {
       "date": "2026-08-21",
-      "run_id": "2026-08-21_221455",
-      "source_url": "../runs/2026-08-21_221455/",
+      "run_id": "2026-08-22_221247",
+      "source_url": "../runs/2026-08-22_221247/",
       "regime": "UPTREND",
       "full_matches": [
         {
@@ -5353,41 +5353,48 @@
         },
         {
           "rank": 2,
+          "ticker": "AYA",
+          "score": 0.9641,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
           "ticker": "AVAH",
           "score": 0.956,
           "gates": "CANSLIM",
           "ad": "A"
         },
         {
-          "rank": 3,
+          "rank": 4,
           "ticker": "NUTX",
           "score": 0.946,
           "gates": "CANSLIM",
           "ad": "A"
         },
         {
-          "rank": 4,
+          "rank": 5,
           "ticker": "FTNT",
           "score": 0.8909,
           "gates": "CANSLIM",
-          "ad": "B"
+          "ad": "A"
         },
         {
-          "rank": 5,
+          "rank": 6,
           "ticker": "ESTC",
           "score": 0.8851,
           "gates": "CANSLIM",
           "ad": "A"
         },
         {
-          "rank": 6,
+          "rank": 7,
           "ticker": "ATRO",
           "score": 0.8668,
           "gates": "CAnSLIM",
           "ad": "A"
         }
       ],
-      "full_matches_total": 6
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -6849,10 +6856,10 @@
     },
     "RNG": {
       "ticker": "RNG",
-      "name": "RNG",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "RingCentral, Inc.",
+      "industry": "Software - Application",
+      "sector": "Technology",
+      "blurb": "RingCentral, Inc., an agentic voice AI\u0096powered cloud business communication services provider, delivering an integrated platform for business phone, SMS, contact center, workforce engagement management, video collaboration, and messaging."
     }
   }
 }
