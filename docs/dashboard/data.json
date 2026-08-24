@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-24",
     "2026-08-21",
     "2026-08-20",
     "2026-08-19",
@@ -5395,6 +5396,57 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-08-24": {
+      "date": "2026-08-24",
+      "run_id": "2026-08-24_221705",
+      "source_url": "../runs/2026-08-24_221705/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "HALO",
+          "score": 0.9792,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AVAH",
+          "score": 0.9579,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "NUTX",
+          "score": 0.9232,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FTNT",
+          "score": 0.8879,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "ATRO",
+          "score": 0.8641,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 6,
+          "ticker": "ESTC",
+          "score": 0.8637,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -6860,6 +6912,20 @@
       "industry": "Software - Application",
       "sector": "Technology",
       "blurb": "RingCentral, Inc., an agentic voice AI\u0096powered cloud business communication services provider, delivering an integrated platform for business phone, SMS, contact center, workforce engagement management, video collaboration, and messaging."
+    },
+    "AMCR": {
+      "ticker": "AMCR",
+      "name": "AMCR",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "EZPW": {
+      "ticker": "EZPW",
+      "name": "EZPW",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
