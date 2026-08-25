@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-25",
     "2026-08-24",
     "2026-08-21",
     "2026-08-20",
@@ -5447,6 +5448,50 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-08-25": {
+      "date": "2026-08-25",
+      "run_id": "2026-08-25_221740",
+      "source_url": "../runs/2026-08-25_221740/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9924,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AVAH",
+          "score": 0.9502,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "FTNT",
+          "score": 0.8952,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 4,
+          "ticker": "ATRO",
+          "score": 0.8642,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "ESTC",
+          "score": 0.8457,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
