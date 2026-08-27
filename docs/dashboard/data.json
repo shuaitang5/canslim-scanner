@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-26",
     "2026-08-25",
     "2026-08-24",
     "2026-08-21",
@@ -5492,6 +5493,36 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-08-26": {
+      "date": "2026-08-26",
+      "run_id": "2026-08-27_022700",
+      "source_url": "../runs/2026-08-27_022700/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9848,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AVAH",
+          "score": 0.9528,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "FTNT",
+          "score": 0.9074,
+          "gates": "CANSLIM",
+          "ad": "B"
+        }
+      ],
+      "full_matches_total": 3
     }
   },
   "companies": {
@@ -6960,17 +6991,24 @@
     },
     "AMCR": {
       "ticker": "AMCR",
-      "name": "AMCR",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Amcor plc",
+      "industry": "Packaging & Containers",
+      "sector": "Consumer Cyclical",
+      "blurb": "Amcor plc, together with its subsidiaries, develops and produces packaging solutions for nutrition, health, beauty, and wellness categories in Europe, North America, Latin America, and the Asia Pacific."
     },
     "EZPW": {
       "ticker": "EZPW",
-      "name": "EZPW",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "EZCORP, Inc.",
+      "industry": "Credit Services",
+      "sector": "Financial Services",
+      "blurb": "EZCORP, Inc. provides pawn services in the United States, Mexico, and Latin America."
+    },
+    "FCX": {
+      "ticker": "FCX",
+      "name": "Freeport-McMoRan Inc.",
+      "industry": "Copper",
+      "sector": "Basic Materials",
+      "blurb": "Freeport-McMoRan Inc. engages in the mining of mineral properties in North America, South America, and Indonesia."
     }
   }
 }
