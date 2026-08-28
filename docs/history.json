@@ -1,6 +1,7 @@
 {
-  "generated": "2026-08-27T02:41:46.183981+00:00",
+  "generated": "2026-08-28T06:02:35.362989+00:00",
   "dates": [
+    "2026-08-27",
     "2026-08-26",
     "2026-08-25",
     "2026-08-24",
@@ -69,6 +70,16 @@
   ],
   "tickers": {
     "AYA": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "full_match",
+        "score": 0.9898,
+        "gates": "CANSLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      },
       {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
@@ -312,6 +323,16 @@
     ],
     "AVAH": [
       {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "full_match",
+        "score": 0.9571,
+        "gates": "CANSLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      },
+      {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
         "bucket": "full_match",
@@ -513,6 +534,16 @@
       }
     ],
     "FTNT": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "full_match",
+        "score": 0.9455,
+        "gates": "CANSLIM",
+        "ad": "A",
+        "pivot": 173.99,
+        "dist": 0.007
+      },
       {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
@@ -1124,7 +1155,69 @@
         "dist": null
       }
     ],
+    "LAUR": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "full_match",
+        "score": 0.9032,
+        "gates": "CANSLIM",
+        "ad": "B",
+        "pivot": 38.38,
+        "dist": -0.0172
+      },
+      {
+        "date": "2026-08-05",
+        "run_id": "2026-08-05_225031",
+        "bucket": "full_match",
+        "score": 0.8884,
+        "gates": "CANSLIM",
+        "ad": "B",
+        "pivot": 38.38,
+        "dist": 0.0086
+      },
+      {
+        "date": "2026-08-04",
+        "run_id": "2026-08-04_225358",
+        "bucket": "full_match",
+        "score": 0.8927,
+        "gates": "CANSLIM",
+        "ad": "B",
+        "pivot": 38.38,
+        "dist": 0.0167
+      },
+      {
+        "date": "2026-07-31",
+        "run_id": "2026-08-02_224704",
+        "bucket": "full_match",
+        "score": 0.9057,
+        "gates": "CANSLIM",
+        "ad": "B",
+        "pivot": 38.38,
+        "dist": 0.0018
+      },
+      {
+        "date": "2026-07-30",
+        "run_id": "2026-07-30_225740",
+        "bucket": "full_match",
+        "score": 0.9125,
+        "gates": "CANSLIM",
+        "ad": "B",
+        "pivot": 38.38,
+        "dist": -0.0008
+      }
+    ],
     "CHEF": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.9437,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 111.37,
+        "dist": 0.0009
+      },
       {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
@@ -1488,6 +1581,16 @@
     ],
     "WPM": [
       {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.939,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 164.0,
+        "dist": 0.0366
+      },
+      {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
         "bucket": "buyable",
@@ -1549,6 +1652,16 @@
       }
     ],
     "EPC": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.9251,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 30.05,
+        "dist": 0.0459
+      },
       {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
@@ -1660,7 +1773,263 @@
         "dist": 0.0283
       }
     ],
+    "RDVT": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.9244,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 74.3,
+        "dist": 0.0309
+      },
+      {
+        "date": "2026-08-25",
+        "run_id": "2026-08-25_221740",
+        "bucket": "watchlist",
+        "score": 0.8941,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 74.3,
+        "dist": 0.0661
+      },
+      {
+        "date": "2026-08-24",
+        "run_id": "2026-08-24_221705",
+        "bucket": "watchlist",
+        "score": 0.9391,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 74.3,
+        "dist": 0.0556
+      },
+      {
+        "date": "2026-08-21",
+        "run_id": "2026-08-23_221310",
+        "bucket": "buyable",
+        "score": 0.9524,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 74.3,
+        "dist": 0.0421
+      },
+      {
+        "date": "2026-08-20",
+        "run_id": "2026-08-20_221810",
+        "bucket": "watchlist",
+        "score": 0.9474,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 74.3,
+        "dist": 0.0507
+      },
+      {
+        "date": "2026-08-19",
+        "run_id": "2026-08-19_221544",
+        "bucket": "watchlist",
+        "score": 0.9409,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 74.3,
+        "dist": 0.0611
+      },
+      {
+        "date": "2026-08-18",
+        "run_id": "2026-08-18_221359",
+        "bucket": "watchlist",
+        "score": 0.9252,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 74.3,
+        "dist": 0.0822
+      },
+      {
+        "date": "2026-08-17",
+        "run_id": "2026-08-17_221519",
+        "bucket": "watchlist",
+        "score": 0.9261,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 74.3,
+        "dist": 0.0842
+      },
+      {
+        "date": "2026-08-14",
+        "run_id": "2026-08-16_221224",
+        "bucket": "watchlist",
+        "score": 0.9482,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 74.3,
+        "dist": 0.0608
+      },
+      {
+        "date": "2026-06-12",
+        "run_id": "2026-06-12_020555",
+        "bucket": "watchlist",
+        "score": 0.92,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 51.4,
+        "dist": -0.083
+      },
+      {
+        "date": "2026-05-28",
+        "run_id": "2026-05-28_200507",
+        "bucket": "watchlist",
+        "score": 0.87,
+        "gates": "CaNSlIM",
+        "ad": "A",
+        "pivot": 51.4,
+        "dist": -0.066
+      }
+    ],
+    "RNG": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.9204,
+        "gates": "cANSLIM",
+        "ad": "A",
+        "pivot": 69.88,
+        "dist": 0.0193
+      },
+      {
+        "date": "2026-08-26",
+        "run_id": "2026-08-27_022700",
+        "bucket": "buyable",
+        "score": 0.9054,
+        "gates": "cANSLIM",
+        "ad": "A",
+        "pivot": 68.55,
+        "dist": 0.0363
+      },
+      {
+        "date": "2026-08-25",
+        "run_id": "2026-08-25_221740",
+        "bucket": "buyable",
+        "score": 0.9016,
+        "gates": "cANSLIM",
+        "ad": "A",
+        "pivot": 68.55,
+        "dist": 0.0429
+      },
+      {
+        "date": "2026-08-24",
+        "run_id": "2026-08-24_221705",
+        "bucket": "buyable",
+        "score": 0.9157,
+        "gates": "cANSLIM",
+        "ad": "A",
+        "pivot": 68.55,
+        "dist": 0.0214
+      },
+      {
+        "date": "2026-08-21",
+        "run_id": "2026-08-23_221310",
+        "bucket": "buyable",
+        "score": 0.9155,
+        "gates": "cANSLIM",
+        "ad": "A",
+        "pivot": 68.55,
+        "dist": 0.0225
+      }
+    ],
+    "SAFT": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.911,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 103.89,
+        "dist": 0.001
+      },
+      {
+        "date": "2026-08-26",
+        "run_id": "2026-08-27_022700",
+        "bucket": "buyable",
+        "score": 0.9122,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 103.74,
+        "dist": 0.001
+      },
+      {
+        "date": "2026-08-25",
+        "run_id": "2026-08-25_221740",
+        "bucket": "buyable",
+        "score": 0.908,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 103.79,
+        "dist": 0.001
+      },
+      {
+        "date": "2026-08-24",
+        "run_id": "2026-08-24_221705",
+        "bucket": "buyable",
+        "score": 0.9055,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 103.85,
+        "dist": 0.001
+      },
+      {
+        "date": "2026-08-21",
+        "run_id": "2026-08-23_221310",
+        "bucket": "buyable",
+        "score": 0.9037,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 103.69,
+        "dist": 0.001
+      },
+      {
+        "date": "2026-08-20",
+        "run_id": "2026-08-20_221810",
+        "bucket": "buyable",
+        "score": 0.9014,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 103.64,
+        "dist": 0.001
+      },
+      {
+        "date": "2026-08-19",
+        "run_id": "2026-08-19_221544",
+        "bucket": "buyable",
+        "score": 0.9035,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 103.66,
+        "dist": 0.001
+      },
+      {
+        "date": "2026-08-18",
+        "run_id": "2026-08-18_221359",
+        "bucket": "buyable",
+        "score": 0.9014,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 103.6,
+        "dist": 0.0031
+      }
+    ],
     "BOW": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.9086,
+        "gates": "caNSlIM",
+        "ad": "A",
+        "pivot": 33.69,
+        "dist": 0.003
+      },
       {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
@@ -1742,69 +2111,139 @@
         "dist": null
       }
     ],
-    "OPY": [
+    "USFD": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.9071,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0238
+      },
       {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
         "bucket": "buyable",
-        "score": 0.9202,
+        "score": 0.9149,
         "gates": "CaNSLIM",
-        "ad": "B",
-        "pivot": 116.44,
-        "dist": 0.0049
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0303
       },
       {
         "date": "2026-08-25",
         "run_id": "2026-08-25_221740",
         "bucket": "buyable",
-        "score": 0.9163,
+        "score": 0.9175,
         "gates": "CaNSLIM",
-        "ad": "B",
-        "pivot": 113.98,
-        "dist": -0.0158
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0344
       },
       {
         "date": "2026-08-24",
         "run_id": "2026-08-24_221705",
         "bucket": "buyable",
-        "score": 0.9136,
+        "score": 0.9232,
         "gates": "CaNSLIM",
-        "ad": "B",
-        "pivot": 113.98,
-        "dist": -0.0154
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0389
       },
       {
         "date": "2026-08-21",
         "run_id": "2026-08-23_221310",
         "bucket": "buyable",
-        "score": 0.9145,
+        "score": 0.9231,
         "gates": "CaNSLIM",
-        "ad": "B",
-        "pivot": 113.98,
-        "dist": -0.0176
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0413
+      },
+      {
+        "date": "2026-08-20",
+        "run_id": "2026-08-20_221810",
+        "bucket": "buyable",
+        "score": 0.917,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0303
+      },
+      {
+        "date": "2026-08-19",
+        "run_id": "2026-08-19_221544",
+        "bucket": "buyable",
+        "score": 0.9102,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0214
+      },
+      {
+        "date": "2026-08-18",
+        "run_id": "2026-08-18_221359",
+        "bucket": "buyable",
+        "score": 0.9056,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0156
+      },
+      {
+        "date": "2026-08-17",
+        "run_id": "2026-08-17_221519",
+        "bucket": "buyable",
+        "score": 0.9124,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0317
+      },
+      {
+        "date": "2026-08-12",
+        "run_id": "2026-08-12_223129",
+        "bucket": "watchlist",
+        "score": 0.9164,
+        "gates": "CaNSlIM",
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0539
+      },
+      {
+        "date": "2026-08-10",
+        "run_id": "2026-08-10_222824",
+        "bucket": "buyable",
+        "score": 0.9181,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": 105.27,
+        "dist": -0.0319
       },
       {
         "date": "2026-08-07",
         "run_id": "2026-08-09_222110",
-        "bucket": "basing",
-        "score": 0.9158,
+        "bucket": "buyable",
+        "score": 0.9196,
         "gates": "CaNSLIM",
         "ad": "A",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-08-06",
-        "run_id": "2026-08-07_012824",
-        "bucket": "basing",
-        "score": 0.9338,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": null,
-        "dist": null
+        "pivot": 105.27,
+        "dist": -0.0343
       }
     ],
     "SAN": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.9032,
+        "gates": "caNsLIM",
+        "ad": "C",
+        "pivot": 15.1,
+        "dist": 0.0364
+      },
       {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
@@ -1926,233 +2365,103 @@
         "dist": 0.0069
       }
     ],
-    "USFD": [
+    "EE": [
       {
-        "date": "2026-08-26",
-        "run_id": "2026-08-27_022700",
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
         "bucket": "buyable",
-        "score": 0.9149,
+        "score": 0.9013,
+        "gates": "CaNsLIM",
+        "ad": "B",
+        "pivot": 40.87,
+        "dist": 0.0306
+      }
+    ],
+    "CMBT": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.8975,
+        "gates": "CANsLIM",
+        "ad": "B",
+        "pivot": 18.62,
+        "dist": 0.0183
+      },
+      {
+        "date": "2026-05-23",
+        "run_id": "2026-05-23_010249",
+        "bucket": "full_match",
+        "score": 0.91,
+        "gates": "CANSLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-05-21",
+        "run_id": "2026-05-21_000903",
+        "bucket": "full_match",
+        "score": 0.93,
+        "gates": "CANSLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-05-19",
+        "run_id": "2026-05-19_223556",
+        "bucket": "full_match",
+        "score": 0.93,
+        "gates": "CANSLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      }
+    ],
+    "PAYC": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "buyable",
+        "score": 0.8971,
         "gates": "CaNSLIM",
         "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0303
+        "pivot": 240.02,
+        "dist": 0.0124
       },
       {
         "date": "2026-08-25",
         "run_id": "2026-08-25_221740",
         "bucket": "buyable",
-        "score": 0.9175,
+        "score": 0.8978,
         "gates": "CaNSLIM",
         "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0344
-      },
-      {
-        "date": "2026-08-24",
-        "run_id": "2026-08-24_221705",
-        "bucket": "buyable",
-        "score": 0.9232,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0389
-      },
-      {
-        "date": "2026-08-21",
-        "run_id": "2026-08-23_221310",
-        "bucket": "buyable",
-        "score": 0.9231,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0413
-      },
-      {
-        "date": "2026-08-20",
-        "run_id": "2026-08-20_221810",
-        "bucket": "buyable",
-        "score": 0.917,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0303
+        "pivot": 233.56,
+        "dist": 0.008
       },
       {
         "date": "2026-08-19",
         "run_id": "2026-08-19_221544",
-        "bucket": "buyable",
-        "score": 0.9102,
+        "bucket": "basing",
+        "score": 0.8863,
         "gates": "CaNSLIM",
         "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0214
-      },
-      {
-        "date": "2026-08-18",
-        "run_id": "2026-08-18_221359",
-        "bucket": "buyable",
-        "score": 0.9056,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0156
-      },
-      {
-        "date": "2026-08-17",
-        "run_id": "2026-08-17_221519",
-        "bucket": "buyable",
-        "score": 0.9124,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0317
-      },
-      {
-        "date": "2026-08-12",
-        "run_id": "2026-08-12_223129",
-        "bucket": "watchlist",
-        "score": 0.9164,
-        "gates": "CaNSlIM",
-        "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0539
-      },
-      {
-        "date": "2026-08-10",
-        "run_id": "2026-08-10_222824",
-        "bucket": "buyable",
-        "score": 0.9181,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0319
-      },
-      {
-        "date": "2026-08-07",
-        "run_id": "2026-08-09_222110",
-        "bucket": "buyable",
-        "score": 0.9196,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 105.27,
-        "dist": -0.0343
-      }
-    ],
-    "SAFT": [
-      {
-        "date": "2026-08-26",
-        "run_id": "2026-08-27_022700",
-        "bucket": "buyable",
-        "score": 0.9122,
-        "gates": "caNSLIM",
-        "ad": "A",
-        "pivot": 103.74,
-        "dist": 0.001
-      },
-      {
-        "date": "2026-08-25",
-        "run_id": "2026-08-25_221740",
-        "bucket": "buyable",
-        "score": 0.908,
-        "gates": "caNSLIM",
-        "ad": "A",
-        "pivot": 103.79,
-        "dist": 0.001
-      },
-      {
-        "date": "2026-08-24",
-        "run_id": "2026-08-24_221705",
-        "bucket": "buyable",
-        "score": 0.9055,
-        "gates": "caNSLIM",
-        "ad": "A",
-        "pivot": 103.85,
-        "dist": 0.001
-      },
-      {
-        "date": "2026-08-21",
-        "run_id": "2026-08-23_221310",
-        "bucket": "buyable",
-        "score": 0.9037,
-        "gates": "caNSLIM",
-        "ad": "A",
-        "pivot": 103.69,
-        "dist": 0.001
-      },
-      {
-        "date": "2026-08-20",
-        "run_id": "2026-08-20_221810",
-        "bucket": "buyable",
-        "score": 0.9014,
-        "gates": "caNSLIM",
-        "ad": "A",
-        "pivot": 103.64,
-        "dist": 0.001
-      },
-      {
-        "date": "2026-08-19",
-        "run_id": "2026-08-19_221544",
-        "bucket": "buyable",
-        "score": 0.9035,
-        "gates": "caNSLIM",
-        "ad": "A",
-        "pivot": 103.66,
-        "dist": 0.001
-      },
-      {
-        "date": "2026-08-18",
-        "run_id": "2026-08-18_221359",
-        "bucket": "buyable",
-        "score": 0.9014,
-        "gates": "caNSLIM",
-        "ad": "A",
-        "pivot": 103.6,
-        "dist": 0.0031
-      }
-    ],
-    "RNG": [
-      {
-        "date": "2026-08-26",
-        "run_id": "2026-08-27_022700",
-        "bucket": "buyable",
-        "score": 0.9054,
-        "gates": "cANSLIM",
-        "ad": "A",
-        "pivot": 68.55,
-        "dist": 0.0363
-      },
-      {
-        "date": "2026-08-25",
-        "run_id": "2026-08-25_221740",
-        "bucket": "buyable",
-        "score": 0.9016,
-        "gates": "cANSLIM",
-        "ad": "A",
-        "pivot": 68.55,
-        "dist": 0.0429
-      },
-      {
-        "date": "2026-08-24",
-        "run_id": "2026-08-24_221705",
-        "bucket": "buyable",
-        "score": 0.9157,
-        "gates": "cANSLIM",
-        "ad": "A",
-        "pivot": 68.55,
-        "dist": 0.0214
-      },
-      {
-        "date": "2026-08-21",
-        "run_id": "2026-08-23_221310",
-        "bucket": "buyable",
-        "score": 0.9155,
-        "gates": "cANSLIM",
-        "ad": "A",
-        "pivot": 68.55,
-        "dist": 0.0225
+        "pivot": null,
+        "dist": null
       }
     ],
     "GCT": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "watchlist",
+        "score": 0.9334,
+        "gates": "cANSLIM",
+        "ad": "A",
+        "pivot": 54.87,
+        "dist": 0.06
+      },
       {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
@@ -2305,6 +2614,16 @@
       }
     ],
     "CNO": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "watchlist",
+        "score": 0.9083,
+        "gates": "caNSlIM",
+        "ad": "B",
+        "pivot": 48.05,
+        "dist": -0.148
+      },
       {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
@@ -2616,7 +2935,59 @@
         "dist": -0.043
       }
     ],
+    "FIVE": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "watchlist",
+        "score": 0.9076,
+        "gates": "caNsLIM",
+        "ad": "A",
+        "pivot": 263.98,
+        "dist": 0.0644
+      },
+      {
+        "date": "2026-08-26",
+        "run_id": "2026-08-27_022700",
+        "bucket": "basing",
+        "score": 0.93,
+        "gates": "caNsLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-20",
+        "run_id": "2026-08-20_221810",
+        "bucket": "watchlist",
+        "score": 0.8946,
+        "gates": "caNSLIM",
+        "ad": "B",
+        "pivot": 249.1,
+        "dist": 0.0513
+      },
+      {
+        "date": "2026-08-19",
+        "run_id": "2026-08-19_221544",
+        "bucket": "buyable",
+        "score": 0.9126,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": 244.64,
+        "dist": 0.0105
+      }
+    ],
     "HAE": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "basing",
+        "score": 0.9657,
+        "gates": "caNSLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      },
       {
         "date": "2026-08-26",
         "run_id": "2026-08-27_022700",
@@ -2758,6 +3129,236 @@
         "dist": null
       }
     ],
+    "NEM": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "basing",
+        "score": 0.955,
+        "gates": "cANsLIM",
+        "ad": "B",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-26",
+        "run_id": "2026-08-27_022700",
+        "bucket": "basing",
+        "score": 0.9274,
+        "gates": "cANsLIM",
+        "ad": "B",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-25",
+        "run_id": "2026-08-25_221740",
+        "bucket": "basing",
+        "score": 0.9153,
+        "gates": "cANsLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-24",
+        "run_id": "2026-08-24_221705",
+        "bucket": "basing",
+        "score": 0.9018,
+        "gates": "cANsLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-21",
+        "run_id": "2026-08-23_221310",
+        "bucket": "basing",
+        "score": 0.9249,
+        "gates": "cANsLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-20",
+        "run_id": "2026-08-20_221810",
+        "bucket": "basing",
+        "score": 0.9007,
+        "gates": "cANsLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      }
+    ],
+    "FCX": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "basing",
+        "score": 0.9269,
+        "gates": "caNsLIM",
+        "ad": "B",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-26",
+        "run_id": "2026-08-27_022700",
+        "bucket": "basing",
+        "score": 0.9132,
+        "gates": "caNsLIM",
+        "ad": "B",
+        "pivot": null,
+        "dist": null
+      }
+    ],
+    "TRGP": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "basing",
+        "score": 0.9227,
+        "gates": "cANsLIM",
+        "ad": "B",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-26",
+        "run_id": "2026-08-27_022700",
+        "bucket": "basing",
+        "score": 0.9034,
+        "gates": "cANsLIM",
+        "ad": "B",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-07-08",
+        "run_id": "2026-07-08_225714",
+        "bucket": "buyable",
+        "score": 0.9442,
+        "gates": "CANsLIM",
+        "ad": "B",
+        "pivot": 280.1,
+        "dist": 0.008
+      },
+      {
+        "date": "2026-07-07",
+        "run_id": "2026-07-07_225302",
+        "bucket": "buyable",
+        "score": 0.9357,
+        "gates": "CANSlIM",
+        "ad": "C",
+        "pivot": 280.1,
+        "dist": 0.0225
+      }
+    ],
+    "EZPW": [
+      {
+        "date": "2026-08-27",
+        "run_id": "2026-08-28_055344",
+        "bucket": "basing",
+        "score": 0.9177,
+        "gates": "CaNsLIM",
+        "ad": "B",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-26",
+        "run_id": "2026-08-27_022700",
+        "bucket": "basing",
+        "score": 0.9386,
+        "gates": "CaNsLIM",
+        "ad": "B",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-25",
+        "run_id": "2026-08-25_221740",
+        "bucket": "basing",
+        "score": 0.9181,
+        "gates": "CaNsLIM",
+        "ad": "B",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-24",
+        "run_id": "2026-08-24_221705",
+        "bucket": "basing",
+        "score": 0.9622,
+        "gates": "CaNsLIM",
+        "ad": "B",
+        "pivot": null,
+        "dist": null
+      }
+    ],
+    "OPY": [
+      {
+        "date": "2026-08-26",
+        "run_id": "2026-08-27_022700",
+        "bucket": "buyable",
+        "score": 0.9202,
+        "gates": "CaNSLIM",
+        "ad": "B",
+        "pivot": 116.44,
+        "dist": 0.0049
+      },
+      {
+        "date": "2026-08-25",
+        "run_id": "2026-08-25_221740",
+        "bucket": "buyable",
+        "score": 0.9163,
+        "gates": "CaNSLIM",
+        "ad": "B",
+        "pivot": 113.98,
+        "dist": -0.0158
+      },
+      {
+        "date": "2026-08-24",
+        "run_id": "2026-08-24_221705",
+        "bucket": "buyable",
+        "score": 0.9136,
+        "gates": "CaNSLIM",
+        "ad": "B",
+        "pivot": 113.98,
+        "dist": -0.0154
+      },
+      {
+        "date": "2026-08-21",
+        "run_id": "2026-08-23_221310",
+        "bucket": "buyable",
+        "score": 0.9145,
+        "gates": "CaNSLIM",
+        "ad": "B",
+        "pivot": 113.98,
+        "dist": -0.0176
+      },
+      {
+        "date": "2026-08-07",
+        "run_id": "2026-08-09_222110",
+        "bucket": "basing",
+        "score": 0.9158,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      },
+      {
+        "date": "2026-08-06",
+        "run_id": "2026-08-07_012824",
+        "bucket": "basing",
+        "score": 0.9338,
+        "gates": "CaNSLIM",
+        "ad": "A",
+        "pivot": null,
+        "dist": null
+      }
+    ],
     "P": [
       {
         "date": "2026-08-26",
@@ -2855,122 +3456,6 @@
         "bucket": "basing",
         "score": 0.974,
         "gates": "CaNsLIM",
-        "ad": "A",
-        "pivot": null,
-        "dist": null
-      }
-    ],
-    "EZPW": [
-      {
-        "date": "2026-08-26",
-        "run_id": "2026-08-27_022700",
-        "bucket": "basing",
-        "score": 0.9386,
-        "gates": "CaNsLIM",
-        "ad": "B",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-08-25",
-        "run_id": "2026-08-25_221740",
-        "bucket": "basing",
-        "score": 0.9181,
-        "gates": "CaNsLIM",
-        "ad": "B",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-08-24",
-        "run_id": "2026-08-24_221705",
-        "bucket": "basing",
-        "score": 0.9622,
-        "gates": "CaNsLIM",
-        "ad": "B",
-        "pivot": null,
-        "dist": null
-      }
-    ],
-    "FIVE": [
-      {
-        "date": "2026-08-26",
-        "run_id": "2026-08-27_022700",
-        "bucket": "basing",
-        "score": 0.93,
-        "gates": "caNsLIM",
-        "ad": "A",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-08-20",
-        "run_id": "2026-08-20_221810",
-        "bucket": "watchlist",
-        "score": 0.8946,
-        "gates": "caNSLIM",
-        "ad": "B",
-        "pivot": 249.1,
-        "dist": 0.0513
-      },
-      {
-        "date": "2026-08-19",
-        "run_id": "2026-08-19_221544",
-        "bucket": "buyable",
-        "score": 0.9126,
-        "gates": "caNSLIM",
-        "ad": "A",
-        "pivot": 244.64,
-        "dist": 0.0105
-      }
-    ],
-    "NEM": [
-      {
-        "date": "2026-08-26",
-        "run_id": "2026-08-27_022700",
-        "bucket": "basing",
-        "score": 0.9274,
-        "gates": "cANsLIM",
-        "ad": "B",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-08-25",
-        "run_id": "2026-08-25_221740",
-        "bucket": "basing",
-        "score": 0.9153,
-        "gates": "cANsLIM",
-        "ad": "A",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-08-24",
-        "run_id": "2026-08-24_221705",
-        "bucket": "basing",
-        "score": 0.9018,
-        "gates": "cANsLIM",
-        "ad": "A",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-08-21",
-        "run_id": "2026-08-23_221310",
-        "bucket": "basing",
-        "score": 0.9249,
-        "gates": "cANsLIM",
-        "ad": "A",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-08-20",
-        "run_id": "2026-08-20_221810",
-        "bucket": "basing",
-        "score": 0.9007,
-        "gates": "cANsLIM",
         "ad": "A",
         "pivot": null,
         "dist": null
@@ -3106,50 +3591,6 @@
         "ad": "A",
         "pivot": 20.6,
         "dist": -0.124
-      }
-    ],
-    "FCX": [
-      {
-        "date": "2026-08-26",
-        "run_id": "2026-08-27_022700",
-        "bucket": "basing",
-        "score": 0.9132,
-        "gates": "caNsLIM",
-        "ad": "B",
-        "pivot": null,
-        "dist": null
-      }
-    ],
-    "TRGP": [
-      {
-        "date": "2026-08-26",
-        "run_id": "2026-08-27_022700",
-        "bucket": "basing",
-        "score": 0.9034,
-        "gates": "cANsLIM",
-        "ad": "B",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-07-08",
-        "run_id": "2026-07-08_225714",
-        "bucket": "buyable",
-        "score": 0.9442,
-        "gates": "CANsLIM",
-        "ad": "B",
-        "pivot": 280.1,
-        "dist": 0.008
-      },
-      {
-        "date": "2026-07-07",
-        "run_id": "2026-07-07_225302",
-        "bucket": "buyable",
-        "score": 0.9357,
-        "gates": "CANSlIM",
-        "ad": "C",
-        "pivot": 280.1,
-        "dist": 0.0225
       }
     ],
     "NUTX": [
@@ -4322,28 +4763,6 @@
         "dist": 0.0089
       }
     ],
-    "PAYC": [
-      {
-        "date": "2026-08-25",
-        "run_id": "2026-08-25_221740",
-        "bucket": "buyable",
-        "score": 0.8978,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 233.56,
-        "dist": 0.008
-      },
-      {
-        "date": "2026-08-19",
-        "run_id": "2026-08-19_221544",
-        "bucket": "basing",
-        "score": 0.8863,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": null,
-        "dist": null
-      }
-    ],
     "LLY": [
       {
         "date": "2026-08-25",
@@ -4734,108 +5153,6 @@
         "ad": "A",
         "pivot": 1166.39,
         "dist": 0.03
-      }
-    ],
-    "RDVT": [
-      {
-        "date": "2026-08-25",
-        "run_id": "2026-08-25_221740",
-        "bucket": "watchlist",
-        "score": 0.8941,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 74.3,
-        "dist": 0.0661
-      },
-      {
-        "date": "2026-08-24",
-        "run_id": "2026-08-24_221705",
-        "bucket": "watchlist",
-        "score": 0.9391,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 74.3,
-        "dist": 0.0556
-      },
-      {
-        "date": "2026-08-21",
-        "run_id": "2026-08-23_221310",
-        "bucket": "buyable",
-        "score": 0.9524,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 74.3,
-        "dist": 0.0421
-      },
-      {
-        "date": "2026-08-20",
-        "run_id": "2026-08-20_221810",
-        "bucket": "watchlist",
-        "score": 0.9474,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 74.3,
-        "dist": 0.0507
-      },
-      {
-        "date": "2026-08-19",
-        "run_id": "2026-08-19_221544",
-        "bucket": "watchlist",
-        "score": 0.9409,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 74.3,
-        "dist": 0.0611
-      },
-      {
-        "date": "2026-08-18",
-        "run_id": "2026-08-18_221359",
-        "bucket": "watchlist",
-        "score": 0.9252,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 74.3,
-        "dist": 0.0822
-      },
-      {
-        "date": "2026-08-17",
-        "run_id": "2026-08-17_221519",
-        "bucket": "watchlist",
-        "score": 0.9261,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 74.3,
-        "dist": 0.0842
-      },
-      {
-        "date": "2026-08-14",
-        "run_id": "2026-08-16_221224",
-        "bucket": "watchlist",
-        "score": 0.9482,
-        "gates": "CaNSLIM",
-        "ad": "A",
-        "pivot": 74.3,
-        "dist": 0.0608
-      },
-      {
-        "date": "2026-06-12",
-        "run_id": "2026-06-12_020555",
-        "bucket": "watchlist",
-        "score": 0.92,
-        "gates": "caNSLIM",
-        "ad": "A",
-        "pivot": 51.4,
-        "dist": -0.083
-      },
-      {
-        "date": "2026-05-28",
-        "run_id": "2026-05-28_200507",
-        "bucket": "watchlist",
-        "score": 0.87,
-        "gates": "CaNSlIM",
-        "ad": "A",
-        "pivot": 51.4,
-        "dist": -0.066
       }
     ],
     "HALO": [
@@ -9456,48 +9773,6 @@
         "ad": "B",
         "pivot": null,
         "dist": null
-      }
-    ],
-    "LAUR": [
-      {
-        "date": "2026-08-05",
-        "run_id": "2026-08-05_225031",
-        "bucket": "full_match",
-        "score": 0.8884,
-        "gates": "CANSLIM",
-        "ad": "B",
-        "pivot": 38.38,
-        "dist": 0.0086
-      },
-      {
-        "date": "2026-08-04",
-        "run_id": "2026-08-04_225358",
-        "bucket": "full_match",
-        "score": 0.8927,
-        "gates": "CANSLIM",
-        "ad": "B",
-        "pivot": 38.38,
-        "dist": 0.0167
-      },
-      {
-        "date": "2026-07-31",
-        "run_id": "2026-08-02_224704",
-        "bucket": "full_match",
-        "score": 0.9057,
-        "gates": "CANSLIM",
-        "ad": "B",
-        "pivot": 38.38,
-        "dist": 0.0018
-      },
-      {
-        "date": "2026-07-30",
-        "run_id": "2026-07-30_225740",
-        "bucket": "full_match",
-        "score": 0.9125,
-        "gates": "CANSLIM",
-        "ad": "B",
-        "pivot": 38.38,
-        "dist": -0.0008
       }
     ],
     "PGNY": [
@@ -20077,38 +20352,6 @@
         "bucket": "basing",
         "score": 0.9,
         "gates": "CaNsLIM",
-        "ad": "A",
-        "pivot": null,
-        "dist": null
-      }
-    ],
-    "CMBT": [
-      {
-        "date": "2026-05-23",
-        "run_id": "2026-05-23_010249",
-        "bucket": "full_match",
-        "score": 0.91,
-        "gates": "CANSLIM",
-        "ad": "A",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-05-21",
-        "run_id": "2026-05-21_000903",
-        "bucket": "full_match",
-        "score": 0.93,
-        "gates": "CANSLIM",
-        "ad": "A",
-        "pivot": null,
-        "dist": null
-      },
-      {
-        "date": "2026-05-19",
-        "run_id": "2026-05-19_223556",
-        "bucket": "full_match",
-        "score": 0.93,
-        "gates": "CANSLIM",
         "ad": "A",
         "pivot": null,
         "dist": null

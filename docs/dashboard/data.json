@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-27",
     "2026-08-26",
     "2026-08-25",
     "2026-08-24",
@@ -5523,6 +5524,43 @@
         }
       ],
       "full_matches_total": 3
+    },
+    "2026-08-27": {
+      "date": "2026-08-27",
+      "run_id": "2026-08-28_055344",
+      "source_url": "../runs/2026-08-28_055344/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9898,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AVAH",
+          "score": 0.9571,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "FTNT",
+          "score": 0.9455,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "LAUR",
+          "score": 0.9032,
+          "gates": "CANSLIM",
+          "ad": "B"
+        }
+      ],
+      "full_matches_total": 4
     }
   },
   "companies": {
@@ -7009,6 +7047,13 @@
       "industry": "Copper",
       "sector": "Basic Materials",
       "blurb": "Freeport-McMoRan Inc. engages in the mining of mineral properties in North America, South America, and Indonesia."
+    },
+    "EE": {
+      "ticker": "EE",
+      "name": "EE",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
