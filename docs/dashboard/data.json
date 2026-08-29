@@ -5565,8 +5565,8 @@
     },
     "2026-08-28": {
       "date": "2026-08-28",
-      "run_id": "2026-08-29_032636",
-      "source_url": "../runs/2026-08-29_032636/",
+      "run_id": "2026-08-29_234446",
+      "source_url": "../runs/2026-08-29_234446/",
       "regime": "UPTREND",
       "full_matches": [
         {
@@ -5596,9 +5596,16 @@
           "score": 0.922,
           "gates": "CANSLIM",
           "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "QNST",
+          "score": 0.833,
+          "gates": "CANSLIM",
+          "ad": "A"
         }
       ],
-      "full_matches_total": 4
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -7088,10 +7095,17 @@
     },
     "EE": {
       "ticker": "EE",
-      "name": "EE",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Excelerate Energy, Inc.",
+      "industry": "Oil & Gas Midstream",
+      "sector": "Energy",
+      "blurb": "Excelerate Energy, Inc. owns and operates liquefied natural gas (LNG) and natural gas infrastructure assets."
+    },
+    "QNST": {
+      "ticker": "QNST",
+      "name": "QuinStreet, Inc.",
+      "industry": "Advertising Agencies",
+      "sector": "Communication Services",
+      "blurb": "QuinStreet, Inc., an online performance marketing company, provides customer acquisition services for its clients in the United States and internationally. The company provides online marketing services, such as qualified clicks, leads, calls, applications, and customers through its websites or third-party publisher\u2026"
     }
   }
 }
