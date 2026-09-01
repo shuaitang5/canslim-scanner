@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-08-31",
     "2026-08-28",
     "2026-08-27",
     "2026-08-26",
@@ -5606,6 +5607,64 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-08-31": {
+      "date": "2026-08-31",
+      "run_id": "2026-09-01_005533",
+      "source_url": "../runs/2026-09-01_005533/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9602,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "TEAM",
+          "score": 0.9517,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "AVAH",
+          "score": 0.9435,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "CMBT",
+          "score": 0.9394,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "ESTC",
+          "score": 0.9293,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "ATI",
+          "score": 0.9191,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 7,
+          "ticker": "QNST",
+          "score": 0.8434,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -7106,6 +7165,20 @@
       "industry": "Advertising Agencies",
       "sector": "Communication Services",
       "blurb": "QuinStreet, Inc., an online performance marketing company, provides customer acquisition services for its clients in the United States and internationally. The company provides online marketing services, such as qualified clicks, leads, calls, applications, and customers through its websites or third-party publisher\u2026"
+    },
+    "TEAM": {
+      "ticker": "TEAM",
+      "name": "TEAM",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "VEEV": {
+      "ticker": "VEEV",
+      "name": "VEEV",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
