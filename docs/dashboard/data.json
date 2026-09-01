@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-01",
     "2026-08-31",
     "2026-08-28",
     "2026-08-27",
@@ -5665,6 +5666,71 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-09-01": {
+      "date": "2026-09-01",
+      "run_id": "2026-09-01_234154",
+      "source_url": "../runs/2026-09-01_234154/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "CMBT",
+          "score": 0.945,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 2,
+          "ticker": "AVAH",
+          "score": 0.9441,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "TEAM",
+          "score": 0.9341,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "AYA",
+          "score": 0.9326,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "OKTA",
+          "score": 0.9314,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "ATI",
+          "score": 0.9078,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 7,
+          "ticker": "ESTC",
+          "score": 0.8884,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "QNST",
+          "score": 0.8349,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 8
     }
   },
   "companies": {
@@ -7168,17 +7234,24 @@
     },
     "TEAM": {
       "ticker": "TEAM",
-      "name": "TEAM",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Atlassian Corporation",
+      "industry": "Software - Application",
+      "sector": "Technology",
+      "blurb": "Atlassian Corporation provides a collaboration software that enables organizations to connect all teams through a system of work that unlocks productivity at scale worldwide. The company's product portfolio includes Jira, Confluence, Loom, Jira Service Management, Rovo, Bitbucket, Compass, Jira Product Discovery, Fo\u2026"
     },
     "VEEV": {
       "ticker": "VEEV",
-      "name": "VEEV",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Veeva Systems Inc.",
+      "industry": "Health Information Services",
+      "sector": "Healthcare",
+      "blurb": "Veeva Systems Inc. provides cloud-based software for the life sciences industry in North America, Europe, the Asia Pacific, the Middle East, Africa, and Latin America."
+    },
+    "SSRM": {
+      "ticker": "SSRM",
+      "name": "SSR Mining Inc.",
+      "industry": "Gold",
+      "sector": "Basic Materials",
+      "blurb": "SSR Mining Inc., together with its subsidiaries, engages in the acquisition, exploration, and development of precious metal resource properties in the United States, T\u00fcrkiye, Canada, and Argentina."
     }
   }
 }
