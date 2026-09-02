@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-02",
     "2026-09-01",
     "2026-08-31",
     "2026-08-28",
@@ -5731,6 +5732,64 @@
         }
       ],
       "full_matches_total": 8
+    },
+    "2026-09-02": {
+      "date": "2026-09-02",
+      "run_id": "2026-09-02_234256",
+      "source_url": "../runs/2026-09-02_234256/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9895,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "DK",
+          "score": 0.9486,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "CMBT",
+          "score": 0.9483,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 4,
+          "ticker": "AVAH",
+          "score": 0.934,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "TEAM",
+          "score": 0.9288,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "ATI",
+          "score": 0.913,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 7,
+          "ticker": "QNST",
+          "score": 0.836,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -7252,6 +7311,13 @@
       "industry": "Gold",
       "sector": "Basic Materials",
       "blurb": "SSR Mining Inc., together with its subsidiaries, engages in the acquisition, exploration, and development of precious metal resource properties in the United States, T\u00fcrkiye, Canada, and Argentina."
+    },
+    "DK": {
+      "ticker": "DK",
+      "name": "DK",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
