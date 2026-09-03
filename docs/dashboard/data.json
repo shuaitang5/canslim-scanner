@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-03",
     "2026-09-02",
     "2026-09-01",
     "2026-08-31",
@@ -5790,6 +5791,71 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-09-03": {
+      "date": "2026-09-03",
+      "run_id": "2026-09-03_234313",
+      "source_url": "../runs/2026-09-03_234313/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9946,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "TEAM",
+          "score": 0.9548,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "AVAH",
+          "score": 0.952,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "SSRM",
+          "score": 0.947,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "CMBT",
+          "score": 0.9418,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "ESTC",
+          "score": 0.9313,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "ATI",
+          "score": 0.9186,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 8,
+          "ticker": "QNST",
+          "score": 0.8161,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 8
     }
   },
   "companies": {
@@ -7314,10 +7380,17 @@
     },
     "DK": {
       "ticker": "DK",
-      "name": "DK",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Delek US Holdings, Inc.",
+      "industry": "Oil & Gas Refining & Marketing",
+      "sector": "Energy",
+      "blurb": "Delek US Holdings, Inc. engages in the integrated downstream energy business in the United States."
+    },
+    "NVDA": {
+      "ticker": "NVDA",
+      "name": "NVIDIA Corporation",
+      "industry": "Semiconductors",
+      "sector": "Technology",
+      "blurb": "NVIDIA Corporation operates as a data center scale AI infrastructure company in the United States, Taiwan, China, Hong Kong, Europe, and internationally. It operates through Compute & Networking, and Graphics segments."
     }
   }
 }
