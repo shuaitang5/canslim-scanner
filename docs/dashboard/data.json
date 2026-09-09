@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-09",
     "2026-09-08",
     "2026-09-04",
     "2026-09-03",
@@ -5995,6 +5996,85 @@
         }
       ],
       "full_matches_total": 8
+    },
+    "2026-09-09": {
+      "date": "2026-09-09",
+      "run_id": "2026-09-09_234200",
+      "source_url": "../runs/2026-09-09_234200/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9951,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AVAH",
+          "score": 0.9594,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "WT",
+          "score": 0.9562,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "OKTA",
+          "score": 0.9501,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "CMBT",
+          "score": 0.9398,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "SSRM",
+          "score": 0.9294,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "ATI",
+          "score": 0.9252,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 8,
+          "ticker": "TEAM",
+          "score": 0.9064,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "SNDK",
+          "score": 0.849,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 10,
+          "ticker": "QNST",
+          "score": 0.8017,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 10
     }
   },
   "companies": {
@@ -7537,6 +7617,13 @@
       "industry": "Oil & Gas Midstream",
       "sector": "Energy",
       "blurb": "Cheniere Energy, Inc., an energy infrastructure company, primarily engages in the liquefied natural gas (LNG) related businesses in the United States. The company owns and operates the Sabine Pass LNG terminal in Cameron Parish, Louisiana; and the Corpus Christi LNG terminal near Corpus Christi, Texas."
+    },
+    "SNDK": {
+      "ticker": "SNDK",
+      "name": "Sandisk Corporation",
+      "industry": "Computer Hardware",
+      "sector": "Technology",
+      "blurb": "Sandisk Corporation develops, manufactures, and sells data storage devices and solutions using NAND flash technology in the Americas, Europe, the Middle East, Africa, Asia, and internationally."
     }
   }
 }
