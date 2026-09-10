@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-10",
     "2026-09-09",
     "2026-09-08",
     "2026-09-04",
@@ -6075,6 +6076,57 @@
         }
       ],
       "full_matches_total": 10
+    },
+    "2026-09-10": {
+      "date": "2026-09-10",
+      "run_id": "2026-09-10_233457",
+      "source_url": "../runs/2026-09-10_233457/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.964,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AVAH",
+          "score": 0.9537,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "CMBT",
+          "score": 0.9489,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "TEAM",
+          "score": 0.9151,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "ATI",
+          "score": 0.9048,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 6,
+          "ticker": "QNST",
+          "score": 0.8111,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
