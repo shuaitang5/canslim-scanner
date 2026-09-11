@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-11",
     "2026-09-10",
     "2026-09-09",
     "2026-09-08",
@@ -6127,6 +6128,57 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-09-11": {
+      "date": "2026-09-11",
+      "run_id": "2026-09-11_234315",
+      "source_url": "../runs/2026-09-11_234315/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9539,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AVAH",
+          "score": 0.9515,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "CMBT",
+          "score": 0.9478,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "ATI",
+          "score": 0.9034,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 5,
+          "ticker": "TEAM",
+          "score": 0.8826,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "QNST",
+          "score": 0.8134,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -7676,6 +7728,13 @@
       "industry": "Computer Hardware",
       "sector": "Technology",
       "blurb": "Sandisk Corporation develops, manufactures, and sells data storage devices and solutions using NAND flash technology in the Americas, Europe, the Middle East, Africa, Asia, and internationally."
+    },
+    "ANF": {
+      "ticker": "ANF",
+      "name": "ANF",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
