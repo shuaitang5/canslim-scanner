@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-15",
     "2026-09-11",
     "2026-09-10",
     "2026-09-09",
@@ -6179,6 +6180,64 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-09-15": {
+      "date": "2026-09-15",
+      "run_id": "2026-09-15_235126",
+      "source_url": "../runs/2026-09-15_235126/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "NUTX",
+          "score": 0.9902,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "CMBT",
+          "score": 0.9495,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "AVAH",
+          "score": 0.9351,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "AYA",
+          "score": 0.9241,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "TEAM",
+          "score": 0.9133,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "GRDN",
+          "score": 0.8624,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "QNST",
+          "score": 0.8032,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -7735,6 +7794,13 @@
       "industry": "Apparel Retail",
       "sector": "Consumer Cyclical",
       "blurb": "Abercrombie & Fitch Co., through its subsidiaries, operates as an omnichannel retailer in the Americas, Europe, the Middle East, Africa, and the Asia-Pacific. It offers an assortment of apparel, personal care products, and accessories for men, women, and kids under the Abercrombie & Fitch, abercrombie kids, Your Per\u2026"
+    },
+    "KNTK": {
+      "ticker": "KNTK",
+      "name": "Kinetik Holdings Inc.",
+      "industry": "Oil & Gas Midstream",
+      "sector": "Energy",
+      "blurb": "Kinetik Holdings Inc., through its subsidiaries, operates as a midstream company in the Texas Delaware Basin. The company operates through two segments, Midstream Logistics and Pipeline Transportation."
     }
   }
 }
