@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-17",
     "2026-09-16",
     "2026-09-15",
     "2026-09-11",
@@ -6297,6 +6298,78 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-09-17": {
+      "date": "2026-09-17",
+      "run_id": "2026-09-17_234923",
+      "source_url": "../runs/2026-09-17_234923/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9724,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "DK",
+          "score": 0.9628,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "CMBT",
+          "score": 0.9521,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "AVAH",
+          "score": 0.9417,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "TEAM",
+          "score": 0.9224,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "FIVN",
+          "score": 0.9171,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "WT",
+          "score": 0.9051,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 8,
+          "ticker": "ESTC",
+          "score": 0.8309,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "GRDN",
+          "score": 0.8214,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 9
     }
   },
   "companies": {
@@ -7860,6 +7933,27 @@
       "industry": "Oil & Gas Midstream",
       "sector": "Energy",
       "blurb": "Kinetik Holdings Inc., through its subsidiaries, operates as a midstream company in the Texas Delaware Basin. The company operates through two segments, Midstream Logistics and Pipeline Transportation."
+    },
+    "FIVN": {
+      "ticker": "FIVN",
+      "name": "FIVN",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "NVGS": {
+      "ticker": "NVGS",
+      "name": "NVGS",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "PNTG": {
+      "ticker": "PNTG",
+      "name": "PNTG",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
