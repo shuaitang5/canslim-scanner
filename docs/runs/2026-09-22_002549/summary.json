@@ -1,9 +1,9 @@
 {
-  "run_id": "2026-09-20_234420",
+  "run_id": "2026-09-22_002549",
   "as_of": "2026-09-18",
   "universe": "us_all",
   "regime": "UPTREND",
-  "generated": "2026-09-20T23:52:13.250427+00:00",
+  "generated": "2026-09-22T00:35:16.690124+00:00",
   "tickers": [
     {
       "ticker": "NUTX",
@@ -13,8 +13,8 @@
       "ad": "A",
       "pivot": null,
       "dist": null,
-      "market_cap": 1371238151.1370392,
-      "as_of": "2026-09-20"
+      "market_cap": 1379729600.04,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "AYA",
@@ -25,7 +25,7 @@
       "pivot": 30.5,
       "dist": 0.0669,
       "market_cap": 3845765795.4908752,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "HALO",
@@ -36,7 +36,7 @@
       "pivot": 112.76,
       "dist": 0.0027,
       "market_cap": 12059162500.0,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "DK",
@@ -46,8 +46,8 @@
       "ad": "B",
       "pivot": 82.37,
       "dist": 0.0516,
-      "market_cap": 4663981852.682632,
-      "as_of": "2026-09-20"
+      "market_cap": 4557954498.54,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "CMBT",
@@ -57,8 +57,8 @@
       "ad": "A",
       "pivot": null,
       "dist": null,
-      "market_cap": 5652506967.290821,
-      "as_of": "2026-09-20"
+      "market_cap": 5704737658.54,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "AVAH",
@@ -69,7 +69,7 @@
       "pivot": 14.81,
       "dist": 0.077,
       "market_cap": 3123739765.328416,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "TEAM",
@@ -79,8 +79,8 @@
       "ad": "A",
       "pivot": 198.7,
       "dist": 0.0336,
-      "market_cap": 48797569367.55,
-      "as_of": "2026-09-20"
+      "market_cap": 49531671931.049995,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "WT",
@@ -90,8 +90,8 @@
       "ad": "A",
       "pivot": null,
       "dist": null,
-      "market_cap": 3625684862.467827,
-      "as_of": "2026-09-20"
+      "market_cap": 3593867272.9199996,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "SNDK",
@@ -102,7 +102,18 @@
       "pivot": 1807.48,
       "dist": 0.0087,
       "market_cap": 262356486507.5182,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
+    },
+    {
+      "ticker": "GRDN",
+      "bucket": "full_match",
+      "score": 0.8212,
+      "gates": "CANSLIM",
+      "ad": "A",
+      "pivot": 44.1,
+      "dist": -0.0202,
+      "market_cap": 2797196144.64,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "ESTC",
@@ -113,7 +124,7 @@
       "pivot": 102.52,
       "dist": 0.1518,
       "market_cap": 9141285801.439232,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "UFCS",
@@ -124,7 +135,7 @@
       "pivot": 56.84,
       "dist": 0.0431,
       "market_cap": 1408523552.5482025,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "GCT",
@@ -135,7 +146,7 @@
       "pivot": 54.87,
       "dist": 0.0366,
       "market_cap": 1887643149.615799,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "NVGS",
@@ -146,7 +157,7 @@
       "pivot": 25.58,
       "dist": 0.0227,
       "market_cap": 1505966680.23,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "ADM",
@@ -156,30 +167,30 @@
       "ad": "C",
       "pivot": 88.85,
       "dist": 0.0413,
-      "market_cap": 41795535626.08957,
-      "as_of": "2026-09-20"
+      "market_cap": 40185535221.259995,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "CNO",
       "bucket": "buyable",
-      "score": 0.9334,
+      "score": 0.9335,
       "gates": "caNSlIM",
       "ad": "B",
       "pivot": 57.69,
       "dist": 0.043,
-      "market_cap": 5083123995.681232,
-      "as_of": "2026-09-20"
+      "market_cap": 5033162582.4,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "LTC",
       "bucket": "buyable",
-      "score": 0.9288,
+      "score": 0.9289,
       "gates": "CaNSlIM",
       "ad": "B",
       "pivot": 43.7,
       "dist": 0.0261,
       "market_cap": 2294220835.3080254,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "UVE",
@@ -189,8 +200,8 @@
       "ad": "B",
       "pivot": 44.06,
       "dist": -0.0023,
-      "market_cap": 1233719688.108902,
-      "as_of": "2026-09-20"
+      "market_cap": 1213960085.1,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "SAFT",
@@ -201,18 +212,18 @@
       "pivot": 103.61,
       "dist": 0.001,
       "market_cap": 1519576723.180893,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "MTCH",
       "bucket": "buyable",
-      "score": 0.9095,
+      "score": 0.9096,
       "gates": "caNslIM",
       "ad": "C",
       "pivot": 45.04,
       "dist": 0.0407,
       "market_cap": 10077114101.168236,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "THC",
@@ -223,29 +234,29 @@
       "pivot": 265.15,
       "dist": 0.0119,
       "market_cap": 21095172023.68164,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "BOW",
       "bucket": "buyable",
-      "score": 0.8994,
+      "score": 0.8995,
       "gates": "caNSlIM",
       "ad": "A",
       "pivot": 33.84,
       "dist": 0.003,
       "market_cap": 1111497043.99374,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "THG",
       "bucket": "buyable",
-      "score": 0.899,
+      "score": 0.8991,
       "gates": "cANslIM",
       "ad": "B",
       "pivot": 236.17,
       "dist": 0.0375,
       "market_cap": 8107192119.187729,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "NSIT",
@@ -256,7 +267,7 @@
       "pivot": 168.6,
       "dist": 0.0812,
       "market_cap": 4716947207.826233,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "AAMI",
@@ -267,7 +278,7 @@
       "pivot": 98.62,
       "dist": 0.0799,
       "market_cap": 3104676516.578003,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "PNTG",
@@ -278,7 +289,7 @@
       "pivot": 42.84,
       "dist": 0.0752,
       "market_cap": 1396115130.4180298,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "MBIN",
@@ -289,18 +300,18 @@
       "pivot": 56.97,
       "dist": 0.086,
       "market_cap": 2427686242.70813,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "KNTK",
       "bucket": "watchlist",
-      "score": 0.9069,
+      "score": 0.907,
       "gates": "CaNSlIM",
       "ad": "B",
       "pivot": 57.02,
       "dist": 0.0617,
       "market_cap": 4303661070.5,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "PAYC",
@@ -310,8 +321,8 @@
       "ad": "A",
       "pivot": 245.08,
       "dist": 0.0767,
-      "market_cap": 9866628280.347198,
-      "as_of": "2026-09-20"
+      "market_cap": 10197003082.56,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "DELL",
@@ -321,8 +332,8 @@
       "ad": "A",
       "pivot": null,
       "dist": null,
-      "market_cap": 360690200977.005,
-      "as_of": "2026-09-20"
+      "market_cap": 365789433202.49994,
+      "as_of": "2026-09-22"
     },
     {
       "ticker": "TNK",
@@ -333,7 +344,7 @@
       "pivot": null,
       "dist": null,
       "market_cap": 3442001116.0,
-      "as_of": "2026-09-20"
+      "as_of": "2026-09-22"
     }
   ]
 }
