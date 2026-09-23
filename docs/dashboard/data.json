@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-22",
     "2026-09-18",
     "2026-09-17",
     "2026-09-16",
@@ -6457,6 +6458,78 @@
         }
       ],
       "full_matches_total": 11
+    },
+    "2026-09-22": {
+      "date": "2026-09-22",
+      "run_id": "2026-09-22_235625",
+      "source_url": "../runs/2026-09-22_235625/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "AYA",
+          "score": 0.9938,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "HALO",
+          "score": 0.9799,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "WT",
+          "score": 0.9417,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FIVN",
+          "score": 0.9254,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "TEAM",
+          "score": 0.9089,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "AVAH",
+          "score": 0.9034,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "DK",
+          "score": 0.9007,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 8,
+          "ticker": "ESTC",
+          "score": 0.8402,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "GRDN",
+          "score": 0.8299,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 9
     }
   },
   "companies": {
@@ -8055,6 +8128,13 @@
       "industry": "REIT - Healthcare Facilities",
       "sector": "Real Estate",
       "blurb": "LTC Properties, Inc. is a real estate investment trust focused on seniors housing and health care properties, principally investing through SHOP, triple-net leases, joint ventures, and structured finance solutions."
+    },
+    "SPNT": {
+      "ticker": "SPNT",
+      "name": "SiriusPoint Ltd.",
+      "industry": "Insurance - Reinsurance",
+      "sector": "Financial Services",
+      "blurb": "SiriusPoint Ltd. provides multi-line reinsurance and insurance products and services worldwide."
     }
   }
 }
