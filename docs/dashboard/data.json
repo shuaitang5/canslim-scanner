@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-23",
     "2026-09-22",
     "2026-09-18",
     "2026-09-17",
@@ -6537,6 +6538,71 @@
         }
       ],
       "full_matches_total": 10
+    },
+    "2026-09-23": {
+      "date": "2026-09-23",
+      "run_id": "2026-09-25_001107",
+      "source_url": "../runs/2026-09-25_001107/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "HALO",
+          "score": 0.9794,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AYA",
+          "score": 0.9611,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "WT",
+          "score": 0.945,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "TEAM",
+          "score": 0.9279,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "FIVN",
+          "score": 0.9256,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "DK",
+          "score": 0.8935,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 7,
+          "ticker": "AVAH",
+          "score": 0.8856,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "ESTC",
+          "score": 0.8573,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 8
     }
   },
   "companies": {
@@ -8142,6 +8208,13 @@
       "industry": "Insurance - Reinsurance",
       "sector": "Financial Services",
       "blurb": "SiriusPoint Ltd. provides multi-line reinsurance and insurance products and services worldwide."
+    },
+    "KRT": {
+      "ticker": "KRT",
+      "name": "KRT",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
