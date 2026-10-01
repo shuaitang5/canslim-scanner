@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-29",
     "2026-09-28",
     "2026-09-25",
     "2026-09-24",
@@ -6794,6 +6795,64 @@
         }
       ],
       "full_matches_total": 8
+    },
+    "2026-09-29": {
+      "date": "2026-09-29",
+      "run_id": "2026-10-01_005639",
+      "source_url": "../runs/2026-10-01_005639/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "HALO",
+          "score": 0.9602,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "WT",
+          "score": 0.9602,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "AYA",
+          "score": 0.931,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 4,
+          "ticker": "TEAM",
+          "score": 0.8711,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "DK",
+          "score": 0.8676,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 6,
+          "ticker": "AVAH",
+          "score": 0.8495,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "ESTC",
+          "score": 0.8381,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -8410,6 +8469,13 @@
     "NHC": {
       "ticker": "NHC",
       "name": "NHC",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "LGND": {
+      "ticker": "LGND",
+      "name": "LGND",
       "industry": "",
       "sector": "",
       "blurb": ""
