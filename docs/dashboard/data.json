@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-09-30",
     "2026-09-29",
     "2026-09-28",
     "2026-09-25",
@@ -6853,6 +6854,57 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-09-30": {
+      "date": "2026-09-30",
+      "run_id": "2026-10-02_011320",
+      "source_url": "../runs/2026-10-02_011320/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "HALO",
+          "score": 0.9656,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AYA",
+          "score": 0.9204,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "DK",
+          "score": 0.8849,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 4,
+          "ticker": "TEAM",
+          "score": 0.8813,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "ESTC",
+          "score": 0.8611,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "AVAH",
+          "score": 0.8289,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
