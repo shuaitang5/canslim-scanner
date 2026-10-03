@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-01",
     "2026-09-30",
     "2026-09-29",
     "2026-09-28",
@@ -6905,6 +6906,78 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-10-01": {
+      "date": "2026-10-01",
+      "run_id": "2026-10-03_005044",
+      "source_url": "../runs/2026-10-03_005044/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "HALO",
+          "score": 0.9288,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AYA",
+          "score": 0.9233,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "TEAM",
+          "score": 0.913,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FIVN",
+          "score": 0.9086,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "DK",
+          "score": 0.9066,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 6,
+          "ticker": "ESTC",
+          "score": 0.8645,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "SNDK",
+          "score": 0.8491,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 8,
+          "ticker": "AVAH",
+          "score": 0.826,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "GRDN",
+          "score": 0.7745,
+          "gates": "CANSLIM",
+          "ad": "B"
+        }
+      ],
+      "full_matches_total": 9
     }
   },
   "companies": {
