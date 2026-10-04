@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-02",
     "2026-10-01",
     "2026-09-30",
     "2026-09-29",
@@ -6978,6 +6979,57 @@
         }
       ],
       "full_matches_total": 9
+    },
+    "2026-10-02": {
+      "date": "2026-10-02",
+      "run_id": "2026-10-04_001550",
+      "source_url": "../runs/2026-10-04_001550/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "HALO",
+          "score": 0.9452,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "TEAM",
+          "score": 0.9057,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "DK",
+          "score": 0.9046,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 4,
+          "ticker": "AYA",
+          "score": 0.8956,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "ESTC",
+          "score": 0.8736,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "AVAH",
+          "score": 0.8349,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -8601,6 +8653,13 @@
     "LGND": {
       "ticker": "LGND",
       "name": "LGND",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "IDT": {
+      "ticker": "IDT",
+      "name": "IDT",
       "industry": "",
       "sector": "",
       "blurb": ""
