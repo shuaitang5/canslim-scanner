@@ -6982,8 +6982,8 @@
     },
     "2026-10-02": {
       "date": "2026-10-02",
-      "run_id": "2026-10-04_001550",
-      "source_url": "../runs/2026-10-04_001550/",
+      "run_id": "2026-10-05_002039",
+      "source_url": "../runs/2026-10-05_002039/",
       "regime": "UPTREND",
       "full_matches": [
         {
@@ -7027,9 +7027,16 @@
           "score": 0.8349,
           "gates": "CANSLIM",
           "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "GRDN",
+          "score": 0.7674,
+          "gates": "CANSLIM",
+          "ad": "B"
         }
       ],
-      "full_matches_total": 6
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -8638,31 +8645,31 @@
     },
     "KRT": {
       "ticker": "KRT",
-      "name": "KRT",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Karat Packaging Inc.",
+      "industry": "Packaging & Containers",
+      "sector": "Consumer Cyclical",
+      "blurb": "Karat Packaging Inc., together with its subsidiaries, engages in the manufacture and distribution of single-use disposable products in plastic, paper, biopolymer-based, and other compostable forms used in various restaurant and foodservice settings."
     },
     "NHC": {
       "ticker": "NHC",
-      "name": "NHC",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "National HealthCare Corporation",
+      "industry": "Medical Care Facilities",
+      "sector": "Healthcare",
+      "blurb": "National HealthCare Corporation engages in the operation of services to skilled nursing facilities, assisted and independent living facilities, homecare and hospice agencies, and health hospitals."
     },
     "LGND": {
       "ticker": "LGND",
-      "name": "LGND",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Ligand Pharmaceuticals Incorporated",
+      "industry": "Biotechnology",
+      "sector": "Healthcare",
+      "blurb": "Ligand Pharmaceuticals Incorporated, a biopharmaceutical company, develops and licenses biopharmaceutical assets worldwide. It offers Pradefovir, Posaconazole, Voriconazole, CAPVAXIVE, NOXAFIL, MenFive, and ZELSUVMI for infectious disease; EVOMELA and KYPROLIS for multiple myeloma; FILSPARI for the treatment of immu\u2026"
     },
     "IDT": {
       "ticker": "IDT",
-      "name": "IDT",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "IDT Corporation",
+      "industry": "Telecom Services",
+      "sector": "Communication Services",
+      "blurb": "IDT Corporation, together with its subsidiaries, provides communications and payment services in the United States, the United Kingdom, and internationally. It operates in four segments: National Retail Solutions, Fintech, Net2phone, and Traditional Communications."
     }
   }
 }
