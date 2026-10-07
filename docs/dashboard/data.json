@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-06",
     "2026-10-05",
     "2026-10-02",
     "2026-10-01",
@@ -7103,6 +7104,64 @@
         }
       ],
       "full_matches_total": 8
+    },
+    "2026-10-06": {
+      "date": "2026-10-06",
+      "run_id": "2026-10-07_011018",
+      "source_url": "../runs/2026-10-07_011018/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "TEAM",
+          "score": 0.9299,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "DK",
+          "score": 0.9168,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 3,
+          "ticker": "WT",
+          "score": 0.9133,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "AYA",
+          "score": 0.8992,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "ESTC",
+          "score": 0.8811,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "FIVN",
+          "score": 0.8555,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "AVAH",
+          "score": 0.8274,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
