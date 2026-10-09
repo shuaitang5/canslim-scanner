@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-08",
     "2026-10-06",
     "2026-10-05",
     "2026-10-02",
@@ -7162,6 +7163,78 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-10-08": {
+      "date": "2026-10-08",
+      "run_id": "2026-10-09_013537",
+      "source_url": "../runs/2026-10-09_013537/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "TEAM",
+          "score": 0.9303,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "FRSH",
+          "score": 0.9182,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "ESTC",
+          "score": 0.8867,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "DK",
+          "score": 0.8852,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 5,
+          "ticker": "AYA",
+          "score": 0.8812,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 6,
+          "ticker": "FIVN",
+          "score": 0.8693,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "CBL",
+          "score": 0.8381,
+          "gates": "CAnSLIM",
+          "ad": "E"
+        },
+        {
+          "rank": 8,
+          "ticker": "AVAH",
+          "score": 0.8262,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "GRDN",
+          "score": 0.7652,
+          "gates": "CANSLIM",
+          "ad": "B"
+        }
+      ],
+      "full_matches_total": 9
     }
   },
   "companies": {
@@ -8795,6 +8868,41 @@
       "industry": "Telecom Services",
       "sector": "Communication Services",
       "blurb": "IDT Corporation, together with its subsidiaries, provides communications and payment services in the United States, the United Kingdom, and internationally. It operates in four segments: National Retail Solutions, Fintech, Net2phone, and Traditional Communications."
+    },
+    "CRVL": {
+      "ticker": "CRVL",
+      "name": "CorVel Corporation",
+      "industry": "Insurance Brokers",
+      "sector": "Financial Services",
+      "blurb": "CorVel Corporation provides workers' compensation, general and auto liability, and hospital bill auditing and payment integrity solutions. It applies technology, including artificial intelligence, machine learning, and natural language processing to enhance the managing of episodes of care and the related health car\u2026"
+    },
+    "FIGS": {
+      "ticker": "FIGS",
+      "name": "FIGS, Inc.",
+      "industry": "Apparel Manufacturing",
+      "sector": "Consumer Cyclical",
+      "blurb": "FIGS, Inc., together with its subsidiary, FIGS Canada, Inc., operates as a direct-to-consumer healthcare apparel and lifestyle company in the United States and internationally. The company designs and sells scrubwear and non-scrubwear offerings, such as outerwear, underscrubs, footwear, compression socks, lab coats,\u2026"
+    },
+    "FRSH": {
+      "ticker": "FRSH",
+      "name": "Freshworks Inc.",
+      "industry": "Software - Application",
+      "sector": "Technology",
+      "blurb": "Freshworks Inc., a software development company, provides software-as-a-service products in North America, Europe, the Middle East, Africa, the Asia Pacific, and internationally. The company's software-as-a-service solutions includes Customer Experience (CX) and Employee Experience (EX)."
+    },
+    "RGA": {
+      "ticker": "RGA",
+      "name": "Reinsurance Group of America, Incorporated",
+      "industry": "Insurance - Reinsurance",
+      "sector": "Financial Services",
+      "blurb": "Reinsurance Group of America, Incorporated provides life and health, and asset-intensive reinsurance in the United States, Latin America, Canada, Europe, the Middle East, Africa, Asia, and Australia."
+    },
+    "RNR": {
+      "ticker": "RNR",
+      "name": "RenaissanceRe Holdings Ltd.",
+      "industry": "Insurance - Reinsurance",
+      "sector": "Financial Services",
+      "blurb": "RenaissanceRe Holdings Ltd., together with its subsidiaries, provides reinsurance and insurance products in the United States and internationally. The company operates through Property, and Casualty and Specialty segments."
     }
   }
 }
