@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-09",
     "2026-10-08",
     "2026-10-06",
     "2026-10-05",
@@ -7235,6 +7236,71 @@
         }
       ],
       "full_matches_total": 9
+    },
+    "2026-10-09": {
+      "date": "2026-10-09",
+      "run_id": "2026-10-11_003629",
+      "source_url": "../runs/2026-10-11_003629/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FRSH",
+          "score": 0.9316,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "TEAM",
+          "score": 0.9308,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "ESTC",
+          "score": 0.9057,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "AYA",
+          "score": 0.8997,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "FIVN",
+          "score": 0.8882,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "DK",
+          "score": 0.8696,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 7,
+          "ticker": "CBL",
+          "score": 0.8361,
+          "gates": "CAnSLIM",
+          "ad": "E"
+        },
+        {
+          "rank": 8,
+          "ticker": "AVAH",
+          "score": 0.826,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 8
     }
   },
   "companies": {
