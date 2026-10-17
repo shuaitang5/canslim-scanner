@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-16",
     "2026-10-15",
     "2026-10-13",
     "2026-10-12",
@@ -7506,6 +7507,57 @@
         }
       ],
       "full_matches_total": 8
+    },
+    "2026-10-16": {
+      "date": "2026-10-16",
+      "run_id": "2026-10-17_234006",
+      "source_url": "../runs/2026-10-17_234006/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FRSH",
+          "score": 0.9162,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "TEAM",
+          "score": 0.9081,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "ESTC",
+          "score": 0.8711,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "CMBT",
+          "score": 0.8554,
+          "gates": "CAnSLIM",
+          "ad": "D"
+        },
+        {
+          "rank": 5,
+          "ticker": "CBL",
+          "score": 0.841,
+          "gates": "CAnSLIM",
+          "ad": "E"
+        },
+        {
+          "rank": 6,
+          "ticker": "FIVN",
+          "score": 0.8336,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -9174,6 +9226,13 @@
       "industry": "Insurance - Reinsurance",
       "sector": "Financial Services",
       "blurb": "RenaissanceRe Holdings Ltd., together with its subsidiaries, provides reinsurance and insurance products in the United States and internationally. The company operates through Property, and Casualty and Specialty segments."
+    },
+    "MORN": {
+      "ticker": "MORN",
+      "name": "Morningstar, Inc.",
+      "industry": "Financial Data & Stock Exchanges",
+      "sector": "Financial Services",
+      "blurb": "Morningstar, Inc. provides independent investment insights for investors in the United States, Asia, Australia, Canada, Continental Europe, the United Kingdom, and internationally."
     }
   }
 }
