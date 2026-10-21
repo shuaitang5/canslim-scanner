@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-19",
     "2026-10-16",
     "2026-10-15",
     "2026-10-13",
@@ -7558,6 +7559,50 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-10-19": {
+      "date": "2026-10-19",
+      "run_id": "2026-10-21_001606",
+      "source_url": "../runs/2026-10-21_001606/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FRSH",
+          "score": 0.9386,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "TEAM",
+          "score": 0.926,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "ESTC",
+          "score": 0.8888,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "CMBT",
+          "score": 0.8597,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 5,
+          "ticker": "FIVN",
+          "score": 0.8453,
+          "gates": "CANSLIM",
+          "ad": "B"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -9233,6 +9278,13 @@
       "industry": "Financial Data & Stock Exchanges",
       "sector": "Financial Services",
       "blurb": "Morningstar, Inc. provides independent investment insights for investors in the United States, Asia, Australia, Canada, Continental Europe, the United Kingdom, and internationally."
+    },
+    "HSTM": {
+      "ticker": "HSTM",
+      "name": "HSTM",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
