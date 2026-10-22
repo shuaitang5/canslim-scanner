@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-20",
     "2026-10-19",
     "2026-10-16",
     "2026-10-15",
@@ -7603,6 +7604,50 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-10-20": {
+      "date": "2026-10-20",
+      "run_id": "2026-10-22_002047",
+      "source_url": "../runs/2026-10-22_002047/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "FRSH",
+          "score": 0.9484,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "TEAM",
+          "score": 0.9322,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "ESTC",
+          "score": 0.8948,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FIVN",
+          "score": 0.8611,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "CMBT",
+          "score": 0.8533,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -9281,10 +9326,10 @@
     },
     "HSTM": {
       "ticker": "HSTM",
-      "name": "HSTM",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "HealthStream, Inc.",
+      "industry": "Health Information Services",
+      "sector": "Healthcare",
+      "blurb": "HealthStream, Inc. provides Software-as-a-Service (SaaS) based applications for healthcare organizations in the United States."
     }
   }
 }
