@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-21",
     "2026-10-20",
     "2026-10-19",
     "2026-10-16",
@@ -7645,6 +7646,50 @@
           "score": 0.8533,
           "gates": "CAnSLIM",
           "ad": "C"
+        }
+      ],
+      "full_matches_total": 5
+    },
+    "2026-10-21": {
+      "date": "2026-10-21",
+      "run_id": "2026-10-23_001648",
+      "source_url": "../runs/2026-10-23_001648/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "MEDP",
+          "score": 0.9697,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "TEAM",
+          "score": 0.9317,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "ESTC",
+          "score": 0.9127,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "CMBT",
+          "score": 0.8785,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 5,
+          "ticker": "FIVN",
+          "score": 0.8698,
+          "gates": "CANSLIM",
+          "ad": "B"
         }
       ],
       "full_matches_total": 5
