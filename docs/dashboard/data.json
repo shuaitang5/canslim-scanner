@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-22",
     "2026-10-21",
     "2026-10-20",
     "2026-10-19",
@@ -7693,6 +7694,36 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-10-22": {
+      "date": "2026-10-22",
+      "run_id": "2026-10-24_000955",
+      "source_url": "../runs/2026-10-24_000955/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "TEAM",
+          "score": 0.9254,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "ESTC",
+          "score": 0.906,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "CMBT",
+          "score": 0.8712,
+          "gates": "CANSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 3
     }
   },
   "companies": {
@@ -9375,6 +9406,20 @@
       "industry": "Health Information Services",
       "sector": "Healthcare",
       "blurb": "HealthStream, Inc. provides Software-as-a-Service (SaaS) based applications for healthcare organizations in the United States."
+    },
+    "FTDR": {
+      "ticker": "FTDR",
+      "name": "Frontdoor, Inc.",
+      "industry": "Personal Services",
+      "sector": "Consumer Cyclical",
+      "blurb": "Frontdoor, Inc. provides home warranties and new home builder warranties in the United States."
+    },
+    "TW": {
+      "ticker": "TW",
+      "name": "Tradeweb Markets Inc.",
+      "industry": "Capital Markets",
+      "sector": "Financial Services",
+      "blurb": "Tradeweb Markets Inc. builds and operates electronic marketplaces in the United States and internationally."
     }
   }
 }
