@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-23",
     "2026-10-22",
     "2026-10-21",
     "2026-10-20",
@@ -7724,6 +7725,50 @@
         }
       ],
       "full_matches_total": 3
+    },
+    "2026-10-23": {
+      "date": "2026-10-23",
+      "run_id": "2026-10-24_235305",
+      "source_url": "../runs/2026-10-24_235305/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "RNG",
+          "score": 0.9628,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "TEAM",
+          "score": 0.9316,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "ESTC",
+          "score": 0.9183,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FIVN",
+          "score": 0.9021,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "CMBT",
+          "score": 0.8803,
+          "gates": "CANSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -9420,6 +9465,13 @@
       "industry": "Capital Markets",
       "sector": "Financial Services",
       "blurb": "Tradeweb Markets Inc. builds and operates electronic marketplaces in the United States and internationally."
+    },
+    "SIGI": {
+      "ticker": "SIGI",
+      "name": "SIGI",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
