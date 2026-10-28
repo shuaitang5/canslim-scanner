@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-26",
     "2026-10-23",
     "2026-10-22",
     "2026-10-21",
@@ -7769,6 +7770,43 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-10-26": {
+      "date": "2026-10-26",
+      "run_id": "2026-10-28_005121",
+      "source_url": "../runs/2026-10-28_005121/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "RNG",
+          "score": 0.9631,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "TEAM",
+          "score": 0.9206,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "ESTC",
+          "score": 0.9192,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "FIVN",
+          "score": 0.9068,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 4
     }
   },
   "companies": {
@@ -9469,6 +9507,13 @@
     "SIGI": {
       "ticker": "SIGI",
       "name": "SIGI",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "CUBI": {
+      "ticker": "CUBI",
+      "name": "CUBI",
       "industry": "",
       "sector": "",
       "blurb": ""
