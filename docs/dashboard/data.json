@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-10-27",
     "2026-10-26",
     "2026-10-23",
     "2026-10-22",
@@ -7807,6 +7808,57 @@
         }
       ],
       "full_matches_total": 4
+    },
+    "2026-10-27": {
+      "date": "2026-10-27",
+      "run_id": "2026-10-29_012623",
+      "source_url": "../runs/2026-10-29_012623/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "RNG",
+          "score": 0.9588,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "FFIV",
+          "score": 0.9449,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "ESTC",
+          "score": 0.9161,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "OKTA",
+          "score": 0.9153,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "TEAM",
+          "score": 0.9111,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "MRVL",
+          "score": 0.843,
+          "gates": "CAnSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
