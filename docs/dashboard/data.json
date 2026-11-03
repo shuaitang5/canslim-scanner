@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-02",
     "2026-10-30",
     "2026-10-29",
     "2026-10-28",
@@ -8008,6 +8009,71 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-11-02": {
+      "date": "2026-11-02",
+      "run_id": "2026-11-03_031250",
+      "source_url": "../runs/2026-11-03_031250/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "LNG",
+          "score": 0.9399,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 2,
+          "ticker": "CVLT",
+          "score": 0.9108,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "RNG",
+          "score": 0.9076,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 4,
+          "ticker": "TDC",
+          "score": 0.8952,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "EBAY",
+          "score": 0.885,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "OKTA",
+          "score": 0.8431,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "TEAM",
+          "score": 0.8386,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 8,
+          "ticker": "ESTC",
+          "score": 0.8207,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 8
     }
   },
   "companies": {
@@ -9760,6 +9826,41 @@
       "industry": "Drug Manufacturers - General",
       "sector": "Healthcare",
       "blurb": "Novartis AG researches, develops, manufactures, distributes, markets, and sells pharmaceutical medicines in Switzerland and internationally. The company offers Entresto, an angiotensin receptorneprilysin inhibitor to treat symptomatic chronic heart failure; Cosentyx to treat plaque psoriasis, pso riatic arthritis, a\u2026"
+    },
+    "ACIW": {
+      "ticker": "ACIW",
+      "name": "ACI Worldwide, Inc.",
+      "industry": "Software - Infrastructure",
+      "sector": "Technology",
+      "blurb": "ACI Worldwide, Inc. develops, markets, installs, and supports software products and services for facilitating electronic payments in the United States and worldwide."
+    },
+    "EBAY": {
+      "ticker": "EBAY",
+      "name": "eBay Inc.",
+      "industry": "Internet Retail",
+      "sector": "Consumer Cyclical",
+      "blurb": "eBay Inc., together with its subsidiaries, operates marketplace platforms that connect buyers and sellers in the United States, the United Kingdom, China, Germany, and internationally."
+    },
+    "EPAC": {
+      "ticker": "EPAC",
+      "name": "Enerpac Tool Group Corp.",
+      "industry": "Specialty Industrial Machinery",
+      "sector": "Industrials",
+      "blurb": "Enerpac Tool Group Corp. manufactures and sells a range of industrial products and solutions in the United States, the United Kingdom, Germany, Australia, Canada, China, Saudi Arabia, Brazil, France, the Netherlands, and internationally."
+    },
+    "EXLS": {
+      "ticker": "EXLS",
+      "name": "ExlService Holdings, Inc.",
+      "industry": "Information Technology Services",
+      "sector": "Technology",
+      "blurb": "ExlService Holdings, Inc., operates as a data and artificial intelligence (\u0093AI\u0094) company in the North America, the United Kingdom, Europe, and internationally. The company operates through Insurance; Healthcare and Life Sciences; Banking, Capital Markets, and Diversified Industries; and International Growth Markets."
+    },
+    "PCTY": {
+      "ticker": "PCTY",
+      "name": "Paylocity Holding Corporation",
+      "industry": "Software - Application",
+      "sector": "Technology",
+      "blurb": "Paylocity Holding Corporation provides cloud-based human capital management, finance, and IT software solutions in the United States. The company offers payroll solutions comprising payroll and tax services, global payroll, on-demand payment, garnishments, and elevate payroll; human resources (HR) solutions consisti\u2026"
     }
   }
 }
