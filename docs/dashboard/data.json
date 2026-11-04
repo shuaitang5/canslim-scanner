@@ -8012,16 +8012,16 @@
     },
     "2026-11-02": {
       "date": "2026-11-02",
-      "run_id": "2026-11-03_031250",
-      "source_url": "../runs/2026-11-03_031250/",
+      "run_id": "2026-11-04_014641",
+      "source_url": "../runs/2026-11-04_014641/",
       "regime": "UPTREND",
       "full_matches": [
         {
           "rank": 1,
-          "ticker": "LNG",
-          "score": 0.9399,
+          "ticker": "CAKE",
+          "score": 0.9679,
           "gates": "CANSLIM",
-          "ad": "B"
+          "ad": "C"
         },
         {
           "rank": 2,
@@ -8046,34 +8046,27 @@
         },
         {
           "rank": 5,
-          "ticker": "EBAY",
-          "score": 0.885,
-          "gates": "CANSLIM",
-          "ad": "A"
-        },
-        {
-          "rank": 6,
           "ticker": "OKTA",
-          "score": 0.8431,
+          "score": 0.8432,
           "gates": "CAnSLIM",
           "ad": "A"
         },
         {
-          "rank": 7,
+          "rank": 6,
           "ticker": "TEAM",
           "score": 0.8386,
           "gates": "CAnSLIM",
           "ad": "B"
         },
         {
-          "rank": 8,
+          "rank": 7,
           "ticker": "ESTC",
           "score": 0.8207,
           "gates": "CANSLIM",
           "ad": "A"
         }
       ],
-      "full_matches_total": 8
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -9861,6 +9854,13 @@
       "industry": "Software - Application",
       "sector": "Technology",
       "blurb": "Paylocity Holding Corporation provides cloud-based human capital management, finance, and IT software solutions in the United States. The company offers payroll solutions comprising payroll and tax services, global payroll, on-demand payment, garnishments, and elevate payroll; human resources (HR) solutions consisti\u2026"
+    },
+    "CAKE": {
+      "ticker": "CAKE",
+      "name": "The Cheesecake Factory Incorporated",
+      "industry": "Restaurants",
+      "sector": "Consumer Cyclical",
+      "blurb": "The Cheesecake Factory Incorporated operates and licenses restaurants in the United States and Canada. It operates bakeries that produce cheesecakes and other baked products for its restaurants, international licensees, third-party bakery customers, external foodservice operators, retailers, and distributors."
     }
   }
 }
