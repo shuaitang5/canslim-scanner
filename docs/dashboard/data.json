@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-03",
     "2026-11-02",
     "2026-10-30",
     "2026-10-29",
@@ -8067,6 +8068,78 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-11-03": {
+      "date": "2026-11-03",
+      "run_id": "2026-11-05_015528",
+      "source_url": "../runs/2026-11-05_015528/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "CAKE",
+          "score": 0.9535,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 2,
+          "ticker": "CVLT",
+          "score": 0.9266,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "RNG",
+          "score": 0.9093,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 4,
+          "ticker": "TDC",
+          "score": 0.878,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "FIVN",
+          "score": 0.877,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 6,
+          "ticker": "OKTA",
+          "score": 0.8769,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "GEV",
+          "score": 0.8457,
+          "gates": "CAnSLIM",
+          "ad": "D"
+        },
+        {
+          "rank": 8,
+          "ticker": "TEAM",
+          "score": 0.8415,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 9,
+          "ticker": "ESTC",
+          "score": 0.806,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 9
     }
   },
   "companies": {
@@ -9861,6 +9934,13 @@
       "industry": "Restaurants",
       "sector": "Consumer Cyclical",
       "blurb": "The Cheesecake Factory Incorporated operates and licenses restaurants in the United States and Canada. It operates bakeries that produce cheesecakes and other baked products for its restaurants, international licensees, third-party bakery customers, external foodservice operators, retailers, and distributors."
+    },
+    "APH": {
+      "ticker": "APH",
+      "name": "Amphenol Corporation",
+      "industry": "Electronic Components",
+      "sector": "Technology",
+      "blurb": "Amphenol Corporation, together with its subsidiaries, designs, manufactures, and markets electrical, electronic, and fiber optic connectors in the United States, China, and internationally."
     }
   }
 }
