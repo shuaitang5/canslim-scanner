@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-04",
     "2026-11-03",
     "2026-11-02",
     "2026-10-30",
@@ -8140,6 +8141,57 @@
         }
       ],
       "full_matches_total": 9
+    },
+    "2026-11-04": {
+      "date": "2026-11-04",
+      "run_id": "2026-11-06_015703",
+      "source_url": "../runs/2026-11-06_015703/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "CAKE",
+          "score": 0.9818,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 2,
+          "ticker": "CVLT",
+          "score": 0.9228,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "RELY",
+          "score": 0.92,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 4,
+          "ticker": "RNG",
+          "score": 0.9085,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "TDC",
+          "score": 0.9012,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "OKTA",
+          "score": 0.8754,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -9941,6 +9993,13 @@
       "industry": "Electronic Components",
       "sector": "Technology",
       "blurb": "Amphenol Corporation, together with its subsidiaries, designs, manufactures, and markets electrical, electronic, and fiber optic connectors in the United States, China, and internationally."
+    },
+    "RELY": {
+      "ticker": "RELY",
+      "name": "Remitly Global, Inc.",
+      "industry": "Software - Infrastructure",
+      "sector": "Technology",
+      "blurb": "Remitly Global, Inc., a cross-border payment company engages in the provision of digital financial services in the United States, Canada, and internationally. It offers cross-border remittances and complementary financial services through mobile application and website."
     }
   }
 }
