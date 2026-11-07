@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-05",
     "2026-11-04",
     "2026-11-03",
     "2026-11-02",
@@ -8192,6 +8193,50 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-11-05": {
+      "date": "2026-11-05",
+      "run_id": "2026-11-07_012906",
+      "source_url": "../runs/2026-11-07_012906/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "CAKE",
+          "score": 0.9588,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 2,
+          "ticker": "PCTY",
+          "score": 0.9527,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "YOU",
+          "score": 0.901,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "RNG",
+          "score": 0.8838,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "SEZL",
+          "score": 0.8766,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
