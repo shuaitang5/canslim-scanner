@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-06",
     "2026-11-05",
     "2026-11-04",
     "2026-11-03",
@@ -8237,6 +8238,64 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-11-06": {
+      "date": "2026-11-06",
+      "run_id": "2026-11-08_005943",
+      "source_url": "../runs/2026-11-08_005943/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "PCTY",
+          "score": 0.962,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 2,
+          "ticker": "CAKE",
+          "score": 0.938,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 3,
+          "ticker": "GCT",
+          "score": 0.9173,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 4,
+          "ticker": "CVLT",
+          "score": 0.9094,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "QNST",
+          "score": 0.9063,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 6,
+          "ticker": "YOU",
+          "score": 0.8951,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "SEZL",
+          "score": 0.8724,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
