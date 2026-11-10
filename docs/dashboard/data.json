@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-09",
     "2026-11-06",
     "2026-11-05",
     "2026-11-04",
@@ -8296,6 +8297,64 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-11-09": {
+      "date": "2026-11-09",
+      "run_id": "2026-11-10_035438",
+      "source_url": "../runs/2026-11-10_035438/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "NBN",
+          "score": 0.9628,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 2,
+          "ticker": "CAKE",
+          "score": 0.9587,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 3,
+          "ticker": "PCTY",
+          "score": 0.9585,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "CVLT",
+          "score": 0.9426,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "YOU",
+          "score": 0.8827,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "SEZL",
+          "score": 0.8752,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "QNST",
+          "score": 0.8481,
+          "gates": "CANSLIM",
+          "ad": "D"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -10104,6 +10163,13 @@
       "industry": "Software - Infrastructure",
       "sector": "Technology",
       "blurb": "Remitly Global, Inc., a cross-border payment company engages in the provision of digital financial services in the United States, Canada, and internationally. It offers cross-border remittances and complementary financial services through mobile application and website."
+    },
+    "RGLD": {
+      "ticker": "RGLD",
+      "name": "Royal Gold, Inc.",
+      "industry": "Gold",
+      "sector": "Basic Materials",
+      "blurb": "Royal Gold, Inc., together with its subsidiaries, acquires and manages precious metal streams, royalties, and related interests in North America, South and Central America, Europe, the Middle East, Africa, and the Australia Pacific."
     }
   }
 }
