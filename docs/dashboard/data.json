@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-10",
     "2026-11-09",
     "2026-11-06",
     "2026-11-05",
@@ -8355,6 +8356,57 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-11-10": {
+      "date": "2026-11-10",
+      "run_id": "2026-11-11_013739",
+      "source_url": "../runs/2026-11-11_013739/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "PCTY",
+          "score": 0.958,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "CAKE",
+          "score": 0.9519,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 3,
+          "ticker": "NBN",
+          "score": 0.9346,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 4,
+          "ticker": "YOU",
+          "score": 0.8823,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "SEZL",
+          "score": 0.8753,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "QNST",
+          "score": 0.8376,
+          "gates": "CAnSLIM",
+          "ad": "D"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -10170,6 +10222,13 @@
       "industry": "Gold",
       "sector": "Basic Materials",
       "blurb": "Royal Gold, Inc., together with its subsidiaries, acquires and manages precious metal streams, royalties, and related interests in North America, South and Central America, Europe, the Middle East, Africa, and the Australia Pacific."
+    },
+    "J": {
+      "ticker": "J",
+      "name": "Jacobs Solutions Inc.",
+      "industry": "Engineering & Construction",
+      "sector": "Industrials",
+      "blurb": "Jacobs Solutions Inc. engages in the infrastructure and advanced facilities, and consulting businesses in the United States, Europe, Canada, India, Asia, Australia, New Zealand, the Middle East, and Africa."
     }
   }
 }
