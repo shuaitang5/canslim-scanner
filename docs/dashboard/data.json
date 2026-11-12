@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-11",
     "2026-11-10",
     "2026-11-09",
     "2026-11-06",
@@ -8407,6 +8408,71 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-11-11": {
+      "date": "2026-11-11",
+      "run_id": "2026-11-12_023730",
+      "source_url": "../runs/2026-11-12_023730/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "GCT",
+          "score": 0.9901,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "SN",
+          "score": 0.9869,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "PCTY",
+          "score": 0.9641,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "PLMR",
+          "score": 0.9436,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "TRGP",
+          "score": 0.9212,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 6,
+          "ticker": "YOU",
+          "score": 0.8827,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "SEZL",
+          "score": 0.8766,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "QNST",
+          "score": 0.8635,
+          "gates": "CANSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 8
     }
   },
   "companies": {
@@ -10229,6 +10295,41 @@
       "industry": "Engineering & Construction",
       "sector": "Industrials",
       "blurb": "Jacobs Solutions Inc. engages in the infrastructure and advanced facilities, and consulting businesses in the United States, Europe, Canada, India, Asia, Australia, New Zealand, the Middle East, and Africa."
+    },
+    "DLTR": {
+      "ticker": "DLTR",
+      "name": "DLTR",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "PLMR": {
+      "ticker": "PLMR",
+      "name": "PLMR",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "RVTY": {
+      "ticker": "RVTY",
+      "name": "RVTY",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "SN": {
+      "ticker": "SN",
+      "name": "SN",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "UPBD": {
+      "ticker": "UPBD",
+      "name": "UPBD",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
