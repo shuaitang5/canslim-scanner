@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-13",
     "2026-11-11",
     "2026-11-10",
     "2026-11-09",
@@ -8466,6 +8467,71 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-11-13": {
+      "date": "2026-11-13",
+      "run_id": "2026-11-14_015538",
+      "source_url": "../runs/2026-11-14_015538/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "GCT",
+          "score": 0.9901,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "SN",
+          "score": 0.9707,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "PCTY",
+          "score": 0.9521,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "PLMR",
+          "score": 0.944,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "TRGP",
+          "score": 0.9272,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 6,
+          "ticker": "HG",
+          "score": 0.9161,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "YOU",
+          "score": 0.9028,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "SEZL",
+          "score": 0.8789,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 8
     }
   },
   "companies": {
