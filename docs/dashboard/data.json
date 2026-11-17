@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-16",
     "2026-11-13",
     "2026-11-11",
     "2026-11-10",
@@ -8518,6 +8519,78 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-11-16": {
+      "date": "2026-11-16",
+      "run_id": "2026-11-17_041615",
+      "source_url": "../runs/2026-11-17_041615/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "SN",
+          "score": 0.9813,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "GCT",
+          "score": 0.9678,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "PLMR",
+          "score": 0.9664,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "PCTY",
+          "score": 0.9601,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "HG",
+          "score": 0.9318,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "TRGP",
+          "score": 0.9215,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 7,
+          "ticker": "YOU",
+          "score": 0.8983,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "ATEN",
+          "score": 0.8955,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 9,
+          "ticker": "SEZL",
+          "score": 0.8846,
+          "gates": "CANSLIM",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 9
     }
   },
   "companies": {
@@ -10375,6 +10448,13 @@
       "industry": "Software - Application",
       "sector": "Technology",
       "blurb": "Upbound Group, Inc., a technology and data-driven company, provides financial solutions in the United States, Puerto Rico, and Mexico. It operates through four segments: Acima, Rent-A-Center, Brigit, and Mexico."
+    },
+    "ASO": {
+      "ticker": "ASO",
+      "name": "Academy Sports and Outdoors, Inc.",
+      "industry": "Specialty Retail",
+      "sector": "Consumer Cyclical",
+      "blurb": "Academy Sports and Outdoors, Inc., through its subsidiaries, operates as a sporting goods and outdoor recreational retailer in the United States. The company's outdoors division comprises camping products, such as coolers and drinkware, camping accessories and equipment, and watersports and equipment; fishing produc\u2026"
     }
   }
 }
