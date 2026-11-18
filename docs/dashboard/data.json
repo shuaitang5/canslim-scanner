@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-17",
     "2026-11-16",
     "2026-11-13",
     "2026-11-11",
@@ -8591,6 +8592,85 @@
         }
       ],
       "full_matches_total": 9
+    },
+    "2026-11-17": {
+      "date": "2026-11-17",
+      "run_id": "2026-11-18_031536",
+      "source_url": "../runs/2026-11-18_031536/",
+      "regime": "UPTREND",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "GCT",
+          "score": 0.9658,
+          "gates": "CANSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 2,
+          "ticker": "PLMR",
+          "score": 0.9422,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "AER",
+          "score": 0.9318,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "PCTY",
+          "score": 0.9295,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "TRGP",
+          "score": 0.9265,
+          "gates": "CANSLIM",
+          "ad": "C"
+        },
+        {
+          "rank": 6,
+          "ticker": "HG",
+          "score": 0.9249,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "ATEN",
+          "score": 0.8987,
+          "gates": "CAnSLIM",
+          "ad": "B"
+        },
+        {
+          "rank": 8,
+          "ticker": "YOU",
+          "score": 0.8854,
+          "gates": "CANSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 9,
+          "ticker": "SEZL",
+          "score": 0.8805,
+          "gates": "CAnSLIM",
+          "ad": "A"
+        },
+        {
+          "rank": 10,
+          "ticker": "VIK",
+          "score": 0.8647,
+          "gates": "CANSLIM",
+          "ad": "C"
+        }
+      ],
+      "full_matches_total": 10
     }
   },
   "companies": {
@@ -10455,6 +10535,13 @@
       "industry": "Specialty Retail",
       "sector": "Consumer Cyclical",
       "blurb": "Academy Sports and Outdoors, Inc., through its subsidiaries, operates as a sporting goods and outdoor recreational retailer in the United States. The company's outdoors division comprises camping products, such as coolers and drinkware, camping accessories and equipment, and watersports and equipment; fishing produc\u2026"
+    },
+    "DEO": {
+      "ticker": "DEO",
+      "name": "Diageo plc",
+      "industry": "Beverages - Wineries & Distilleries",
+      "sector": "Consumer Defensive",
+      "blurb": "Diageo plc, together with its subsidiaries, engages in the production, marketing, and distribution of alcoholic beverages in North America, Europe, the Asia Pacific, Latin America and Caribbean, and Africa."
     }
   }
 }
