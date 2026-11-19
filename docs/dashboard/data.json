@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-18",
     "2026-11-17",
     "2026-11-16",
     "2026-11-13",
@@ -8671,6 +8672,71 @@
         }
       ],
       "full_matches_total": 10
+    },
+    "2026-11-18": {
+      "date": "2026-11-18",
+      "run_id": "2026-11-19_025412",
+      "source_url": "../runs/2026-11-19_025412/",
+      "regime": "CAUTION",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "GCT",
+          "score": 0.8972,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "AER",
+          "score": 0.8574,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "PLMR",
+          "score": 0.8563,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "PCTY",
+          "score": 0.8417,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "GDYN",
+          "score": 0.8356,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "ATEN",
+          "score": 0.8214,
+          "gates": "CAnSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "VIK",
+          "score": 0.814,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 8,
+          "ticker": "SEZL",
+          "score": 0.7974,
+          "gates": "CAnSLIm",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 8
     }
   },
   "companies": {
@@ -10542,6 +10608,27 @@
       "industry": "Beverages - Wineries & Distilleries",
       "sector": "Consumer Defensive",
       "blurb": "Diageo plc, together with its subsidiaries, engages in the production, marketing, and distribution of alcoholic beverages in North America, Europe, the Asia Pacific, Latin America and Caribbean, and Africa."
+    },
+    "GDYN": {
+      "ticker": "GDYN",
+      "name": "Grid Dynamics Holdings, Inc.",
+      "industry": "Information Technology Services",
+      "sector": "Technology",
+      "blurb": "Grid Dynamics Holdings, Inc., together with its subsidiaries, provides enterprise artificial intelligence and digital transformation services in North America, Europe, and internationally."
+    },
+    "SONO": {
+      "ticker": "SONO",
+      "name": "Sonos, Inc.",
+      "industry": "Consumer Electronics",
+      "sector": "Technology",
+      "blurb": "Sonos, Inc., together with its subsidiaries, designs, develops, manufactures, and sells audio products and services in the Americas, Europe, the Middle East, Africa, and the Asia Pacific."
+    },
+    "SPB": {
+      "ticker": "SPB",
+      "name": "Spectrum Brands Holdings, Inc.",
+      "industry": "Household & Personal Products",
+      "sector": "Consumer Defensive",
+      "blurb": "Spectrum Brands Holdings, Inc. operates as a branded consumer products and home essentials company in North America, Europe, the Middle East, Africa, Latin America, and Asia-Pacific regions."
     }
   }
 }
