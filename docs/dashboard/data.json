@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-19",
     "2026-11-18",
     "2026-11-17",
     "2026-11-16",
@@ -8737,6 +8738,64 @@
         }
       ],
       "full_matches_total": 8
+    },
+    "2026-11-19": {
+      "date": "2026-11-19",
+      "run_id": "2026-11-20_024639",
+      "source_url": "../runs/2026-11-20_024639/",
+      "regime": "CAUTION",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "GCT",
+          "score": 0.897,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "PLMR",
+          "score": 0.8564,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "PCTY",
+          "score": 0.8424,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "GDYN",
+          "score": 0.8352,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "ATEN",
+          "score": 0.8215,
+          "gates": "CAnSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "VIK",
+          "score": 0.8131,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 7,
+          "ticker": "SEZL",
+          "score": 0.7974,
+          "gates": "CAnSLIm",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 7
     }
   },
   "companies": {
@@ -10629,6 +10688,13 @@
       "industry": "Household & Personal Products",
       "sector": "Consumer Defensive",
       "blurb": "Spectrum Brands Holdings, Inc. operates as a branded consumer products and home essentials company in North America, Europe, the Middle East, Africa, Latin America, and Asia-Pacific regions."
+    },
+    "TGT": {
+      "ticker": "TGT",
+      "name": "TGT",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
