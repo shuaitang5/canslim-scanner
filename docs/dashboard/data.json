@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-20",
     "2026-11-19",
     "2026-11-18",
     "2026-11-17",
@@ -8796,6 +8797,57 @@
         }
       ],
       "full_matches_total": 7
+    },
+    "2026-11-20": {
+      "date": "2026-11-20",
+      "run_id": "2026-11-21_025640",
+      "source_url": "../runs/2026-11-21_025640/",
+      "regime": "CAUTION",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "PLMR",
+          "score": 0.8864,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "GFF",
+          "score": 0.847,
+          "gates": "CANSLIm",
+          "ad": "B"
+        },
+        {
+          "rank": 3,
+          "ticker": "PCTY",
+          "score": 0.8449,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "GDYN",
+          "score": 0.8218,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "ATEN",
+          "score": 0.8218,
+          "gates": "CAnSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "VIK",
+          "score": 0.764,
+          "gates": "CANSLIm",
+          "ad": "B"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -10691,10 +10743,24 @@
     },
     "TGT": {
       "ticker": "TGT",
-      "name": "TGT",
-      "industry": "",
-      "sector": "",
-      "blurb": ""
+      "name": "Target Corporation",
+      "industry": "Discount Stores",
+      "sector": "Consumer Defensive",
+      "blurb": "Target Corporation operates as a general merchandise retailer in the United States. It offers apparel for women, men, young adults, kids, toddlers, and babies, as well as jewelry, accessories, and shoes; and beauty products, such as skin and bath care, cosmetics, hair care, oral care, deodorant, and shaving products."
+    },
+    "IBN": {
+      "ticker": "IBN",
+      "name": "ICICI Bank Limited",
+      "industry": "Banks - Regional",
+      "sector": "Financial Services",
+      "blurb": "ICICI Bank Limited, together with its subsidiaries, engages in the provision of various banking and financial services to corporate and retail customers in India and internationally."
+    },
+    "VVV": {
+      "ticker": "VVV",
+      "name": "Valvoline Inc.",
+      "industry": "Auto & Truck Dealerships",
+      "sector": "Consumer Cyclical",
+      "blurb": "Valvoline Inc. provides automotive preventive maintenance through its retail stores in the United States and Canada."
     }
   }
 }
