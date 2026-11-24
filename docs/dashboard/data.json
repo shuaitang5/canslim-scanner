@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-23",
     "2026-11-20",
     "2026-11-19",
     "2026-11-18",
@@ -8848,6 +8849,57 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-11-23": {
+      "date": "2026-11-23",
+      "run_id": "2026-11-24_054157",
+      "source_url": "../runs/2026-11-24_054157/",
+      "regime": "CAUTION",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "GFF",
+          "score": 0.8742,
+          "gates": "CANSLIm",
+          "ad": "B"
+        },
+        {
+          "rank": 2,
+          "ticker": "PLMR",
+          "score": 0.8566,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "GDYN",
+          "score": 0.8557,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "ATEN",
+          "score": 0.8227,
+          "gates": "CAnSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 5,
+          "ticker": "VIK",
+          "score": 0.8096,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 6,
+          "ticker": "HG",
+          "score": 0.8079,
+          "gates": "CANSLIm",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -10761,6 +10813,13 @@
       "industry": "Auto & Truck Dealerships",
       "sector": "Consumer Cyclical",
       "blurb": "Valvoline Inc. provides automotive preventive maintenance through its retail stores in the United States and Canada."
+    },
+    "WWD": {
+      "ticker": "WWD",
+      "name": "Woodward, Inc.",
+      "industry": "Aerospace & Defense",
+      "sector": "Industrials",
+      "blurb": "Woodward, Inc. designs, manufactures, and services control solutions for the aerospace and industrial markets worldwide."
     }
   }
 }
