@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-25",
     "2026-11-24",
     "2026-11-23",
     "2026-11-20",
@@ -8945,6 +8946,57 @@
         }
       ],
       "full_matches_total": 5
+    },
+    "2026-11-25": {
+      "date": "2026-11-25",
+      "run_id": "2026-11-26_035223",
+      "source_url": "../runs/2026-11-26_035223/",
+      "regime": "CAUTION",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "GDYN",
+          "score": 0.8796,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "GFF",
+          "score": 0.8771,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "PLMR",
+          "score": 0.8573,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "ATEN",
+          "score": 0.8216,
+          "gates": "CAnSLIm",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "HG",
+          "score": 0.8109,
+          "gates": "CANSLIm",
+          "ad": "B"
+        },
+        {
+          "rank": 6,
+          "ticker": "VIK",
+          "score": 0.8065,
+          "gates": "CANSLIm",
+          "ad": "B"
+        }
+      ],
+      "full_matches_total": 6
     }
   },
   "companies": {
@@ -10886,6 +10938,13 @@
       "industry": "Apparel Retail",
       "sector": "Consumer Cyclical",
       "blurb": "Urban Outfitters, Inc. offers lifestyle products and services in the United States and internationally."
+    },
+    "GHC": {
+      "ticker": "GHC",
+      "name": "Graham Holdings Company",
+      "industry": "Conglomerates",
+      "sector": "Industrials",
+      "blurb": "Graham Holdings Company, through its subsidiaries, operates as a diversified holding company in the United States and internationally. The company provides academic preparation programs for international students; professional training and postsecondary education services, as well as English-language programs; opera\u2026"
     }
   }
 }
