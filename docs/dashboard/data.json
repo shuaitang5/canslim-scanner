@@ -1,5 +1,6 @@
 {
   "dates": [
+    "2026-11-27",
     "2026-11-25",
     "2026-11-24",
     "2026-11-23",
@@ -8997,6 +8998,50 @@
         }
       ],
       "full_matches_total": 6
+    },
+    "2026-11-27": {
+      "date": "2026-11-27",
+      "run_id": "2026-11-28_033949",
+      "source_url": "../runs/2026-11-28_033949/",
+      "regime": "CAUTION",
+      "full_matches": [
+        {
+          "rank": 1,
+          "ticker": "GFF",
+          "score": 0.8829,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 2,
+          "ticker": "GDYN",
+          "score": 0.8786,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 3,
+          "ticker": "PLMR",
+          "score": 0.8535,
+          "gates": "CANSLIm",
+          "ad": "A"
+        },
+        {
+          "rank": 4,
+          "ticker": "ATEN",
+          "score": 0.8218,
+          "gates": "CAnSLIm",
+          "ad": "B"
+        },
+        {
+          "rank": 5,
+          "ticker": "VIK",
+          "score": 0.8148,
+          "gates": "CANSLIm",
+          "ad": "A"
+        }
+      ],
+      "full_matches_total": 5
     }
   },
   "companies": {
@@ -10945,6 +10990,20 @@
       "industry": "Conglomerates",
       "sector": "Industrials",
       "blurb": "Graham Holdings Company, through its subsidiaries, operates as a diversified holding company in the United States and internationally. The company provides academic preparation programs for international students; professional training and postsecondary education services, as well as English-language programs; opera\u2026"
+    },
+    "GATX": {
+      "ticker": "GATX",
+      "name": "GATX",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
+    },
+    "YUMC": {
+      "ticker": "YUMC",
+      "name": "YUMC",
+      "industry": "",
+      "sector": "",
+      "blurb": ""
     }
   }
 }
